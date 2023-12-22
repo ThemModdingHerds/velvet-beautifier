@@ -14,7 +14,7 @@ public class Mod
             throw new Exception("no mod entry");
         Info = JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new Exception("couldn't read mod entry");
     }
-    public List<string> GetFolders(List<string> filter)
+    private List<string> GetFolders(List<string> filter)
     {
         List<string> folders = [];
         string[] fullfolders = Directory.GetDirectories(Folder);
