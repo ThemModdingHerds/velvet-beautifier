@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Win32;
 
 namespace ThemModdingHerds.VelvetBeautifier;
@@ -16,5 +17,15 @@ public static class Utils
     public static string GetDefaultTFHPath()
     {
         return Path.Combine(GetSteamPath(),"steamapps","common","Them's Fightin' Herds");
+    }
+    public static void OpenLink(string link)
+    {
+        Process.Start(new ProcessStartInfo(link){UseShellExecute = true});
+    }
+    public static List<string> GetAllFiles(string folder)
+    {
+        if(!Directory.Exists(folder))
+            return [];
+        return Directory.EnumerateFiles(folder,"*.*",SearchOption.AllDirectories).ToList();
     }
 }
