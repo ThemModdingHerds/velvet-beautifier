@@ -53,8 +53,8 @@ A: not yet, it is possible but I don't have the knowledge of how they work
 Q: when is the next update?  
 A: when I can work, I can't work 24/7  
 
-Q: can I modify base assets?
-A: no and for secure reasons I won't add this feature
+Q: can I modify base assets?  
+A: no and for security reasons I won't add this feature
 
 ## License
 
