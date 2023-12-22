@@ -4,6 +4,8 @@
 
 Them's Fighting' Herds Mod Loader/Tool
 
+- [GameBanana link][gamebanana-link]
+
 ## Features
 
 - extract `.tfhres` files
@@ -60,3 +62,4 @@ This tool is licensed under the [GPL-3.0 license][license-path]
 
 [license-path]: ./LICENSE
 [icon-path]: ./icon_small.ico
+[gamebanana-link]: https://gamebanana.com/tools/15674
