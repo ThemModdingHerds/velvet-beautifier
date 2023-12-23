@@ -6,6 +6,7 @@ public class Mod
 {
     public ModInfo Info {get;}
     public string Folder {get;}
+    public List<TFHResourceMod> TFHResourceMods {get;}
     public Mod(string folder)
     {
         Folder = folder;
@@ -13,6 +14,7 @@ public class Mod
         if(!File.Exists(filepath))
             throw new Exception("no mod entry");
         Info = JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new Exception("couldn't read mod entry");
+        TFHResourceMods = ReadTFHResourceMod();
     }
     private List<string> GetFolders(List<string> filter)
     {
@@ -35,9 +37,12 @@ public class Mod
     {
         return GetFolders(Modable.Data01);
     }
-    public Database Add(Database db,CachedTextfile textfile)
+    private List<TFHResourceMod> ReadTFHResourceMod()
     {
-
-        return db;
+        List<string> resources = GetTFHResources();
+        List<TFHResourceMod> mods = [];
+        foreach(string resource in resources)
+            mods.Add(TFHResourceMod.Create(this,Path.Combine(Folder,resource)));
+        return mods;
     }
 }

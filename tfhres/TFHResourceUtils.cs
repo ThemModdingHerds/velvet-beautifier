@@ -3,12 +3,20 @@ using ThemModdingHerds.Resource;
 namespace ThemModdingHerds.VelvetBeautifier;
 public static class TFHResourceUtils
 {
-    public static CachedTextfile CreateTextFile(Mod mod,string path)
+    private static string GetSourceFilePath(string folder,string path)
+    {
+        return path.Replace(folder + "\\","").Replace("\\","/");
+    }
+    private static string GetDatabasePath(string path)
+    {
+        return "database:/" + Path.GetFileName(path);
+    }
+    public static CachedTextfile CreateTextFile(Mod mod,string resource,string path)
     {
         if(!File.Exists(path))
-            throw new VelvetException(path + " does not exist");
-        string shortname = "database:/" + mod.Info.Id + "/" + Path.GetFileName(path);
-        string source_file = path.Replace(mod.Folder,"");
+            throw new VelvetException("TFHResourceUtils.CreateTextFile",path + " does not exist");
+        string shortname = GetDatabasePath(path);
+        string source_file = GetSourceFilePath(Path.Combine(mod.Folder,resource),path);
         byte[] text_data = File.ReadAllBytes(path);
         return new()
         {
@@ -17,12 +25,12 @@ public static class TFHResourceUtils
             TextData = text_data
         };
     }
-    public static CacheRecord CreateRecord(Mod mod,string path)
+    public static CacheRecord CreateRecord(Mod mod,string resource,string path)
     {
         if(!File.Exists(path))
-            throw new VelvetException(path + " does not exist");
-        string shortname = "database:/" + mod.Info.Id + "/" + Path.GetFileName(path);
-        string source_file = path.Replace(mod.Folder,"");
+            throw new VelvetException("TFHResourceUtils.CreateRecord",path + " does not exist");
+        string shortname = GetDatabasePath(path);
+        string source_file = GetSourceFilePath(Path.Combine(mod.Folder,resource),path);
         return new()
         {
             ShortName = shortname,
@@ -32,7 +40,7 @@ public static class TFHResourceUtils
     public static Database MakeTempCopy(string path)
     {
         if(!File.Exists(path))
-            throw new VelvetException(path + " does not exist");
+            throw new VelvetException("TFHResourceUtils.MakeTempCopy",path + " does not exist");
         byte[] data = File.ReadAllBytes(path);
         DirectoryInfo tempDir = Directory.CreateTempSubdirectory();
         string filepath = Path.Combine(tempDir.FullName,Path.GetFileName(path));

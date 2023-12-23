@@ -10,4 +10,6 @@ public class ModInfo
     public string Name {get; set;} = "Example Mod";
     [JsonPropertyName("author")]
     public string Author {get; set;} = Environment.UserName;
+    [JsonPropertyName("desc")]
+    public string Description {get; set;} = "This is an Example Mod";
 }

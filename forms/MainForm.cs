@@ -48,11 +48,13 @@ public partial class MainForm : Form
     }
     private void FillModList(List<Mod> mods)
     {
+        ModList.Items.Clear();
         foreach (Mod mod in mods)
             ModList.Items.Add(mod.Info.Name);
     }
     private void RefreshModList()
     {
+        Velvet.ConsoleWriteLine("Refreshing modlist...");
         ModManager.RefreshMods();
         FillModList([.. ModManager.Mods.Values]);
     }
@@ -61,11 +63,66 @@ public partial class MainForm : Form
 
     private void ModList_SelectedIndexChanged(object sender, EventArgs e)
     {
-        object? modname = ModList.Items[ModList.SelectedIndex];
-    }
+        Mod? mod =GetModFromModList(ModList.SelectedIndex);
+        if(mod == null)
+            return;
 
+        ModNameLabel.Visible = ModAuthorLabel.Visible = ModDescriptionBox.Visible = true;
+
+        ModNameLabel.Text = mod.Info.Name;
+        ModAuthorLabel.Text = "by " + mod.Info.Author;
+        ModDescriptionBox.Text = mod.Info.Description;
+    }
+    private Mod? GetModFromModList(int index)
+    {
+        object? modname_o = ModList.Items[index];
+        if(modname_o == null)
+            return null;
+        string modname = (string)modname_o;
+        return ModManager.FindModByName(modname);
+    }
+    private List<Mod> GetEnabledMods()
+    {
+        List<Mod> mods = [];
+
+        for(int index = 0;index < ModList.CheckedItems.Count;index++)
+        {
+            object? modname_o = ModList.CheckedItems[index];
+            if(modname_o == null)
+                continue;
+            string modname = (string)modname_o;
+            Mod? mod = ModManager.FindModByName(modname);
+            if(mod != null)
+                mods.Add(mod);
+        }
+
+        return mods;
+    }
     private void ApplyButton_Click(object sender, EventArgs e)
     {
+        List<Mod> mods = GetEnabledMods();
+        if(mods.Count == 0)
+            return;
 
+        Dictionary<string,List<TFHResourceMod>> tfhres_mods = [];
+
+        foreach(Mod mod in mods)
+        {
+            foreach(TFHResourceMod resourceMod in mod.TFHResourceMods)
+            {
+                if(!tfhres_mods.ContainsKey(resourceMod.Resource))
+                    tfhres_mods.Add(resourceMod.Resource,[]);
+                List<TFHResourceMod> ts = tfhres_mods[resourceMod.Resource];
+                ts.Add(resourceMod);
+            }
+        }
+
+        foreach((string resource,List<TFHResourceMod> tfhres) in tfhres_mods)
+        {
+            string target_path = Config.Current.GetTFHResourcesFolder(resource);
+            TFHResourceMod.ModIt(target_path,tfhres);
+        }
+
+        Velvet.ShowMessageBox(mods.Count + " mods have been applied! You can start the game with the modifications","Done");
     }
 }

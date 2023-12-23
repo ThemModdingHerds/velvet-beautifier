@@ -23,7 +23,10 @@ public static class Velvet
         .Replace("TH","Z");
     }
 }
-public class VelvetException(string message) : Exception(Velvet.Velvetify(message))
+public class VelvetException : Exception
 {
-    
+    public VelvetException(string origin,string message): base(origin + ": " + Velvet.Velvetify(message))
+    {
+        Velvet.ShowMessageBox(ToString());
+    }
 }

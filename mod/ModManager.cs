@@ -6,6 +6,7 @@ public static class ModManager
     public static Dictionary<string,Mod> Mods {get;set;} = [];
     public static void RefreshMods()
     {
+        Mods.Clear();
         if(!Config.Current.ExistsModsFolder())
             Directory.CreateDirectory(Config.Current.ModsFolder);
         string[] folders = Directory.GetDirectories(Config.Current.ModsFolder);
@@ -18,5 +19,12 @@ public static class ModManager
             {
                 Velvet.ConsoleWriteLine(err.ToString());
             }
+    }
+    public static Mod? FindModByName(string name)
+    {
+        foreach(Mod mod in Mods.Values)
+            if(mod.Info.Name == name)
+                return mod;
+        return null;
     }
 }

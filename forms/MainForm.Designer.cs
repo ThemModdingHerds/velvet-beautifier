@@ -45,6 +45,9 @@ partial class MainForm
         MenuHelpAbout = new ToolStripMenuItem();
         ModList = new CheckedListBox();
         ApplyButton = new Button();
+        ModNameLabel = new Label();
+        ModAuthorLabel = new Label();
+        ModDescriptionBox = new TextBox();
         MenuBar.SuspendLayout();
         SuspendLayout();
         // 
@@ -164,6 +167,38 @@ partial class MainForm
         ApplyButton.UseVisualStyleBackColor = true;
         ApplyButton.Click += ApplyButton_Click;
         // 
+        // ModNameLabel
+        // 
+        ModNameLabel.AutoSize = true;
+        ModNameLabel.Font = new Font("Segoe UI", 15F);
+        ModNameLabel.Location = new Point(238, 27);
+        ModNameLabel.Name = "ModNameLabel";
+        ModNameLabel.Size = new Size(111, 28);
+        ModNameLabel.TabIndex = 3;
+        ModNameLabel.Text = "Mod Name";
+        ModNameLabel.Visible = false;
+        // 
+        // ModAuthorLabel
+        // 
+        ModAuthorLabel.AutoSize = true;
+        ModAuthorLabel.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        ModAuthorLabel.Location = new Point(244, 55);
+        ModAuthorLabel.Name = "ModAuthorLabel";
+        ModAuthorLabel.Size = new Size(69, 15);
+        ModAuthorLabel.TabIndex = 4;
+        ModAuthorLabel.Text = "by someone";
+        ModAuthorLabel.Visible = false;
+        // 
+        // ModDescriptionBox
+        // 
+        ModDescriptionBox.Location = new Point(244, 82);
+        ModDescriptionBox.Multiline = true;
+        ModDescriptionBox.Name = "ModDescriptionBox";
+        ModDescriptionBox.ReadOnly = true;
+        ModDescriptionBox.Size = new Size(444, 208);
+        ModDescriptionBox.TabIndex = 5;
+        ModDescriptionBox.Visible = false;
+        // 
         // MainForm
         // 
         AccessibleDescription = "Them's Fightin' Herds Mod Loader";
@@ -171,6 +206,9 @@ partial class MainForm
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(700, 338);
+        Controls.Add(ModDescriptionBox);
+        Controls.Add(ModAuthorLabel);
+        Controls.Add(ModNameLabel);
         Controls.Add(ApplyButton);
         Controls.Add(ModList);
         Controls.Add(MenuBar);
@@ -203,4 +241,7 @@ partial class MainForm
     private ToolStripMenuItem MenuFileRefreshMods;
     private ToolStripSeparator MenuFileSeperator;
     private Button ApplyButton;
+    private Label ModNameLabel;
+    private Label ModAuthorLabel;
+    private TextBox ModDescriptionBox;
 }

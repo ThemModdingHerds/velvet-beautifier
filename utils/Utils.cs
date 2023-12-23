@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
 namespace ThemModdingHerds.VelvetBeautifier;
@@ -28,4 +29,21 @@ public static class Utils
             return [];
         return Directory.EnumerateFiles(folder,"*.*",SearchOption.AllDirectories).ToList();
     }
+    public static string CreateTempFile(string path)
+    {
+        if(!File.Exists(path))
+            throw new VelvetException("Utils.CreateTempFile",path + " does not exist");
+        string folder = Directory.CreateTempSubdirectory().FullName;
+        string filename = Path.GetFileName(path);
+        string tempfile = Path.Combine(folder,filename);
+        File.Copy(path,tempfile,true);
+        Velvet.ConsoleWriteLine("Created temp file from " + path + " to " + tempfile);
+        return tempfile;
+    }
+    [DllImport("kernel32.dll",SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool AllocConsole();
+    [DllImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool AttachConsole(int dwProcessId);
 }

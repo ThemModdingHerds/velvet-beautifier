@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "dotnet",
+            "name": "Launch VelvetBeautifier",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/VelvetBeautifier.csproj",
+            "preLaunchTask": "Build"
+        }
+    ]
+}

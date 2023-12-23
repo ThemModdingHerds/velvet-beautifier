@@ -9,6 +9,7 @@ Them's Fighting' Herds Mod Loader/Tool
 ## Features
 
 - extract `.tfhres` files
+- add files to `.tfhres` files
 
 ## Possible Features
 
@@ -19,9 +20,9 @@ Them's Fighting' Herds Mod Loader/Tool
 
 ## Planned features
 
-- making mods possible
 - `.gfs` extraction
 - GameBanana support?
+- modify existing files (patching)
 
 ## How does this load mods?
 
