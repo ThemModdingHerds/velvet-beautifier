@@ -9,7 +9,7 @@ Them's Fighting' Herds Mod Loader/Tool
 ## Features
 
 - extract `.tfhres` files
-- add files to `.tfhres` files
+- add/patch files to `.tfhres` files
 
 ## Possible Features
 
