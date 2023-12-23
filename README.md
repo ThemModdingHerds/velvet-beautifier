@@ -29,6 +29,10 @@ Them's Fighting' Herds Mod Loader/Tool
 1. checks for folders in `mods` directory
 2. check if these folders have a `mod.json` file
 
+## How do I make mods?
+
+[here][guide-path]
+
 ## Mod Structure
 
 ### Folder Structure
@@ -62,5 +66,6 @@ A: no and for security reasons I won't add this feature
 This tool is licensed under the [GPL-3.0 license][license-path]
 
 [license-path]: ./LICENSE
-[icon-path]: ./icon_small.ico
+[icon-path]: ./assets/icon_small.ico
+[guide-path]: ./GUIDE.md
 [gamebanana-link]: https://gamebanana.com/tools/15674
