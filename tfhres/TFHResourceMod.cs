@@ -9,9 +9,52 @@ public class TFHResourceMod(string resource)
     public List<CachedTextfile> TextFiles {get;private set;} = [];
     public Database Insert(Database db)
     {
-        return db.Insert(Records)
-        .Insert(Images)
-        .Insert(TextFiles);
+        List<CacheRecord> db_records = db.GetCacheRecords();
+        foreach(CacheRecord record in Records)
+        {
+            bool updated = false;
+            foreach(CacheRecord db_record in db_records)
+            {
+                if(db_record.ShortName == record.ShortName)
+                {
+                    db.Update(db_record.HiberliteId,record);
+                    updated = true;
+                }
+            }
+            if(updated) continue;
+            db.Insert(record);
+        }
+        List<CachedImage> db_images = db.GetCachedImages();
+        foreach(CachedImage image in Images)
+        {
+            bool updated = false;
+            foreach(CachedImage db_image in db_images)
+            {
+                if(db_image.ShortName == image.ShortName)
+                {
+                    db.Update(db_image.HiberliteId,image);
+                    updated = true;
+                }
+            }
+            if(updated) continue;
+            db.Insert(image);
+        }
+        List<CachedTextfile> db_textfiles = db.GetCachedTextfiles();
+        foreach(CachedTextfile textfile in TextFiles)
+        {
+            bool updated = false;
+            foreach(CachedTextfile db_textfile in db_textfiles)
+            {
+                if(db_textfile.ShortName == textfile.ShortName)
+                {
+                    db.Update(db_textfile.HiberliteId,textfile);
+                    updated = true;
+                }
+            }
+            if(updated) continue;
+            db.Insert(textfile);
+        }
+        return db;
     }
     public static TFHResourceMod Create(Mod mod,string path)
     {
