@@ -59,4 +59,25 @@ public static class TFHResourceUtils
     {
         Replace(dest.Path,db);
     }
+    public static void ApplyTFHResources(List<Mod> mods)
+    {
+        Dictionary<string, List<TFHResourceMod>> tfhres_mods = [];
+
+        foreach (Mod mod in mods)
+        {
+            foreach (TFHResourceMod resourceMod in mod.TFHResourceMods)
+            {
+                if (!tfhres_mods.ContainsKey(resourceMod.Resource))
+                    tfhres_mods.Add(resourceMod.Resource, []);
+                List<TFHResourceMod> ts = tfhres_mods[resourceMod.Resource];
+                ts.Add(resourceMod);
+            }
+        }
+
+        foreach ((string resource, List<TFHResourceMod> tfhres) in tfhres_mods)
+        {
+            string target_path = Config.Current.GetTFHResourcesFolder(resource);
+            TFHResourceMod.ModIt(target_path, tfhres);
+        }
+    }
 }

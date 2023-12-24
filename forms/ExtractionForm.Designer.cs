@@ -1,6 +1,6 @@
 ﻿namespace ThemModdingHerds.VelvetBeautifier
 {
-    partial class ExtractionWindow
+    partial class ExtractionForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtractionWindow));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtractionForm));
             FileFormat = new ComboBox();
             ExtractButton = new Button();
             ExtractSelectFile = new Button();

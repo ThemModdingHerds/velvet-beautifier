@@ -27,4 +27,17 @@ public static class ModManager
                 return mod;
         return null;
     }
+    public static Mod? FindModById(string id)
+    {
+        foreach(Mod mod in Mods.Values)
+            if(mod.Info.Id == id)
+                return mod;
+        return null;
+    }
+    public static void RevertMods()
+    {
+        BackupManager.RevertTFHResources();
+        //BackupManager.RevertData01();
+        Velvet.ConsoleWriteLine("The mods have been disabled");
+    }
 }

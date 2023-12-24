@@ -18,6 +18,7 @@ partial class MainForm
             components.Dispose();
         }
         base.Dispose(disposing);
+        Utils.FreeConsole();
     }
 
     #region Windows Form Designer generated code
@@ -33,6 +34,7 @@ partial class MainForm
         MenuBar = new MenuStrip();
         MenuFile = new ToolStripMenuItem();
         MenuFileRefreshMods = new ToolStripMenuItem();
+        MenuFileApplyMods = new ToolStripMenuItem();
         MenuFileSeperator = new ToolStripSeparator();
         MenuFileExit = new ToolStripMenuItem();
         MenuTools = new ToolStripMenuItem();
@@ -40,6 +42,7 @@ partial class MainForm
         MenuToolsSeperator = new ToolStripSeparator();
         MenuToolsConfigure = new ToolStripMenuItem();
         MenuToolsConfigureTFHFolder = new ToolStripMenuItem();
+        MenuToolsRegisterScheme = new ToolStripMenuItem();
         MenuHelp = new ToolStripMenuItem();
         MenuHelpFI = new ToolStripMenuItem();
         MenuHelpAbout = new ToolStripMenuItem();
@@ -48,6 +51,7 @@ partial class MainForm
         ModNameLabel = new Label();
         ModAuthorLabel = new Label();
         ModDescriptionBox = new TextBox();
+        MenuFileInstallMod = new ToolStripMenuItem();
         MenuBar.SuspendLayout();
         SuspendLayout();
         // 
@@ -67,7 +71,7 @@ partial class MainForm
         // 
         // MenuFile
         // 
-        MenuFile.DropDownItems.AddRange(new ToolStripItem[] { MenuFileRefreshMods, MenuFileSeperator, MenuFileExit });
+        MenuFile.DropDownItems.AddRange(new ToolStripItem[] { MenuFileInstallMod, MenuFileRefreshMods, MenuFileApplyMods, MenuFileSeperator, MenuFileExit });
         MenuFile.Name = "MenuFile";
         MenuFile.Size = new Size(37, 20);
         MenuFile.Text = "File";
@@ -79,6 +83,14 @@ partial class MainForm
         MenuFileRefreshMods.Size = new Size(187, 22);
         MenuFileRefreshMods.Text = "Refresh Mods";
         MenuFileRefreshMods.Click += MenuFileRefreshMods_Click;
+        // 
+        // MenuFileApplyMods
+        // 
+        MenuFileApplyMods.Name = "MenuFileApplyMods";
+        MenuFileApplyMods.ShortcutKeys = Keys.Control | Keys.S;
+        MenuFileApplyMods.Size = new Size(187, 22);
+        MenuFileApplyMods.Text = "Apply Mods";
+        MenuFileApplyMods.Click += MenuFileApplyMods_Click;
         // 
         // MenuFileSeperator
         // 
@@ -95,7 +107,7 @@ partial class MainForm
         // 
         // MenuTools
         // 
-        MenuTools.DropDownItems.AddRange(new ToolStripItem[] { MenuToolsExtraction, MenuToolsSeperator, MenuToolsConfigure });
+        MenuTools.DropDownItems.AddRange(new ToolStripItem[] { MenuToolsExtraction, MenuToolsSeperator, MenuToolsConfigure, MenuToolsRegisterScheme });
         MenuTools.Name = "MenuTools";
         MenuTools.Size = new Size(46, 20);
         MenuTools.Text = "Tools";
@@ -104,20 +116,20 @@ partial class MainForm
         // 
         MenuToolsExtraction.Name = "MenuToolsExtraction";
         MenuToolsExtraction.ShortcutKeys = Keys.Control | Keys.E;
-        MenuToolsExtraction.Size = new Size(167, 22);
+        MenuToolsExtraction.Size = new Size(180, 22);
         MenuToolsExtraction.Text = "Extraction";
         MenuToolsExtraction.Click += MenuToolsExtraction_Click;
         // 
         // MenuToolsSeperator
         // 
         MenuToolsSeperator.Name = "MenuToolsSeperator";
-        MenuToolsSeperator.Size = new Size(164, 6);
+        MenuToolsSeperator.Size = new Size(177, 6);
         // 
         // MenuToolsConfigure
         // 
         MenuToolsConfigure.DropDownItems.AddRange(new ToolStripItem[] { MenuToolsConfigureTFHFolder });
         MenuToolsConfigure.Name = "MenuToolsConfigure";
-        MenuToolsConfigure.Size = new Size(167, 22);
+        MenuToolsConfigure.Size = new Size(180, 22);
         MenuToolsConfigure.Text = "Configure";
         // 
         // MenuToolsConfigureTFHFolder
@@ -126,6 +138,13 @@ partial class MainForm
         MenuToolsConfigureTFHFolder.Size = new Size(141, 22);
         MenuToolsConfigureTFHFolder.Text = "Install Folder";
         MenuToolsConfigureTFHFolder.Click += MenuToolsConfigureTFHFolder_Click;
+        // 
+        // MenuToolsRegisterScheme
+        // 
+        MenuToolsRegisterScheme.Name = "MenuToolsRegisterScheme";
+        MenuToolsRegisterScheme.Size = new Size(180, 22);
+        MenuToolsRegisterScheme.Text = "Register Scheme";
+        MenuToolsRegisterScheme.Click += MenuToolsRegisterScheme_Click;
         // 
         // MenuHelp
         // 
@@ -155,6 +174,7 @@ partial class MainForm
         ModList.Name = "ModList";
         ModList.Size = new Size(220, 292);
         ModList.TabIndex = 1;
+        ModList.ItemCheck += ModList_ItemCheck;
         ModList.SelectedIndexChanged += ModList_SelectedIndexChanged;
         // 
         // ApplyButton
@@ -198,6 +218,14 @@ partial class MainForm
         ModDescriptionBox.Size = new Size(444, 208);
         ModDescriptionBox.TabIndex = 5;
         ModDescriptionBox.Visible = false;
+        // 
+        // MenuFileInstallMod
+        // 
+        MenuFileInstallMod.Name = "MenuFileInstallMod";
+        MenuFileInstallMod.ShortcutKeys = Keys.Control | Keys.I;
+        MenuFileInstallMod.Size = new Size(187, 22);
+        MenuFileInstallMod.Text = "Install Mod";
+        MenuFileInstallMod.Click += MenuFileInstallMod_Click;
         // 
         // MainForm
         // 
@@ -244,4 +272,7 @@ partial class MainForm
     private Label ModNameLabel;
     private Label ModAuthorLabel;
     private TextBox ModDescriptionBox;
+    private ToolStripMenuItem MenuFileApplyMods;
+    private ToolStripMenuItem MenuToolsRegisterScheme;
+    private ToolStripMenuItem MenuFileInstallMod;
 }

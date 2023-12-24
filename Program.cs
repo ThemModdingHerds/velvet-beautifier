@@ -6,17 +6,28 @@ static class Program
     ///  The main entry point for the application.
     /// </summary>
     [STAThread]
-    static void Main()
+    static void Main(string[] argv)
     {
-#if DEBUG
-        Utils.AllocConsole();
         Utils.AttachConsole(-1);
-#endif
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
+        
         Velvet.ConsoleWriteLine("Loading ApplicationConfiguration...");
         ApplicationConfiguration.Initialize();
+        CommandLineResult cmdResult = HandleCommandLine(argv);
+
         Velvet.ConsoleWriteLine("Starting App...");
         Application.Run(new MainForm());
-    }    
+    }
+    
+    static CommandLineResult HandleCommandLine(string[] argv)
+    {
+        foreach(string arg in argv)
+        {
+            if(arg.StartsWith(Utils.Scheme))
+            {
+                GameBanana.HandleCommandLine(arg[(Utils.Scheme.Length + 1)..]);
+                return CommandLineResult.GameBanana;
+            }
+        }
+        return CommandLineResult.None;
+    }
 }

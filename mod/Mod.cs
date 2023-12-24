@@ -12,8 +12,8 @@ public class Mod
         Folder = folder;
         string filepath = Path.Combine(folder,"mod.json");
         if(!File.Exists(filepath))
-            throw new Exception("no mod entry");
-        Info = JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new Exception("couldn't read mod entry");
+            throw new VelvetException("new Mod","no mod entry in " + folder);
+        Info = JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new VelvetException("new Mod","couldn't read mod entry in " + folder);
         TFHResourceMods = ReadTFHResourceMod();
     }
     private List<string> GetFolders(List<string> filter)

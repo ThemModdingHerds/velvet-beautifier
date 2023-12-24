@@ -2,10 +2,10 @@
 
 namespace ThemModdingHerds.VelvetBeautifier
 {
-    public partial class ExtractionWindow : Form
+    public partial class ExtractionForm : Form
     {
         private string extractFilePath = "";
-        public ExtractionWindow()
+        public ExtractionForm()
         {
             InitializeComponent();
             ExtractButton.Enabled = false;

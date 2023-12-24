@@ -1,10 +1,14 @@
 using System.Diagnostics;
+using System.IO.Compression;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using Microsoft.Win32;
 
 namespace ThemModdingHerds.VelvetBeautifier;
 public static class Utils
 {
+    public static string Scheme {get;} = "velvetbeautifier";
     public static string GetSteamPath()
     {
         string x32 = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Valve\\Steam";
@@ -40,10 +44,57 @@ public static class Utils
         Velvet.ConsoleWriteLine("Created temp file from " + path + " to " + tempfile);
         return tempfile;
     }
-    [DllImport("kernel32.dll",SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool AllocConsole();
+    public static string CreateTempFile()
+    {
+        string folder = Directory.CreateTempSubdirectory().FullName;
+        string path = Guid.NewGuid().ToString();
+        string tempfile = Path.Combine(folder,path);
+        File.Create(tempfile).Close();
+        Velvet.ConsoleWriteLine("Created temp file from " + path + " to " + tempfile);
+        return tempfile;
+    }
+    public static void CreateURIScheme()
+    {
+        string name = "Velvet Beautifier";
+        string path = Application.ExecutablePath;
+        string regpath = "SOFTWARE\\CLASSES\\" + Scheme;
+
+        RegistryKey key = Registry.CurrentUser.OpenSubKey(regpath,true) ?? Registry.CurrentUser.CreateSubKey(regpath);
+        key.SetValue("","URL:" + name);
+        key.SetValue("URL Protocol",Scheme);
+        
+        RegistryKey iconKey = Registry.CurrentUser.OpenSubKey("DefaultIcon",true) ?? key.CreateSubKey("DefaultIcon");
+        iconKey.SetValue("",'"' + path + "\",1");
+        iconKey.Close();
+
+        RegistryKey openKey = Registry.CurrentUser.OpenSubKey(@"shell\open\command",true) ?? key.CreateSubKey(@"shell\open\command");
+        openKey.SetValue("","\"" + path + "\" \"%1\"");
+        openKey.Close();
+
+        key.Close();
+        Velvet.ShowMessageBox("Registered URI Scheme");
+    }
+    public static bool IsUrl(string url)
+    {
+        return Uri.TryCreate(url,UriKind.RelativeOrAbsolute,out Uri? _);
+    }
+    public static void ExtractZip(string path,string output)
+    {
+        ZipFile.ExtractToDirectory(path,output);
+    }
+    public static void SavePID()
+    {
+        Process cur = Process.GetCurrentProcess();
+        File.WriteAllText(Path.Combine(Environment.CurrentDirectory,".pid"),cur.Id.ToString());
+    }
+    public static bool HasPID()
+    {
+        return File.Exists(Path.Combine(Environment.CurrentDirectory,".pid"));
+    }
     [DllImport("kernel32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool AttachConsole(int dwProcessId);
+    [DllImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool FreeConsole();
 }

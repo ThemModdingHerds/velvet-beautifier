@@ -8,6 +8,7 @@ public class Config
     public string TfhPath {get; set;} = Utils.GetDefaultTFHPath();
     public string ModsFolder {get; set;} = Path.Combine(Environment.CurrentDirectory,"mods");
     public string BackupFolder {get; set;} = Path.Combine(Environment.CurrentDirectory,"backup");
+    public List<string> EnabledMods {get; set;} = [];
     public static Config Read(string path)
     {
         if(!Exists(path))
@@ -75,6 +76,10 @@ public class Config
     {
         return Path.Combine(TfhPath,"Scripts","src","Farm","resources");
     }
+    public bool ExistsTFHResourcesFolder()
+    {
+        return Directory.Exists(GetTFHResourcesFolder());
+    }
     public string GetTFHResourcesFolder(string path)
     {
         return Path.Combine(GetTFHResourcesFolder(),path);
@@ -83,8 +88,35 @@ public class Config
     {
         return Path.Combine(TfhPath,"data01");
     }
+    public bool ExistsData01Folder()
+    {
+        return Directory.Exists(GetData01Folder());
+    }
     public string GetData01Folder(string path)
     {
         return Path.Combine(GetData01Folder(),path);
+    }
+    public void EnableMod(Mod mod)
+    {
+        if(!EnabledMods.Contains(mod.Info.Id))
+            EnabledMods.Add(mod.Info.Id);
+    }
+    public void DisableMod(Mod mod)
+    {
+        if(EnabledMods.Contains(mod.Info.Id))
+            EnabledMods.Remove(mod.Info.Id);
+    }
+    public bool IsModEnabled(Mod mod)
+    {
+        return EnabledMods.Contains(mod.Info.Id);
+    }
+    public void ToggleMod(Mod mod)
+    {
+        if(IsModEnabled(mod))
+        {
+            DisableMod(mod);
+            return;
+        }
+        EnableMod(mod);
     }
 }
