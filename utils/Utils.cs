@@ -85,9 +85,18 @@ public static class Utils
     {
         return Uri.TryCreate(url,UriKind.RelativeOrAbsolute,out Uri? _);
     }
-    public static void ExtractZip(string path,string output)
+    public static bool ExtractZip(string path,string output)
     {
-        ZipFile.ExtractToDirectory(path,output);
+        try
+        {
+            ZipFile.ExtractToDirectory(path,output);
+        }
+        catch(Exception err)
+        {
+            Velvet.ConsoleWriteLine(err.ToString());
+            return false;
+        }
+        return true;
     }
     public static void SavePID()
     {

@@ -7,11 +7,16 @@ public class Mod
     public ModInfo Info {get;}
     public string Folder {get;}
     public List<TFHResourceMod> TFHResourceMods {get;}
+    public static bool IsMod(string folder)
+    {
+        string modinfo_path = Path.Combine(folder,"mod.json");
+        return File.Exists(modinfo_path);
+    }
     public Mod(string folder)
     {
         Folder = folder;
         string filepath = Path.Combine(folder,"mod.json");
-        if(!File.Exists(filepath))
+        if(!IsMod(folder))
             throw new VelvetException("new Mod","no mod entry in " + folder);
         Info = JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new VelvetException("new Mod","couldn't read mod entry in " + folder);
         TFHResourceMods = ReadTFHResourceMod();
