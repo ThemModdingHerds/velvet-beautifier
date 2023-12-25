@@ -1,5 +1,4 @@
 ﻿namespace ThemModdingHerds.VelvetBeautifier;
-
 partial class MainForm
 {
     /// <summary>
@@ -18,7 +17,6 @@ partial class MainForm
             components.Dispose();
         }
         base.Dispose(disposing);
-        Utils.FreeConsole();
     }
 
     #region Windows Form Designer generated code

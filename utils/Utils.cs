@@ -33,6 +33,13 @@ public static class Utils
             return [];
         return Directory.EnumerateFiles(folder,"*.*",SearchOption.AllDirectories).ToList();
     }
+    public static void CopyFilesTo(string input,string output)
+    {
+        foreach(string dirpath in Directory.GetDirectories(input,"*",SearchOption.AllDirectories))
+            Directory.CreateDirectory(dirpath.Replace(input,output));
+        foreach(string filepath in Directory.GetFiles(input,"*.*",SearchOption.AllDirectories))
+            File.Copy(filepath,filepath.Replace(input,output),true);
+    }
     public static string CreateTempFile(string path)
     {
         if(!File.Exists(path))

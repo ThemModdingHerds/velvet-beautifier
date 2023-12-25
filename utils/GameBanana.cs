@@ -47,25 +47,6 @@ public static class GameBanana
         string field = string.Join(',',fields);
         return $"https://api.gamebanana.com/Core/Item/Data?itemtype={itemtype}&itemid={id}&fields={field}&format=json&return_keys=true";
     }
-    public static async Task<List<string>> GetDownloads(int id)
-    {
-        List<string> urls = [];
-        string url = CreateCoreItemDataRequestUrl("Mod",id,["Files().aFiles()"]);
-        JsonDocument? jsonObject = await DownloadManager.GetJSON<JsonDocument>(url);
-        if(jsonObject == null) return [];
-
-        foreach(JsonElement item in jsonObject.RootElement.EnumerateArray())
-        foreach(JsonProperty downloadInfo in item.EnumerateObject())
-        {
-            JsonElement data = downloadInfo.Value;
-            JsonElement downloadUrlObject = data.GetProperty("_sDownloadUrl");
-            string? downloadUrl = downloadUrlObject.GetString();
-            if(downloadUrl == null) continue;
-            urls.Add(downloadUrl);
-        }
-
-        return urls;
-    }
 }
 public class GameBananaError
 {
@@ -76,6 +57,7 @@ public class GameBananaError
 }
 public class GameBananaModFile
 {
+    static readonly DateTime epoch = new(1970,1,1);
     [JsonPropertyName("_sFile")]
     public string Filename {get;set;} = "";
     [JsonPropertyName("_nFilesize")]
@@ -85,7 +67,9 @@ public class GameBananaModFile
     [JsonPropertyName("_sDescription")]
     public string Description {get;set;} = "";
     [JsonPropertyName("_tsDateAdded")]
-    public int DateAdded {get;set;}
+    public int DateAddedInt {get;set;}
+    [JsonIgnore]
+    public DateTime DateAdded {get => epoch.AddSeconds(DateAddedInt);}
     [JsonPropertyName("_nDownloadCount")]
     public int DownloadCount {get;set;}
 }
@@ -111,5 +95,15 @@ public class GameBananaMod
             "Files().aFiles()"
         ]);
         return await DownloadManager.GetJSON<GameBananaMod>(url);
+    }
+    public GameBananaModFile GetLatestUpdate()
+    {
+        GameBananaModFile newest = Files.Values.ToArray().Last();
+        foreach(GameBananaModFile file in Files.Values)
+        {
+            if(DateTime.Compare(newest.DateAdded,file.DateAdded) < 0)
+                newest = file;
+        }
+        return newest;
     }
 }

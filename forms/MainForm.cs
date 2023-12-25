@@ -1,7 +1,4 @@
-using ThemModdingHerds.VelvetBeautifier.forms;
-
 namespace ThemModdingHerds.VelvetBeautifier;
-
 public partial class MainForm : Form
 {
     private readonly ExtractionForm extractionForm = new();
@@ -112,6 +109,7 @@ public partial class MainForm : Form
     }
     private Mod? GetModFromModList(int index)
     {
+        if(index < 0 || index >= ModList.Items.Count) return null;
         object? modname_o = ModList.Items[index];
         if (modname_o == null)
             return null;
