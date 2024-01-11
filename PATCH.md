@@ -34,6 +34,7 @@ You see that the property `balls` is having a wrong order of numbers (you know, 
 {
     "type": "U", // we're updating a value
     "value_type": "N", // the value we set is a number
+    "path": "path/to/that/json/file", // the path to the json file
     "property": "balls/[2]", // we want to patch the array "balls" at index 2 (arrays start at 0, not 1)
     "value": 2 // the fix
 }

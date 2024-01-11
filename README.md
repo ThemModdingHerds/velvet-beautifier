@@ -11,44 +11,29 @@ Them's Fighting' Herds Mod Loader/Tool
 - extract `.tfhres` files
 - add/patch files to `.tfhres` files
 
-## Possible Features
+### Possible Features
 
 - custom GeoBox maps
   - PixelLobbies
   - Story Mode
 - custom Stages
 
-## Planned features
+### Planned features
 
 - `.gfs` extraction
 - GameBanana support?
 - modify existing files (patching)
 
-## How does this load mods?
+## Mods
+
+### How does this load mods?
 
 1. checks for folders in `mods` directory
 2. check if these folders have a `mod.json` file
 
-## How do I make mods?
+### How do I make mods?
 
 [here][guide-path]
-
-## Mod Structure
-
-### Folder Structure
-
-- `mod.json` - contains metadata about the mod
-- `<folders-with-tfhres-extension>` - TFH resources to add
-
-### `mod.json` Structure
-
-```json
-{
-  "id": "com.example.mod",
-  "name": "Example Mod",
-  "author": "Example Author"
-}
-```
 
 ## Frequently asked questions
 
@@ -59,7 +44,11 @@ Q: when is the next update?
 A: when I can work, I can't work 24/7  
 
 Q: can I modify base assets?  
-A: no and for security reasons I won't add this feature
+A: yes but only do it if required
+
+## Building
+
+You need the .NET 8.0 SDK and Visual Studio, open the solution and build. That's it
 
 ## License
 

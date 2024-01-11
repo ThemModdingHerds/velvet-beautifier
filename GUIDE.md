@@ -15,7 +15,7 @@
         "depends": { // this is similar to package.json from NodeJS. See here https://docs.npmjs.com/cli/v6/configuring-npm/package-json#dependencies
             "ntf.someother.mod": "1.0.0"
         },
-        "url": "https://somelink.to/the/mod" // link to your mod (GameBanana, website)
+        "url": "https://somelink.to/the/mod" // link to your mod download (GameBanana, direct zip download)
     }
     ```
 
