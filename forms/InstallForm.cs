@@ -1,6 +1,10 @@
-﻿namespace ThemModdingHerds.VelvetBeautifier;
+﻿using ThemModdingHerds.VelvetBeautifier.Modding;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
+
+namespace ThemModdingHerds.VelvetBeautifier.Forms;
 public partial class InstallForm : Form
 {
+    private MainForm MainForm {get => (MainForm?)Owner ?? throw new VelvetException("InstallForm.MainForm","MainForm is null");}
     public InstallForm()
     {
         InitializeComponent();
@@ -8,28 +12,38 @@ public partial class InstallForm : Form
 
     private void InstallModUrl_TextChanged(object sender, EventArgs e)
     {
-        FetchButton.Enabled = (Utils.IsUrl(InstallModUrl.Text) && InstallModUrl.Text.EndsWith(".zip")) || GameBanana.ValidUrl(InstallModUrl.Text);
+        FetchButton.Enabled = (Url.IsUrl(InstallModUrl.Text) && InstallModUrl.Text.EndsWith(".zip")) || GameBanana.Utils.ValidUrl(InstallModUrl.Text);
     }
 
     private async void FetchButton_Click(object sender, EventArgs e)
     {
         string url = InstallModUrl.Text;
-        if(GameBanana.ValidUrl(url))
+        DownloadForm download;
+        if(GameBanana.Utils.ValidUrl(url))
         {
-            GameBananaMod? gb_mod = await GameBananaMod.Fetch(GameBanana.GetModId(url));
+            GameBanana.Mod? gb_mod = await GameBanana.Mod.Fetch(GameBanana.Utils.GetModId(url));
             if(gb_mod == null)
             {
                 Velvet.ShowMessageBox("Couldn't fetch " + url);
                 Close();
                 return;
             }
-            new DownloadForm(gb_mod).ShowDialog();
+            download = new(gb_mod)
+            {
+                Owner = MainForm
+            };
+            download.ShowDialog();
             Close();
             return;
         }
         string unzippedpath = await DownloadManager.GetAndUnzip(url);
         Mod mod = new(unzippedpath);
-        new DownloadForm(mod,unzippedpath).ShowDialog();
+        mod.Info.Url = url;
+        download = new(mod,unzippedpath)
+        {
+            Owner = MainForm
+        };
+        download.ShowDialog();
         Close();
         return;
     }

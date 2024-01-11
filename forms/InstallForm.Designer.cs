@@ -1,4 +1,4 @@
-﻿namespace ThemModdingHerds.VelvetBeautifier;
+﻿namespace ThemModdingHerds.VelvetBeautifier.Forms;
 partial class InstallForm
 {
     /// <summary>

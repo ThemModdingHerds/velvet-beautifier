@@ -1,4 +1,4 @@
-﻿namespace ThemModdingHerds.VelvetBeautifier;
+﻿namespace ThemModdingHerds.VelvetBeautifier.Forms;
 partial class MainForm
 {
     /// <summary>
@@ -27,10 +27,14 @@ partial class MainForm
     /// </summary>
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-        FindTFHFolder = new FolderBrowserDialog();
+        SelectFolder = new FolderBrowserDialog();
         MenuBar = new MenuStrip();
         MenuFile = new ToolStripMenuItem();
+        MenuFileInstallMod = new ToolStripMenuItem();
+        ContextInstallFromFolder = new ToolStripMenuItem();
+        ContextInstallFromUrl = new ToolStripMenuItem();
         MenuFileRefreshMods = new ToolStripMenuItem();
         MenuFileApplyMods = new ToolStripMenuItem();
         MenuFileSeperator = new ToolStripSeparator();
@@ -49,14 +53,22 @@ partial class MainForm
         ModNameLabel = new Label();
         ModAuthorLabel = new Label();
         ModDescriptionBox = new TextBox();
-        MenuFileInstallMod = new ToolStripMenuItem();
+        ModListContextMenu = new ContextMenuStrip(components);
+        MenuInstallMod = new ToolStripMenuItem();
+        ContextUninstallMod = new ToolStripMenuItem();
+        ContextVisitModPage = new ToolStripMenuItem();
+        ExtractionSelection = new OpenFileDialog();
+        aToolStripMenuItem = new ToolStripMenuItem();
+        aToolStripMenuItem1 = new ToolStripMenuItem();
+        MenuInstallFromURL = new ToolStripMenuItem();
+        MenuInstallFromFolder = new ToolStripMenuItem();
         MenuBar.SuspendLayout();
+        ModListContextMenu.SuspendLayout();
         SuspendLayout();
         // 
-        // FindTFHFolder
+        // SelectFolder
         // 
-        FindTFHFolder.Description = "Select Installation Folder of Them's Fightin' Herds";
-        FindTFHFolder.RootFolder = Environment.SpecialFolder.MyComputer;
+        SelectFolder.RootFolder = Environment.SpecialFolder.MyComputer;
         // 
         // MenuBar
         // 
@@ -65,7 +77,7 @@ partial class MainForm
         MenuBar.Name = "MenuBar";
         MenuBar.Size = new Size(700, 24);
         MenuBar.TabIndex = 0;
-        MenuBar.Text = "menuStrip1";
+        MenuBar.Text = "MenuBar";
         // 
         // MenuFile
         // 
@@ -74,32 +86,53 @@ partial class MainForm
         MenuFile.Size = new Size(37, 20);
         MenuFile.Text = "File";
         // 
+        // MenuFileInstallMod
+        // 
+        MenuFileInstallMod.DropDownItems.AddRange(new ToolStripItem[] { MenuInstallFromURL, MenuInstallFromFolder });
+        MenuFileInstallMod.Name = "MenuFileInstallMod";
+        MenuFileInstallMod.Size = new Size(180, 22);
+        MenuFileInstallMod.Text = "Install";
+        // 
+        // ContextInstallFromFolder
+        // 
+        ContextInstallFromFolder.Name = "ContextInstallFromFolder";
+        ContextInstallFromFolder.Size = new Size(180, 22);
+        ContextInstallFromFolder.Text = "From Folder";
+        ContextInstallFromFolder.Click += ContextInstallFromFolder_Click;
+        // 
+        // ContextInstallFromUrl
+        // 
+        ContextInstallFromUrl.Name = "ContextInstallFromUrl";
+        ContextInstallFromUrl.Size = new Size(180, 22);
+        ContextInstallFromUrl.Text = "From URL";
+        ContextInstallFromUrl.Click += ContextInstallFromURL_Click;
+        // 
         // MenuFileRefreshMods
         // 
         MenuFileRefreshMods.Name = "MenuFileRefreshMods";
         MenuFileRefreshMods.ShortcutKeys = Keys.Control | Keys.R;
-        MenuFileRefreshMods.Size = new Size(187, 22);
-        MenuFileRefreshMods.Text = "Refresh Mods";
+        MenuFileRefreshMods.Size = new Size(180, 22);
+        MenuFileRefreshMods.Text = "Refresh";
         MenuFileRefreshMods.Click += MenuFileRefreshMods_Click;
         // 
         // MenuFileApplyMods
         // 
         MenuFileApplyMods.Name = "MenuFileApplyMods";
         MenuFileApplyMods.ShortcutKeys = Keys.Control | Keys.S;
-        MenuFileApplyMods.Size = new Size(187, 22);
-        MenuFileApplyMods.Text = "Apply Mods";
+        MenuFileApplyMods.Size = new Size(180, 22);
+        MenuFileApplyMods.Text = "Apply";
         MenuFileApplyMods.Click += MenuFileApplyMods_Click;
         // 
         // MenuFileSeperator
         // 
         MenuFileSeperator.Name = "MenuFileSeperator";
-        MenuFileSeperator.Size = new Size(184, 6);
+        MenuFileSeperator.Size = new Size(177, 6);
         // 
         // MenuFileExit
         // 
         MenuFileExit.Name = "MenuFileExit";
         MenuFileExit.ShortcutKeys = Keys.Alt | Keys.F4;
-        MenuFileExit.Size = new Size(187, 22);
+        MenuFileExit.Size = new Size(180, 22);
         MenuFileExit.Text = "Exit";
         MenuFileExit.Click += MenuFileExit_Click;
         // 
@@ -114,20 +147,20 @@ partial class MainForm
         // 
         MenuToolsExtraction.Name = "MenuToolsExtraction";
         MenuToolsExtraction.ShortcutKeys = Keys.Control | Keys.E;
-        MenuToolsExtraction.Size = new Size(180, 22);
+        MenuToolsExtraction.Size = new Size(167, 22);
         MenuToolsExtraction.Text = "Extraction";
         MenuToolsExtraction.Click += MenuToolsExtraction_Click;
         // 
         // MenuToolsSeperator
         // 
         MenuToolsSeperator.Name = "MenuToolsSeperator";
-        MenuToolsSeperator.Size = new Size(177, 6);
+        MenuToolsSeperator.Size = new Size(164, 6);
         // 
         // MenuToolsConfigure
         // 
         MenuToolsConfigure.DropDownItems.AddRange(new ToolStripItem[] { MenuToolsConfigureTFHFolder });
         MenuToolsConfigure.Name = "MenuToolsConfigure";
-        MenuToolsConfigure.Size = new Size(180, 22);
+        MenuToolsConfigure.Size = new Size(167, 22);
         MenuToolsConfigure.Text = "Configure";
         // 
         // MenuToolsConfigureTFHFolder
@@ -140,7 +173,7 @@ partial class MainForm
         // MenuToolsRegisterScheme
         // 
         MenuToolsRegisterScheme.Name = "MenuToolsRegisterScheme";
-        MenuToolsRegisterScheme.Size = new Size(180, 22);
+        MenuToolsRegisterScheme.Size = new Size(167, 22);
         MenuToolsRegisterScheme.Text = "Register Scheme";
         MenuToolsRegisterScheme.Click += MenuToolsRegisterScheme_Click;
         // 
@@ -168,7 +201,7 @@ partial class MainForm
         // ModList
         // 
         ModList.FormattingEnabled = true;
-        ModList.Location = new Point(12, 27);
+        ModList.Location = new Point(18, 34);
         ModList.Name = "ModList";
         ModList.Size = new Size(220, 292);
         ModList.TabIndex = 1;
@@ -217,13 +250,61 @@ partial class MainForm
         ModDescriptionBox.TabIndex = 5;
         ModDescriptionBox.Visible = false;
         // 
-        // MenuFileInstallMod
+        // ModListContextMenu
         // 
-        MenuFileInstallMod.Name = "MenuFileInstallMod";
-        MenuFileInstallMod.ShortcutKeys = Keys.Control | Keys.I;
-        MenuFileInstallMod.Size = new Size(187, 22);
-        MenuFileInstallMod.Text = "Install Mod";
-        MenuFileInstallMod.Click += MenuFileInstallMod_Click;
+        ModListContextMenu.Items.AddRange(new ToolStripItem[] { MenuInstallMod, ContextUninstallMod, ContextVisitModPage });
+        ModListContextMenu.Name = "contextMenuStrip1";
+        ModListContextMenu.Size = new Size(154, 70);
+        // 
+        // MenuInstallMod
+        // 
+        MenuInstallMod.DropDownItems.AddRange(new ToolStripItem[] { ContextInstallFromFolder, ContextInstallFromUrl });
+        MenuInstallMod.Name = "MenuInstallMod";
+        MenuInstallMod.Size = new Size(153, 22);
+        MenuInstallMod.Text = "Install";
+        // 
+        // ContextUninstallMod
+        // 
+        ContextUninstallMod.Name = "ContextUninstallMod";
+        ContextUninstallMod.Size = new Size(153, 22);
+        ContextUninstallMod.Text = "Uninstall";
+        ContextUninstallMod.Click += UninstallMod_Click;
+        // 
+        // ContextVisitModPage
+        // 
+        ContextVisitModPage.Name = "ContextVisitModPage";
+        ContextVisitModPage.Size = new Size(153, 22);
+        ContextVisitModPage.Text = "Visit Mod Page";
+        ContextVisitModPage.Click += VisitModPage_Click;
+        // 
+        // ExtractionSelection
+        // 
+        ExtractionSelection.Filter = "TFHResource|*.tfhres|Reverge Package File|*.gfs|All files|*.*";
+        ExtractionSelection.Multiselect = true;
+        // 
+        // aToolStripMenuItem
+        // 
+        aToolStripMenuItem.Name = "aToolStripMenuItem";
+        aToolStripMenuItem.Size = new Size(32, 19);
+        // 
+        // aToolStripMenuItem1
+        // 
+        aToolStripMenuItem1.Name = "aToolStripMenuItem1";
+        aToolStripMenuItem1.Size = new Size(32, 19);
+        // 
+        // MenuInstallFromURL
+        // 
+        MenuInstallFromURL.Name = "MenuInstallFromURL";
+        MenuInstallFromURL.Size = new Size(180, 22);
+        MenuInstallFromURL.Text = "From URL";
+        MenuInstallFromURL.Click += MenuInstallFromURL_Click;
+        // 
+        // MenuInstallFromFolder
+        // 
+        MenuInstallFromFolder.Name = "MenuInstallFromFolder";
+        MenuInstallFromFolder.Size = new Size(180, 22);
+        MenuInstallFromFolder.Text = "From Folder";
+        MenuInstallFromFolder.Click += MenuInstallFromFolder_Click;
         // 
         // MainForm
         // 
@@ -245,13 +326,14 @@ partial class MainForm
         Text = "VelvetBeautifier";
         MenuBar.ResumeLayout(false);
         MenuBar.PerformLayout();
+        ModListContextMenu.ResumeLayout(false);
         ResumeLayout(false);
         PerformLayout();
     }
 
     #endregion
 
-    private FolderBrowserDialog FindTFHFolder;
+    private FolderBrowserDialog SelectFolder;
     private MenuStrip MenuBar;
     private ToolStripMenuItem MenuFile;
     private ToolStripMenuItem MenuFileExit;
@@ -273,4 +355,15 @@ partial class MainForm
     private ToolStripMenuItem MenuFileApplyMods;
     private ToolStripMenuItem MenuToolsRegisterScheme;
     private ToolStripMenuItem MenuFileInstallMod;
+    private ContextMenuStrip ModListContextMenu;
+    private ToolStripMenuItem ContextUninstallMod;
+    private ToolStripMenuItem MenuInstallMod;
+    private ToolStripMenuItem ContextVisitModPage;
+    private OpenFileDialog ExtractionSelection;
+    private ToolStripMenuItem ContextInstallFromFolder;
+    private ToolStripMenuItem ContextInstallFromUrl;
+    private ToolStripMenuItem aToolStripMenuItem;
+    private ToolStripMenuItem aToolStripMenuItem1;
+    private ToolStripMenuItem MenuInstallFromURL;
+    private ToolStripMenuItem MenuInstallFromFolder;
 }

@@ -1,4 +1,4 @@
-﻿namespace ThemModdingHerds.VelvetBeautifier;
+﻿namespace ThemModdingHerds.VelvetBeautifier.Forms;
 partial class AboutForm
 {
     /// <summary>
@@ -35,6 +35,7 @@ partial class AboutForm
         ByLabel = new Label();
         NightTheFoxLink = new LinkLabel();
         VelvetQuote = new Label();
+        VersionLabel = new Label();
         ((System.ComponentModel.ISupportInitialize)VelvetPicture).BeginInit();
         SuspendLayout();
         // 
@@ -112,11 +113,22 @@ partial class AboutForm
         VelvetQuote.TabIndex = 6;
         VelvetQuote.Text = "\"Want some more? Of course you do.\" - Velvet";
         // 
+        // VersionLabel
+        // 
+        VersionLabel.AutoSize = true;
+        VersionLabel.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        VersionLabel.Location = new Point(743, 12);
+        VersionLabel.Name = "VersionLabel";
+        VersionLabel.Size = new Size(37, 15);
+        VersionLabel.TabIndex = 7;
+        VersionLabel.Text = "v1.0.0";
+        // 
         // AboutForm
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(800, 450);
+        Controls.Add(VersionLabel);
         Controls.Add(VelvetQuote);
         Controls.Add(NightTheFoxLink);
         Controls.Add(ByLabel);
@@ -141,4 +153,5 @@ partial class AboutForm
     private Label ByLabel;
     private LinkLabel NightTheFoxLink;
     private Label VelvetQuote;
+    private Label VersionLabel;
 }

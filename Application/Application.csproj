@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFramework>net8.0-windows</TargetFramework>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <Nullable>enable</Nullable>
+      <AssemblyName>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
+      <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    </PropertyGroup>
+  
+    <ItemGroup>
+      <ProjectReference Include="..\Utilities\Utilities.csproj" />
+      <ProjectReference Include="..\Modding\Modding.csproj" />
+    </ItemGroup>
+  </Project>
+  

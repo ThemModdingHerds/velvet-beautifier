@@ -1,54 +1,54 @@
-﻿namespace ThemModdingHerds.VelvetBeautifier;
+﻿using ThemModdingHerds.VelvetBeautifier.Modding;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
+
+namespace ThemModdingHerds.VelvetBeautifier.Forms;
 public partial class DownloadForm : Form
 {
-    private string? GameBananaUrl { get; }
-    private string? UnzippedPath { get; }
-    private DownloadType DType {get;}
+    private MainForm MainForm {get => (MainForm?)ParentForm ?? throw new VelvetException("DownloadForm.MainForm","MainForm is null");}
+    private string? DownloadLink { get; }
+    private string? FolderPath { get; }
     private string ModName {get;}
     private string ModAuthor {get;}
     private string Description {get;}
-    public DownloadForm(GameBananaMod mod, string url)
+    public DownloadForm(GameBanana.Mod mod, string url)
     {
         ModName = mod.ModName;
         ModAuthor = mod.OwnerName;
         Description = mod.Body;
         InitializeComponent();
-        DType = DownloadType.GameBanana;
-        GameBananaUrl = url;
+        DownloadLink = url;
         Text = "Install " + mod.ModName + '?';
         ModNameLabel.Text = mod.ModName;
         ModAuthorLabel.Text = "by " + mod.OwnerName;
         ModDescriptionBox.Text = mod.Body;
     }
-    public DownloadForm(Mod mod, string unzippedpath)
+    public DownloadForm(Mod mod, string mod_path)
     {
         ModName = mod.Info.Name;
         ModAuthor = mod.Info.Author;
         Description = mod.Info.Description;
         InitializeComponent();
-        DType = DownloadType.ZipFile;
-        UnzippedPath = unzippedpath;
+        FolderPath = mod_path;
         Text = "Install " + mod.Info.Name + '?';
         ModNameLabel.Text = mod.Info.Name;
         ModAuthorLabel.Text = "by " + mod.Info.Author;
         ModDescriptionBox.Text = mod.Info.Description;
     }
-    public DownloadForm(GameBananaMod mod) : this(mod, mod.GetLatestUpdate().DownloadUrl)
+    public DownloadForm(string path): this(new Mod(path),path)
+    {
+
+    }
+    public DownloadForm(GameBanana.Mod mod) : this(mod, mod.GetLatestUpdate().DownloadUrl)
     {
 
     }
 
     private void InstallButton_Click(object sender, EventArgs e)
     {
-        switch(DType)
-        {
-            case DownloadType.GameBanana:
-                InstallGameBanana();
-                break;
-            case DownloadType.ZipFile:
-                InstallZipfile();
-                break;
-        }
+        if(DownloadLink != null)
+            InstallFromLink();
+        else if(FolderPath != null)
+            InstallFromFolder();
         Close();
     }
     private static bool ModCheck(string folder)
@@ -58,26 +58,24 @@ public partial class DownloadForm : Form
         Directory.Delete(folder,true);
         return false;
     }
-    private void InstallZipfile()
+    private void InstallFromFolder(string folder)
     {
-        string destFolder = Path.Combine(Config.Current.ModsFolder,ModName);
-        if(UnzippedPath == null) return;
-        if(!ModCheck(UnzippedPath)) return;
-        Utils.CopyFilesTo(UnzippedPath,destFolder);
-        Velvet.ShowMessageBox("Zip Mod has been downloaded and installed. You might have to refresh the mods list","Installed Zip Mod");
+        if(!ModCheck(folder)) return;
+        ModInfo info = ModInfo.Read(Path.Combine(folder,Mod.MODINFO_NAME));
+        string destFolder = Path.Combine(Application.Instance.ModDB.Folder,info.Id);
+        Utilities.IO.CopyFolder(folder,destFolder);
+        Velvet.ShowMessageBox("Mod has been installed!","Installed Mod");
+        MainForm.RefreshModList();
     }
-    private async void InstallGameBanana()
+    private void InstallFromFolder()
     {
-        if(GameBananaUrl == null) return;
-        string destFolder = Path.Combine(Config.Current.ModsFolder,ModName);
-        string unzippedpath = await DownloadManager.GetAndUnzip(GameBananaUrl);
-        if(!ModCheck(unzippedpath)) return;
-        Utils.CopyFilesTo(unzippedpath,destFolder);
-        Velvet.ShowMessageBox("GameBanana Mod has been downloaded and installed. You might have to refresh the mods list","Installed GameBanana Mod");
+        if(FolderPath == null) return;
+        InstallFromFolder(FolderPath);
     }
-}
-public enum DownloadType
-{
-    GameBanana,
-    ZipFile
+    private async void InstallFromLink()
+    {
+        if(DownloadLink == null) return;
+        string unzippedpath = await DownloadManager.GetAndUnzip(DownloadLink);
+        InstallFromFolder(unzippedpath);
+    }
 }

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+      <TargetFramework>net8.0-windows</TargetFramework>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <UseWindowsForms>true</UseWindowsForms>
+      <Nullable>enable</Nullable>
+      <AssemblyName>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
+      <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    </PropertyGroup>
+  
+    <ItemGroup>
+      <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />
+    </ItemGroup>
+</Project>
