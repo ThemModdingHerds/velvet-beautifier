@@ -1,13 +1,15 @@
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
-public static class IO
+public static class FileSystem
 {
-    public static List<string> GetAllFiles(string folder)
+    public static string ExecutableExtension {get => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";}
+    public static List<string> GetAllFiles(string folder,string filter = "*.*")
     {
         if(!Directory.Exists(folder))
             return [];
-        return [..Directory.EnumerateFiles(folder,"*.*",SearchOption.AllDirectories)];
+        return [..Directory.EnumerateFiles(folder,filter,SearchOption.AllDirectories)];
     }
     public static void CopyFolder(string source,string dest)
     {
@@ -24,7 +26,6 @@ public static class IO
         string filename = Path.GetFileName(path);
         string tempfile = Path.Combine(folder,filename);
         File.Copy(path,tempfile,true);
-        Velvet.ConsoleWriteLine("Created temp file from " + path + " to " + tempfile);
         return tempfile;
     }
     public static string CreateTempFile()
@@ -33,8 +34,11 @@ public static class IO
         string path = Guid.NewGuid().ToString();
         string tempfile = Path.Combine(folder,path);
         File.Create(tempfile).Close();
-        Velvet.ConsoleWriteLine("Created temp file from " + path + " to " + tempfile);
         return tempfile;
+    }
+    public static string CreateTempFolder()
+    {
+        return Directory.CreateTempSubdirectory().FullName;
     }
     public static string SafePath(string path)
     {
@@ -49,11 +53,15 @@ public static class IO
         {
             ZipFile.ExtractToDirectory(path,output);
         }
-        catch(Exception err)
+        catch(Exception)
         {
-            Velvet.ConsoleWriteLine(err.ToString());
             return false;
         }
         return true;
+    }
+    public static string? ExtractZip(string path)
+    {
+        string output = CreateTempFolder();
+        return ExtractZip(path,output) ? output : null;
     }
 }

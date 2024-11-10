@@ -5,6 +5,7 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Forms;
 public partial class MainForm : Form
 {
+    public Application App {get;} = new();
     private readonly AboutForm aboutForm = new();
     private readonly InstallForm installForm = new();
     public List<string> Argv = [];
@@ -21,7 +22,7 @@ public partial class MainForm : Form
 #if DEBUG
         Debug();
 #endif
-        Application.Instance.Config.Save();
+        App.Config.Save();
     }
     private void MenuFileExit_Click(object sender, EventArgs e) => Close();
     private void MenuToolsExtraction_Click(object sender, EventArgs e) => ExtractSelectedFiles();
@@ -33,9 +34,11 @@ public partial class MainForm : Form
     private void MenuHelpFI_Click(object sender, EventArgs e) => Url.OpenUrl("https://github.com/ThemModdingHerds/velvet-beautifier/issues/new/choose");
     private void MenuToolsConfigureTFHFolder_Click(object sender, EventArgs e) => SelectGameFolder();
     private void MenuFileRefreshMods_Click(object sender, EventArgs e) => RefreshModList();
-    private void ApplyButton_Click(object sender, EventArgs e) => Application.Instance.ModDB.Apply();
-    private void MenuFileApplyMods_Click(object sender, EventArgs e) => Application.Instance.ModDB.Apply();
+    private void ApplyButton_Click(object sender, EventArgs e) => Apply();
+    private void MenuFileApplyMods_Click(object sender, EventArgs e) => Apply();
     private void MenuToolsRegisterScheme_Click(object sender, EventArgs e) => Win32.CreateURIScheme();
+    private void UninstallMod_Click(object sender, EventArgs e) => UninstallSelectedMod();
+    private void ButtonUninstall_Click(object sender, EventArgs e) => UninstallSelectedMod();
     private void Debug()
     {
         ToolStripMenuItem debugItem = new()
@@ -49,23 +52,27 @@ public partial class MainForm : Form
         {
             Text = "Test GameBanana Link"
         };
-        gbTestItem.Click += async (object? sender, EventArgs e) => await GameBanana.Utils.ParseCommandLine("https://gamebanana.com/mmdl/1108527,Mod,50765");
+        gbTestItem.Click += async (object? sender, EventArgs e) => await GameBanana.Mod.Fetch(GameBanana.Utils.ParseArgument("https://gamebanana.com/mmdl/1108527,Mod,50765"));
         debugItem.DropDownItems.Add(gbTestItem);
+    }
+    private void Apply()
+    {
+
     }
     private void CheckForCorrectFolders()
     {
-        if (!Application.Instance.Config.ExistsGameFolder())
+        if (!App.Config.ExistsGameFolder())
         {
-            Velvet.ShowMessageBox("No Them's Fightin' Herds Folder found! Please select the folder", "Didn't find installation folder");
+            VelvetForms.ShowMessageBox("No Them's Fightin' Herds Folder found! Please select the folder", "Didn't find installation folder");
             SelectGameFolder();
         }
-        if (Application.Instance.Config.ExistsServerFolder())
+        if (App.Config.ExistsServerFolder())
         {
-            if (!Application.Instance.Server.IsServer())
+            if (!App.Server.IsServer())
             {
-                Velvet.ShowMessageBox("the server folder is invalid, no mods for the local server");
-                Application.Instance.Config.ServerPath = "";
-                Application.Instance.Config.Save();
+                VelvetForms.ShowMessageBox("the server folder is invalid, no mods for the local server");
+                App.Config.ServerPath = "";
+                App.Config.Save();
             }
         }
     }
@@ -75,35 +82,35 @@ public partial class MainForm : Form
         DialogResult result = SelectFolder.ShowDialog();
         if (result != DialogResult.OK)
         {
-            Velvet.ShowMessageBox("You need to select a folder, exiting...", "No folder selected");
+            VelvetForms.ShowMessageBox("You need to select a folder, exiting...", "No folder selected");
             Close();
             Environment.Exit(1);
         }
-        Application.Instance.Config.ClientPath = SelectFolder.SelectedPath;
-        if (!Application.Instance.Config.ExistsGameFolder() || !Application.Instance.Client.IsClient())
+        App.Config.ClientPath = SelectFolder.SelectedPath;
+        if (!App.Config.ExistsGameFolder() || !App.Client.IsClient())
         {
-            Velvet.ShowMessageBox("This folder you selected is invalid", "Invalid Folder");
-            Application.Instance.Config.ClientPath = "";
-            Application.Instance.Config.Save();
+            VelvetForms.ShowMessageBox("This folder you selected is invalid", "Invalid Folder");
+            App.Config.ClientPath = "";
+            App.Config.Save();
             Close();
             Environment.Exit(1);
         }
-        if (!Application.Instance.Client.ExistsTFHResourcesFolder() || !Application.Instance.Client.ExistsData01Folder())
+        if (!App.Client.ExistsTFHResourcesFolder() || !App.Client.ExistsData01Folder())
         {
-            Velvet.ShowMessageBox("The folder you've specified does not contain Them's Fightin' Herds assets", "Invalid TFH folder");
-            Application.Instance.Config.ClientPath = "";
-            Application.Instance.Config.Save();
+            VelvetForms.ShowMessageBox("The folder you've specified does not contain Them's Fightin' Herds assets", "Invalid TFH folder");
+            App.Config.ClientPath = "";
+            App.Config.Save();
             Close();
             Environment.Exit(1);
         }
-        Application.Instance.Config.Save();
+        App.Config.Save();
     }
     public void RefreshModList()
     {
-        Velvet.ConsoleWriteLine("Refreshing modlist...");
-        Application.Instance.ModDB.Refresh();
+        Velvet.Info("Refreshing modlist...");
+        App.ModDB.Refresh();
         ModList.Items.Clear();
-        foreach (Mod mod in Application.Instance.ModDB.Mods)
+        foreach (Mod mod in App.ModDB.Mods)
         {
             int index = ModList.Items.Add(mod.Info.Name);
             if (mod.Enabled)
@@ -113,13 +120,17 @@ public partial class MainForm : Form
     private void ModList_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (SelectedMod == null)
+        {
+            ButtonUninstall.Enabled = false;
             return;
+        }
 
         ModNameLabel.Visible = ModAuthorLabel.Visible = ModDescriptionBox.Visible = true;
 
         ModNameLabel.Text = SelectedMod.Info.Name;
         ModAuthorLabel.Text = "by " + SelectedMod.Info.Author;
         ModDescriptionBox.Text = SelectedMod.Info.Description;
+        ButtonUninstall.Enabled = true;
     }
     private Mod? GetModFromModList(int index)
     {
@@ -128,7 +139,7 @@ public partial class MainForm : Form
         if (modname_o == null)
             return null;
         string modname = (string)modname_o;
-        return Application.Instance.ModDB.FindModByName(modname);
+        return App.ModDB.FindModByName(modname);
     }
     private void ModList_ItemCheck(object sender, ItemCheckEventArgs e)
     {
@@ -153,7 +164,7 @@ public partial class MainForm : Form
             if (dirpath == null) return;
             string output = Path.Combine(dirpath, Path.GetFileNameWithoutExtension(file));
             if (file.EndsWith(".tfhres"))
-                TFHResourceUtils.Extract(file, output);
+                TFHResource.Utils.Extract(file, output);
             if (file.EndsWith(".gfs"))
                 GFS.Utils.Extract(file, output);
         }
@@ -165,40 +176,41 @@ public partial class MainForm : Form
         if (result != DialogResult.OK) return;
         if (!Mod.IsMod(SelectFolder.SelectedPath))
         {
-            Velvet.ShowMessageBox("This folder is not a valid mod", "Invalid Mod Folder");
+            VelvetForms.ShowMessageBox("This folder is not a valid mod", "Invalid Mod Folder");
             return;
         }
         new DownloadForm(SelectFolder.SelectedPath).ShowDialog(Owner);
     }
-    private void UninstallMod_Click(object sender, EventArgs e)
+    private void UninstallSelectedMod()
     {
         if (SelectedMod == null)
         {
-            Velvet.ShowMessageBox("You need to select a mod first");
+            VelvetForms.ShowMessageBox("You need to select a mod first");
             return;
         }
-        DialogResult result = Velvet.ShowMessageBox("Are you sure you want to uninstall " + SelectedMod.Info.Name + "?", "Uninstall " + SelectedMod.Info.Name + "?", MessageBoxButtons.YesNo);
+        DialogResult result = VelvetForms.ShowMessageBox("Are you sure you want to uninstall " + SelectedMod.Info.Name + "?", "Uninstall " + SelectedMod.Info.Name + "?", MessageBoxButtons.YesNo);
         if (result != DialogResult.Yes) return;
         Directory.Delete(SelectedMod.Folder, true);
-        Velvet.ShowMessageBox("Uninstalled mod!");
+        VelvetForms.ShowMessageBox("Uninstalled mod!");
         RefreshModList();
+        ButtonUninstall.Enabled = false;
     }
     private void VisitModPage_Click(object sender, EventArgs e)
     {
         if (SelectedMod == null)
         {
-            Velvet.ShowMessageBox("You need to select a mod first");
+            VelvetForms.ShowMessageBox("You need to select a mod first");
             return;
         }
         string? url = SelectedMod.Info.Url;
         if (url == null)
         {
-            Velvet.ShowMessageBox("This mod has no link assigned!");
+            VelvetForms.ShowMessageBox("This mod has no link assigned!");
             return;
         }
         if (!Url.IsUrl(url))
         {
-            Velvet.ShowMessageBox("The url assigned to this mod is invalid. You should contact the mod creator to fix it!");
+            VelvetForms.ShowMessageBox("The url assigned to this mod is invalid. You should contact the mod creator to fix it!");
             return;
         }
         Url.OpenUrl(url);

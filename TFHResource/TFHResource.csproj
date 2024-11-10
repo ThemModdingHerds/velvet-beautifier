@@ -1,18 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <TargetFramework>net8.0-windows</TargetFramework>
+      <TargetFramework>net8.0</TargetFramework>
       <ImplicitUsings>enable</ImplicitUsings>
       <Nullable>enable</Nullable>
       <AssemblyName>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
       <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="ThemModdingHerds.TFHRES" Version="1.1.1" />
+      <PackageReference Include="ThemModdingHerds.TFHRES" Version="1.4.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Utilities\Utilities.csproj" />
-      <ProjectReference Include="..\Patching\Patching.csproj" />
     </ItemGroup>
   </Project>
   

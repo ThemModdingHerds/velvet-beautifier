@@ -24,7 +24,7 @@ public partial class InstallForm : Form
             GameBanana.Mod? gb_mod = await GameBanana.Mod.Fetch(GameBanana.Utils.GetModId(url));
             if(gb_mod == null)
             {
-                Velvet.ShowMessageBox("Couldn't fetch " + url);
+                VelvetForms.ShowMessageBox("Couldn't fetch " + url);
                 Close();
                 return;
             }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <TargetFramework>net8.0-windows</TargetFramework>
+      <TargetFramework>net8.0</TargetFramework>
       <ImplicitUsings>enable</ImplicitUsings>
       <Nullable>enable</Nullable>
       <AssemblyName>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
@@ -11,6 +11,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Utilities\Utilities.csproj" />
       <ProjectReference Include="..\Modding\Modding.csproj" />
+      <ProjectReference Include="..\GameBanana\GameBanana.csproj" />
     </ItemGroup>
   </Project>
   

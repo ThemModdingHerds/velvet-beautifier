@@ -13,13 +13,8 @@ public class Config
     public static Config Read(string path)
     {
         if(!File.Exists(path))
-        {
-            Velvet.ConsoleWriteLine("Config does not exist, creating one...");
             Create(path);
-        }
-        Config? config = JsonSerializer.Deserialize<Config>(File.ReadAllText(path)) ?? throw new VelvetException("Config.Read","couldn't read config file");
-        Velvet.ConsoleWriteLine("Read Config at " + path);
-        return config;
+        return JsonSerializer.Deserialize<Config>(File.ReadAllText(path)) ?? throw new VelvetException("Config.Read","couldn't read config file");
     }
     public static Config Read()
     {
@@ -31,7 +26,6 @@ public class Config
     }
     public static void Write(string path,Config config)
     {
-        Velvet.ConsoleWriteLine("Writing config to " + path);
         StreamWriter file = File.CreateText(path);
         string json = JsonSerializer.Serialize(config);
         file.Write(json);

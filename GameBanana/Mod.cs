@@ -15,6 +15,7 @@ public class Mod
     public string Body {get;set;} = "";
     [JsonPropertyName("Files().aFiles()")]
     public Dictionary<string,ModFile> Files {get;set;} = [];
+    public static async Task<Mod?> Fetch(Argument argument) => await Fetch(argument.Id);
     public static async Task<Mod?> Fetch(int id)
     {
         string url = Utils.CreateCoreItemDataRequestUrl("Mod",id,[
@@ -35,5 +36,9 @@ public class Mod
                 newest = file;
         }
         return newest;
+    }
+    public async Task<string> DownloadLatestUpdate()
+    {
+        return await DownloadManager.GetAndUnzip(GetLatestUpdate().DownloadUrl);
     }
 }

@@ -1,8 +1,9 @@
+using System.Text.RegularExpressions;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GameBanana;
-public static class Utils
+public static partial class Utils
 {
-    public static async Task<Mod?> ParseCommandLine(string line)
+    public static Argument ParseArgument(string line)
     {
         string[] args = line.Split(",");
         // 0. url
@@ -11,20 +12,39 @@ public static class Utils
         try
         {
             string url = args[0];
+            string itemtype = args[1];
             int id = int.Parse(args[2]);
-            return await Mod.Fetch(id) ?? throw new Exception("Couldn't fetch mod");
+            return new Argument()
+            {
+                Link = url,
+                ItemType = itemtype,
+                Id = id
+            };
         }
         catch(Exception err)
         {
-            throw new VelvetException("GameBanana.HandleCommandLine",err.ToString());
+            throw new VelvetException("GameBanana.ParseArgument",err.ToString());
+        }
+    }
+    public static bool HasArgument(string line)
+    {
+        try
+        {
+            ParseArgument(line);
+            return true;
+        }
+        catch(Exception)
+        {
+            return false;
         }
     }
     public static bool ValidUrl(string url)
     {
-        return url.StartsWith("http://gamebanana.com") ||
-                url.StartsWith("https://gamebanana.com") ||
-                url.StartsWith("http://www.gamebanana.com") ||
-                url.StartsWith("https://www.gamebanana.com");
+        return GameBananaURL().IsMatch(url);
+        //return url.StartsWith("http://gamebanana.com") ||
+        //        url.StartsWith("https://gamebanana.com") ||
+        //        url.StartsWith("http://www.gamebanana.com") ||
+        //        url.StartsWith("https://www.gamebanana.com");
     }
     public static int GetModId(string url)
     {
@@ -44,4 +64,7 @@ public static class Utils
         string field = string.Join(',',fields);
         return $"https://api.gamebanana.com/Core/Item/Data?itemtype={itemtype}&itemid={id}&fields={field}&format=json&return_keys=true";
     }
+
+    [GeneratedRegex(@"/^(https?:\/\/)?(www\.)?gamebanana\.com.*$/gm")]
+    private static partial Regex GameBananaURL();
 }

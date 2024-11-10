@@ -21,12 +21,10 @@ class Program
     [STAThread]
     static void Main(string[] argv)
     {
-        Win32.AttachConsole(-1);
-
-        Velvet.ConsoleWriteLine("Loading ApplicationConfiguration...");
+        Velvet.Info("Loading ApplicationConfiguration...");
         ApplicationConfiguration.Initialize();
 
-        Velvet.ConsoleWriteLine("Starting App...");
+        Velvet.Info("Starting App...");
         FApplication.Run(new MainForm()
         {
             Argv = [..argv]

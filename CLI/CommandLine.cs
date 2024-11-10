@@ -1,14 +1,34 @@
-namespace ThemModdingHerds.VelvetBeautifier;
-public class CommandLine(string[] argv)
+namespace ThemModdingHerds.VelvetBeautifier.CLI;
+public static class CommandLine
 {
-    public List<string> Argv {get;} = [..argv];
-    public bool Has(string arg)
+    private static bool IsArg(string arg)
     {
-        return Argv.Contains("--" + arg) || Argv.Contains('-' + arg[0].ToString());
+        return arg.StartsWith("--");
     }
-    public string? Get(string arg)
+    public static Dictionary<string,string> Generate(string[] argv)
     {
-        if(!Has(arg)) return null;
-        return Argv[Argv.IndexOf(arg)+1];
+        Dictionary<string,string> dict = [];
+        for(long i = 0;i < argv.LongLength;i++)
+        {
+            string arg = argv[i];
+            if(IsArg(arg))
+            {
+                string key = arg[2..];
+                string value = "";
+                long next = i + 1;
+                if(next < argv.LongLength && !IsArg(argv[next]))
+                {
+                    value = argv[next];
+                    i = next;
+                }
+                if(dict.ContainsKey("key"))
+                {
+                    dict[key] = value;
+                    continue;
+                }
+                dict.Add(key,value);
+            }
+        }
+        return dict;
     }
 }

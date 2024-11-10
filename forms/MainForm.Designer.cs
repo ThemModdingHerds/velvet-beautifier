@@ -33,8 +33,8 @@ partial class MainForm
         MenuBar = new MenuStrip();
         MenuFile = new ToolStripMenuItem();
         MenuFileInstallMod = new ToolStripMenuItem();
-        ContextInstallFromFolder = new ToolStripMenuItem();
-        ContextInstallFromUrl = new ToolStripMenuItem();
+        MenuInstallFromURL = new ToolStripMenuItem();
+        MenuInstallFromFolder = new ToolStripMenuItem();
         MenuFileRefreshMods = new ToolStripMenuItem();
         MenuFileApplyMods = new ToolStripMenuItem();
         MenuFileSeperator = new ToolStripSeparator();
@@ -48,6 +48,8 @@ partial class MainForm
         MenuHelp = new ToolStripMenuItem();
         MenuHelpFI = new ToolStripMenuItem();
         MenuHelpAbout = new ToolStripMenuItem();
+        ContextInstallFromFolder = new ToolStripMenuItem();
+        ContextInstallFromUrl = new ToolStripMenuItem();
         ModList = new CheckedListBox();
         ApplyButton = new Button();
         ModNameLabel = new Label();
@@ -60,8 +62,7 @@ partial class MainForm
         ExtractionSelection = new OpenFileDialog();
         aToolStripMenuItem = new ToolStripMenuItem();
         aToolStripMenuItem1 = new ToolStripMenuItem();
-        MenuInstallFromURL = new ToolStripMenuItem();
-        MenuInstallFromFolder = new ToolStripMenuItem();
+        ButtonUninstall = new Button();
         MenuBar.SuspendLayout();
         ModListContextMenu.SuspendLayout();
         SuspendLayout();
@@ -90,28 +91,28 @@ partial class MainForm
         // 
         MenuFileInstallMod.DropDownItems.AddRange(new ToolStripItem[] { MenuInstallFromURL, MenuInstallFromFolder });
         MenuFileInstallMod.Name = "MenuFileInstallMod";
-        MenuFileInstallMod.Size = new Size(180, 22);
+        MenuFileInstallMod.Size = new Size(154, 22);
         MenuFileInstallMod.Text = "Install";
         // 
-        // ContextInstallFromFolder
+        // MenuInstallFromURL
         // 
-        ContextInstallFromFolder.Name = "ContextInstallFromFolder";
-        ContextInstallFromFolder.Size = new Size(180, 22);
-        ContextInstallFromFolder.Text = "From Folder";
-        ContextInstallFromFolder.Click += ContextInstallFromFolder_Click;
+        MenuInstallFromURL.Name = "MenuInstallFromURL";
+        MenuInstallFromURL.Size = new Size(138, 22);
+        MenuInstallFromURL.Text = "From URL";
+        MenuInstallFromURL.Click += MenuInstallFromURL_Click;
         // 
-        // ContextInstallFromUrl
+        // MenuInstallFromFolder
         // 
-        ContextInstallFromUrl.Name = "ContextInstallFromUrl";
-        ContextInstallFromUrl.Size = new Size(180, 22);
-        ContextInstallFromUrl.Text = "From URL";
-        ContextInstallFromUrl.Click += ContextInstallFromURL_Click;
+        MenuInstallFromFolder.Name = "MenuInstallFromFolder";
+        MenuInstallFromFolder.Size = new Size(138, 22);
+        MenuInstallFromFolder.Text = "From Folder";
+        MenuInstallFromFolder.Click += MenuInstallFromFolder_Click;
         // 
         // MenuFileRefreshMods
         // 
         MenuFileRefreshMods.Name = "MenuFileRefreshMods";
         MenuFileRefreshMods.ShortcutKeys = Keys.Control | Keys.R;
-        MenuFileRefreshMods.Size = new Size(180, 22);
+        MenuFileRefreshMods.Size = new Size(154, 22);
         MenuFileRefreshMods.Text = "Refresh";
         MenuFileRefreshMods.Click += MenuFileRefreshMods_Click;
         // 
@@ -119,20 +120,20 @@ partial class MainForm
         // 
         MenuFileApplyMods.Name = "MenuFileApplyMods";
         MenuFileApplyMods.ShortcutKeys = Keys.Control | Keys.S;
-        MenuFileApplyMods.Size = new Size(180, 22);
+        MenuFileApplyMods.Size = new Size(154, 22);
         MenuFileApplyMods.Text = "Apply";
         MenuFileApplyMods.Click += MenuFileApplyMods_Click;
         // 
         // MenuFileSeperator
         // 
         MenuFileSeperator.Name = "MenuFileSeperator";
-        MenuFileSeperator.Size = new Size(177, 6);
+        MenuFileSeperator.Size = new Size(151, 6);
         // 
         // MenuFileExit
         // 
         MenuFileExit.Name = "MenuFileExit";
         MenuFileExit.ShortcutKeys = Keys.Alt | Keys.F4;
-        MenuFileExit.Size = new Size(180, 22);
+        MenuFileExit.Size = new Size(154, 22);
         MenuFileExit.Text = "Exit";
         MenuFileExit.Click += MenuFileExit_Click;
         // 
@@ -198,6 +199,20 @@ partial class MainForm
         MenuHelpAbout.Text = "About";
         MenuHelpAbout.Click += MenuHelpAbout_Click;
         // 
+        // ContextInstallFromFolder
+        // 
+        ContextInstallFromFolder.Name = "ContextInstallFromFolder";
+        ContextInstallFromFolder.Size = new Size(138, 22);
+        ContextInstallFromFolder.Text = "From Folder";
+        ContextInstallFromFolder.Click += ContextInstallFromFolder_Click;
+        // 
+        // ContextInstallFromUrl
+        // 
+        ContextInstallFromUrl.Name = "ContextInstallFromUrl";
+        ContextInstallFromUrl.Size = new Size(138, 22);
+        ContextInstallFromUrl.Text = "From URL";
+        ContextInstallFromUrl.Click += ContextInstallFromURL_Click;
+        // 
         // ModList
         // 
         ModList.FormattingEnabled = true;
@@ -210,7 +225,7 @@ partial class MainForm
         // 
         // ApplyButton
         // 
-        ApplyButton.Location = new Point(238, 296);
+        ApplyButton.Location = new Point(244, 296);
         ApplyButton.Name = "ApplyButton";
         ApplyButton.Size = new Size(75, 23);
         ApplyButton.TabIndex = 2;
@@ -292,19 +307,16 @@ partial class MainForm
         aToolStripMenuItem1.Name = "aToolStripMenuItem1";
         aToolStripMenuItem1.Size = new Size(32, 19);
         // 
-        // MenuInstallFromURL
+        // ButtonUninstall
         // 
-        MenuInstallFromURL.Name = "MenuInstallFromURL";
-        MenuInstallFromURL.Size = new Size(180, 22);
-        MenuInstallFromURL.Text = "From URL";
-        MenuInstallFromURL.Click += MenuInstallFromURL_Click;
-        // 
-        // MenuInstallFromFolder
-        // 
-        MenuInstallFromFolder.Name = "MenuInstallFromFolder";
-        MenuInstallFromFolder.Size = new Size(180, 22);
-        MenuInstallFromFolder.Text = "From Folder";
-        MenuInstallFromFolder.Click += MenuInstallFromFolder_Click;
+        ButtonUninstall.Enabled = false;
+        ButtonUninstall.Location = new Point(325, 296);
+        ButtonUninstall.Name = "ButtonUninstall";
+        ButtonUninstall.Size = new Size(75, 23);
+        ButtonUninstall.TabIndex = 6;
+        ButtonUninstall.Text = "Uninstall";
+        ButtonUninstall.UseVisualStyleBackColor = true;
+        ButtonUninstall.Click += ButtonUninstall_Click;
         // 
         // MainForm
         // 
@@ -313,6 +325,7 @@ partial class MainForm
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(700, 338);
+        Controls.Add(ButtonUninstall);
         Controls.Add(ModDescriptionBox);
         Controls.Add(ModAuthorLabel);
         Controls.Add(ModNameLabel);
@@ -366,4 +379,5 @@ partial class MainForm
     private ToolStripMenuItem aToolStripMenuItem1;
     private ToolStripMenuItem MenuInstallFromURL;
     private ToolStripMenuItem MenuInstallFromFolder;
+    private Button ButtonUninstall;
 }

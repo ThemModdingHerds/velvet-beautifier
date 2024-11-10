@@ -1,24 +1,28 @@
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Game(string folder,string name)
 {
-    public static readonly string CLIENT_NAME = "Them's Fightin' Herds";
-    public static readonly string SERVER_NAME = "LobbyExe";
+    public const string CLIENT_NAME = "Them's Fightin' Herds";
+    public const string SERVER_NAME = "LobbyExe";
     public string Folder {get;} = folder;
     public string Name {get;} = name;
-    public string Executable {get;} = Path.Combine(folder,name);
+    public string Executable {get;} = Path.Combine(folder,name + FileSystem.ExecutableExtension);
     public static string? FindGamePath()
     {
-        string path;
-        List<string> games;
-        games = Steam.GetGames();
-        path = games.Where((gpath) => gpath.EndsWith(CLIENT_NAME)).ToArray()[0];
-        if(Directory.Exists(path))
-            return path;
+        List<string> steam = Steam.GetGames();
+        if(steam.Count > 0)
+        {
+            string steampath = steam.Where((gpath) => gpath.EndsWith(CLIENT_NAME)).ToArray()[0];
+            if(Directory.Exists(steampath))
+                return steampath;
+        }
 
-        games = EpicGames.GetGames();
-        path = games.Where((gpath) => gpath.EndsWith(CLIENT_NAME)).ToArray()[0];
-        if(Directory.Exists(path))
-            return path;
+        List<string> epicgames = EpicGames.GetGames();
+        if(epicgames.Count > 0)
+        {
+            string epicpath = epicgames.Where((gpath) => gpath.EndsWith(CLIENT_NAME)).ToArray()[0];
+            if(Directory.Exists(epicpath))
+                return epicpath;
+        }
         return null;
     }
     public static Game? FindClient()
@@ -29,7 +33,12 @@ public class Game(string folder,string name)
     }
     public bool Valid()
     {
-        return (!IsClient() || ExistsData01Folder()) && ExistsExecutable() && ExistsTFHResourcesFolder();
+        bool flag = ExistsExecutable();
+        if(IsClient())
+            flag = ExistsData01Folder() && ExistsTFHResourcesFolder();
+        if(IsServer())
+            flag = ExistsTFHResourcesFolder();
+        return flag;
     }
     public bool IsClient()
     {
@@ -43,24 +52,10 @@ public class Game(string folder,string name)
     {
         return Path.Combine(Folder,"Scripts","src","Farm","resources");
     }
-    public bool VerifyTFHResource(string resource,string hash)
-    {
-        if(!GameFiles.TFHResources.Contains(resource)) return false;
-        string path = Path.Combine(GetTFHResourcesFolder(),resource);
-        if(!File.Exists(path)) return false;
-        return Crypto.Checksum(path,hash);
-    }
     public bool ExistsTFHResourcesFolder() => Directory.Exists(GetTFHResourcesFolder());
     public string GetData01Folder()
     {
         return Path.Combine(Folder,"data01");
-    }
-    public bool VerifyData01(string gfsfile,string hash)
-    {
-        if(!GameFiles.Data01.Contains(gfsfile)) return false;
-        string path = Path.Combine(GetData01Folder(),gfsfile);
-        if(!File.Exists(path)) return false;
-        return Crypto.Checksum(path,hash);
     }
     public bool ExistsData01Folder() => Directory.Exists(GetData01Folder());
     public bool ExistsExecutable() => File.Exists(Executable);

@@ -1,17 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <RootNamespace>ThemModdingHerds.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <AssemblyName>VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Modding\Modding.csproj" />
+    <ProjectReference Include="..\TFHResource\TFHResource.csproj" />
+    <ProjectReference Include="..\GFS\GFS.csproj" />
+    <ProjectReference Include="..\GameBanana\GameBanana.csproj" />
   </ItemGroup>
 </Project>

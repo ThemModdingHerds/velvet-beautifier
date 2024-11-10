@@ -1,30 +1,38 @@
+using System.Runtime.InteropServices;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
-using Microsoft.Win32;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class Steam
 {
-    public static string GetInstallPath()
+    public const string REGISTRY_KEY32 = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Valve\\Steam";
+    public const string REGISTRY_KEY64 = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Valve\\Steam";
+    public const string DEFAULT_PATH = "C:\\Program Files (x86)\\Steam";
+    public static string? GetInstallPath()
     {
-        string x32 = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Valve\\Steam";
-        string x64 = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Valve\\Steam";
-        string defaultPath = "C:\\Program Files (x86)\\Steam";
-        string regPath = Environment.Is64BitOperatingSystem ? x64 : x32;
-        string path = (string?)Registry.GetValue(regPath,"InstallPath",defaultPath) ?? defaultPath;
-        if(!Directory.Exists(path)) throw new VelvetException("Steam.GetInstallPath","Invalid folder: " + path);
-        return path;
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string regPath = Environment.Is64BitOperatingSystem ? REGISTRY_KEY64 : REGISTRY_KEY32;
+            string path = (string?)Microsoft.Win32.Registry.GetValue(regPath,"InstallPath",DEFAULT_PATH) ?? DEFAULT_PATH;
+            if(!Directory.Exists(path)) return null;
+            return path;
+        }
+        return null;
     }
-    public static string GetLibraryFoldersConfigPath()
+    public static string? GetLibraryFoldersConfigPath()
     {
-        string path = Path.Combine(GetInstallPath(),"config","libraryfolders.vdf");
-        if(!File.Exists(path)) throw new VelvetException("Steam.GetLibraryFoldersConfigPath","Invalid file: " + path);
+        string? install = GetInstallPath();
+        if(install == null) return null;
+        string path = Path.Combine(install,"config","libraryfolders.vdf");
+        if(!File.Exists(path)) return null;
         return path;
     }
     public static List<string> GetLibraryFolders()
     {
         List<string> folders = [];
-        VProperty vdf = VdfConvert.Deserialize(File.ReadAllText(GetLibraryFoldersConfigPath())) ?? throw new VelvetException("Steam.GetLibraryFolders","Couldn't get \"ibraryfolders.vdf\" from Steam folder");
+        string? libraryfoldersconfig = GetLibraryFoldersConfigPath();
+        if(libraryfoldersconfig == null) return folders;
+        VProperty vdf = VdfConvert.Deserialize(File.ReadAllText(libraryfoldersconfig));
         VToken libraryfolders = vdf.Value;
         foreach(VProperty property in libraryfolders.Cast<VProperty>())
         {
@@ -35,16 +43,18 @@ public static class Steam
         }
         return folders;
     }
-    public static string GetCommonSteamApps(string library)
+    public static string? GetCommonSteamApps(string library)
     {
-        if(!Directory.Exists(library)) throw new VelvetException("Steam.GetCommonSteamApps","Invalid folder: " + library);
+        if(!Directory.Exists(library)) return null;
         string path = Path.Combine(library,"steamapps","common");
-        if(!Directory.Exists(path)) throw new VelvetException("Steam.GetCommonSteamApps","Invalid folder: " + path);
+        if(!Directory.Exists(path)) return null;
         return path;
     }
     public static List<string> GetGames(string library)
     {
-        return [..Directory.EnumerateDirectories(GetCommonSteamApps(library))];
+        string? commonapps = GetCommonSteamApps(library);
+        if(commonapps == null) return [];
+        return [..Directory.EnumerateDirectories(commonapps)];
     }
     public static List<string> GetGames()
     {

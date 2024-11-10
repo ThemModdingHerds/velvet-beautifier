@@ -1,20 +1,26 @@
+using System.Runtime.InteropServices;
 using System.Text.Json;
-using Microsoft.Win32;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class EpicGames
 {
-    public static string GetManifestFolder()
+    public static string? GetManifestFolder()
     {
-        string defaultPath = "C:\\ProgramData\\Epic\\EpicGamesLauncher\\Data\\Manifests";
-        string keypath = "HKEY_CURRENT_USER\\Software\\Epic Games\\EOS";
-        string path = (string?)Registry.GetValue(keypath,"ModSdkMetadataDir",defaultPath) ?? defaultPath;
-        if(!Directory.Exists(path)) throw new VelvetException("EpicGames.GetManifestFolder","Invalid path: " + path);
-        return path;
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string defaultPath = "C:\\ProgramData\\Epic\\EpicGamesLauncher\\Data\\Manifests";
+            string keypath = "HKEY_CURRENT_USER\\Software\\Epic Games\\EOS";
+            string path = (string?)Microsoft.Win32.Registry.GetValue(keypath,"ModSdkMetadataDir",defaultPath) ?? defaultPath;
+            if(!Directory.Exists(path)) throw new VelvetException("EpicGames.GetManifestFolder","Invalid path: " + path);
+            return path;
+        }
+        return null;
     }
     public static List<string> GetManifests()
     {
-        return IO.GetAllFiles(GetManifestFolder());
+        string? manifest = GetManifestFolder();
+        if(manifest == null) return [];
+        return FileSystem.GetAllFiles(manifest);
     }
     public static List<string> GetGames()
     {

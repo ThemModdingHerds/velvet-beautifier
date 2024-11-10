@@ -1,35 +1,14 @@
-using System.Diagnostics;
-
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class Velvet
 {
-    private static bool IsDebug {get;} = false;
-    static Velvet()
-    {
-#if DEBUG
-        IsDebug = true;
-#endif
-    }
-    public static void ShowMessageBox(string text)
-    {
-        MessageBox.Show(Velvetify(text));
-        ConsoleWriteLine(text);
-    }
-    public static void ShowMessageBox(string text,string title)
-    {
-        MessageBox.Show(Velvetify(text),Velvetify(title));
-        ConsoleWriteLine(title + ": " + text);
-    }
-    public static DialogResult ShowMessageBox(string text,string title,MessageBoxButtons buttons)
-    {
-        DialogResult result = MessageBox.Show(Velvetify(text),Velvetify(title),buttons);
-        ConsoleWriteLine(title + ": " + text);
-        return result;
-    }
-    public static void ConsoleWriteLine(string text)
+    public const string NAME = "Velvet Beautifier";
+    public static void Info(string text)
     {
         Console.WriteLine(Velvetify(text));
-        Debug.WriteLineIf(IsDebug,Velvetify(text));
+    }
+    public static void Error(string text)
+    {
+        Console.Error.WriteLine(Velvetify(text));
     }
     public static string Velvetify(string input)
     {
@@ -41,10 +20,7 @@ public static class Velvet
         .Replace("TH","Z") : input;
     }
 }
-public class VelvetException : Exception
+public class VelvetException(string origin,string message) : Exception($"{origin}: {Velvet.Velvetify(message)}")
 {
-    public VelvetException(string origin,string message): base(origin + ": " + Velvet.Velvetify(message))
-    {
-        Velvet.ShowMessageBox(ToString());
-    }
+
 }

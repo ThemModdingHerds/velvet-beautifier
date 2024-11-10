@@ -4,8 +4,6 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class ModInfo
 {
-    [JsonIgnore]
-    public Mod? Mod {get;set;}
     [JsonPropertyName("id")]
     public string Id {get; set;} = "com.example.mod";
     [JsonPropertyName("name")]
@@ -16,8 +14,6 @@ public class ModInfo
     public string Description {get; set;} = "This is an Example Mod";
     [JsonPropertyName("version")]
     public string Version {get; set;} = "legacy";
-    [JsonPropertyName("depends")]
-    public Dictionary<string,string> Dependencies {get; set;} = [];
     [JsonPropertyName("url")]
     public string? Url {get; set;}
     public static ModInfo Read(string filepath)

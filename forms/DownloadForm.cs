@@ -54,7 +54,7 @@ public partial class DownloadForm : Form
     private static bool ModCheck(string folder)
     {
         if(Mod.IsMod(folder)) return true;
-        Velvet.ShowMessageBox("The mod you downloaded is not a valid mod","Invalid mod");
+        VelvetForms.ShowMessageBox("The mod you downloaded is not a valid mod","Invalid mod");
         Directory.Delete(folder,true);
         return false;
     }
@@ -62,9 +62,9 @@ public partial class DownloadForm : Form
     {
         if(!ModCheck(folder)) return;
         ModInfo info = ModInfo.Read(Path.Combine(folder,Mod.MODINFO_NAME));
-        string destFolder = Path.Combine(Application.Instance.ModDB.Folder,info.Id);
-        Utilities.IO.CopyFolder(folder,destFolder);
-        Velvet.ShowMessageBox("Mod has been installed!","Installed Mod");
+        string destFolder = Path.Combine(MainForm.App.ModDB.Folder,info.Id);
+        Utilities.FileSystem.CopyFolder(folder,destFolder);
+        VelvetForms.ShowMessageBox("Mod has been installed!","Installed Mod");
         MainForm.RefreshModList();
     }
     private void InstallFromFolder()

@@ -1,8 +1,9 @@
 using ThemModdingHerds.TFHResource;
+using ThemModdingHerds.TFHResource.Data;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.TFHResource;
-public static class TFHResourceUtils
+public static class Utils
 {
     public static void Extract(string db_path,string output)
     {
@@ -11,17 +12,17 @@ public static class TFHResourceUtils
         static string find_path(CachedImage image, List<CacheRecord> records)
         {
             foreach (CacheRecord record in records)
-                if (image.ShortName == record.ShortName)
+                if (image.Shortname == record.Shortname)
                     return fix_buckgit_path(record.SourcePath);
-            return fix_database_path(image.ShortName);
+            return fix_database_path(image.Shortname);
         }
-        TFHResourceFile db = new(db_path);
-        List<CacheRecord> records = db.GetEntries<CacheRecord>();
-        List<CachedImage> images = db.GetEntries<CachedImage>();
-        List<CachedTextfile> textfiles = db.GetEntries<CachedTextfile>();
-        List<InkBytecode> inkBytecodes = db.GetEntries<InkBytecode>();
-        List<JotBytecode> jotBytecodes = db.GetEntries<JotBytecode>();
-        List<LocalizedText> localizedTexts = db.GetEntries<LocalizedText>();
+        Database db = Database.Open(db_path);
+        List<CacheRecord> records = db.ReadCacheRecord();
+        List<CachedImage> images = db.ReadCachedImage();
+        List<CachedTextfile> textfiles = db.ReadCachedTextfile();
+        List<InkBytecode> inkBytecodes = db.ReadInkBytecode();
+        List<JotBytecode> jotBytecodes = db.ReadJotBytecode();
+        List<LocalizedText> localizedTexts = db.ReadLocalizedText();
         foreach(CachedImage image in images)
         {
             string filepath = Path.Combine(output,find_path(image,records));
@@ -49,7 +50,7 @@ public static class TFHResourceUtils
         }
         foreach(JotBytecode bytecode in jotBytecodes)
         {
-            string filepath = Path.Combine(output,"jot",IO.SafePath(bytecode.ShortName) + ".xml");
+            string filepath = Path.Combine(output,"jot",FileSystem.SafePath(bytecode.Shortname) + ".xml");
             string? dirpath = Path.GetDirectoryName(filepath);
             if(dirpath == null) continue;
             Directory.CreateDirectory(dirpath);
@@ -57,7 +58,7 @@ public static class TFHResourceUtils
         }
         foreach(LocalizedText text in localizedTexts)
         {
-            string filepath = Path.Combine(output,"lang",text.LanguageCode,fix_database_path(text.StoryFileDatabaseName));
+            string filepath = Path.Combine(output,"lang",text.Langcode,fix_database_path(text.StoryfileDbname));
             string? dirpath = Path.GetDirectoryName(filepath);
             if(dirpath == null) continue;
             Directory.CreateDirectory(dirpath);

@@ -2,25 +2,27 @@ using System.Text.Json;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class DownloadManager
 {
-    public static async Task<byte[]> Get(string url)
+    public static async Task<Stream> Get(string url)
     {
         HttpClient client = new();
-        return await client.GetByteArrayAsync(url);
+        return await client.GetStreamAsync(url);
     }
     public static async Task Get(string url,string path)
     {
-        byte[] data = await Get(url);
-        await File.WriteAllBytesAsync(path,data);
+        Stream data = await Get(url);
+        FileStream file = File.OpenWrite(path);
+        await data.CopyToAsync(file);
+        file.Close();
     }
     public static async Task GetAndUnzip(string url,string path)
     {
-        string temp = IO.CreateTempFile();
+        string temp = FileSystem.CreateTempFile();
         await Get(url,temp);
-        IO.ExtractZip(temp,path);
+        FileSystem.ExtractZip(temp,path);
     }
     public static async Task<string> GetAndUnzip(string url)
     {
-        string temp = Directory.CreateTempSubdirectory().FullName;
+        string temp = FileSystem.CreateTempFolder();
         await GetAndUnzip(url,temp);
         return temp;
     }

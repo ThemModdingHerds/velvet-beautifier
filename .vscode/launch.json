@@ -3,9 +3,9 @@
     "configurations": [
         {
             "type": "dotnet",
-            "name": "Launch VelvetBeautifier",
+            "name": "Launch VelvetBeautifier (Client)",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/VelvetBeautifier.csproj",
+            "projectPath": "${workspaceFolder}/CLI/CLI.csproj",
             "preLaunchTask": "Build"
         }
     ]

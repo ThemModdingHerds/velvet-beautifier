@@ -23,7 +23,6 @@ public class BackupManager(string folder)
         if(!Directory.Exists(Folder))
             Directory.CreateDirectory(Folder);
         File.Copy(path,filepath,true);
-        Velvet.ConsoleWriteLine("made backup of " + path + " to " + filepath);
         return filepath;
     }
     public bool ExistsBackup(string path)
@@ -36,7 +35,6 @@ public class BackupManager(string folder)
             return;
         string filepath = GetBackupPath(path);
         File.Copy(filepath,path,true);
-        Velvet.ConsoleWriteLine("Reverted backup at " + filepath + " to " + path);
     }
     public void RevertFolder(string folder)
     {

@@ -8,43 +8,52 @@ Them's Fighting' Herds Mod Loader/Tool
 
 ## Features
 
-- extract `.tfhres` files
-- add/patch files to `.tfhres` files
+- extract/create `.tfhres`/`.gfs` files
+- easy way of modifying `.tfhres`/`.gfs` files
 
 ### Possible Features
 
-- custom GeoBox maps
-  - PixelLobbies
-  - Story Mode
 - custom Stages
+- custom Lobbies
+- custom Color palettes
 
 ### Planned features
 
-- `.gfs` extraction
-- GameBanana support?
-- modify existing files (patching)
+- GUI program
+- modding `.tfhres` a little bit easier
 
-## Mods
+## Usage
 
-### How does this load mods?
+### How do I use this?
 
-1. checks for folders in `mods` directory
-2. check if these folders have a `mod.json` file
+[Configurations (config.json)](CONFIG.md)  
+[The Command Line (VelvetBeautifier.CLI.exe)](./CLI.md)  
+The Graphical Userinterface does not exist yet
 
 ### How do I make mods?
 
 [here][guide-path]
 
+### How does this work?
+
+[here][process-path]
+
 ## Frequently asked questions
 
 Q: yo, you can add custom stages?  
-A: not yet, it is possible but I don't have the knowledge of how they work  
+A: yes but you'll have to modify the `worlds.ini` and other mods might cause a conflict but I will work on making some kind of sub manager for custom stages
 
 Q: when is the next update?  
 A: when I can work, I can't work 24/7  
 
 Q: can I modify base assets?  
-A: yes but only do it if required
+A: yes but I hope you know what you're doing
+
+Q: can I get banned for using this?  
+A: maybe if you're unlucky or stupid like me but of course this is against their TOS so yeah...
+
+Q: I modified a lobby but I am bugging out on servers
+A: you've only changed the lobby on your side, the server should also have the custom lobby installed
 
 ## Building
 
@@ -58,3 +67,4 @@ This tool is licensed under the [GPL-3.0 license][license-path]
 [icon-path]: ./assets/icon_small.ico
 [guide-path]: ./GUIDE.md
 [gamebanana-link]: https://gamebanana.com/tools/15674
+[process-path]: PROCESS.md
