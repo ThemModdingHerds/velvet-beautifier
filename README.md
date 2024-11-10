@@ -58,6 +58,9 @@ A: you've only changed the lobby on your side, the server should also have the c
 Q: I added a mod but nothing happenend after applying  
 A: Did you enable the mod?
 
+Q: What's the `backup` folder and why is it taking so much space?  
+A: these are backups of games files, required for modding the game, if there's one missing, then you'll have to redownload the game (it means you modified it already)
+
 ## Building
 
 You need the .NET 8.0 SDK and Visual Studio, open the solution and build. That's it
