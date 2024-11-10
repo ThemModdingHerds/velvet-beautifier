@@ -52,8 +52,11 @@ A: yes but I hope you know what you're doing
 Q: can I get banned for using this?  
 A: maybe if you're unlucky or stupid like me but of course this is against their TOS so yeah...
 
-Q: I modified a lobby but I am bugging out on servers
+Q: I modified a lobby but I am bugging out on servers  
 A: you've only changed the lobby on your side, the server should also have the custom lobby installed
+
+Q: I added a mod but nothing happenend after applying  
+A: Did you enable the mod?
 
 ## Building
 
