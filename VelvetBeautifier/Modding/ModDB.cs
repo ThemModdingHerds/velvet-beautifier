@@ -1,5 +1,3 @@
-using ThemModdingHerds.TFHResource;
-using ThemModdingHerds.VelvetBeautifier.TFHResource;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.Modding;

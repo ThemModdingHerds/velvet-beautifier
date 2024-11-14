@@ -1,4 +1,3 @@
-using System.Text;
 using ThemModdingHerds.GFS;
 using ThemModdingHerds.IO.Binary;
 

@@ -11,11 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Utilities\Utilities.csproj" />
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Modding\Modding.csproj" />
-    <ProjectReference Include="..\TFHResource\TFHResource.csproj" />
-    <ProjectReference Include="..\GFS\GFS.csproj" />
-    <ProjectReference Include="..\GameBanana\GameBanana.csproj" />
+    <ProjectReference Include="..\VelvetBeautifier\VelvetBeautifier.csproj" />
   </ItemGroup>
 </Project>

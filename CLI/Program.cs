@@ -1,6 +1,4 @@
-﻿using ThemModdingHerds.GFS;
-using ThemModdingHerds.IO.Binary;
-using ThemModdingHerds.VelvetBeautifier.Utilities;
+﻿using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.CLI;
 class Program

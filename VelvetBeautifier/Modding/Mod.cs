@@ -1,7 +1,5 @@
 using ThemModdingHerds.GFS;
-using ThemModdingHerds.IO.Binary;
 using ThemModdingHerds.TFHResource;
-using ThemModdingHerds.VelvetBeautifier.TFHResource;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class Mod

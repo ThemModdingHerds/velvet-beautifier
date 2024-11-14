@@ -4,10 +4,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
-    <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>ThemModdingHerds.VelvetBeautifier</AssemblyName>
+    <RootNamespace>ThemModdingHerds.VelvetBeautifier</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />
+    <PackageReference Include="ThemModdingHerds.TFHRES" Version="1.4.0" />
     <PackageReference Include="ThemModdingHerds.GFS" Version="2.1.1" />
+
   </ItemGroup>
 </Project>
