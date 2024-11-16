@@ -23,15 +23,15 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build/${{runner.os}} --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Create Archive
       run: |
         if [[ ${{runner.os}} == 'Windows' ]]; then
-          powershell Compress-Archive -Path ./build/**/* -DestinationPath VelvetBeautifier.${{runner.os}}.zip
+          powershell Compress-Archive -Path ./build/${{runner.os}}/**/* -DestinationPath VelvetBeautifier.${{runner.os}}.zip
         else
-          tar -czvf VelvetBeautifier.${{runner.os}}.tar.gz ./build/**/*
+          tar -czvf VelvetBeautifier.${{runner.os}}.tar.gz ./build/${{runner.os}}/**/*
         fi
     - name: Upload Build
       uses: actions/upload-artifact@v4
