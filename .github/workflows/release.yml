@@ -30,16 +30,9 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Create Archive
-      run: |
-        if [[ ${{runner.os}} == 'Windows' ]]; then
-          powershell Compress-Archive -Path ./build/${{runner.os}}/**/* -DestinationPath VelvetBeautifier.${{runner.os}}.zip
-        else
-          tar -czvf VelvetBeautifier.${{runner.os}}.tar.gz ./build/${{runner.os}}/**/*
-        fi
+      run: tar -czvf VelvetBeautifier.${{runner.os}}.zip ./build/${{runner.os}}/**/*
     - name: Upload Build
-      uses: actions/upload-artifact@v4
+      uses: softprops/action-gh-release@v2
       with:
         name: VelvetBeautifier.${{runner.os}}
-        path: |
-          VelvetBeautifier.${{runner.os}}.tar.gz
-          VelvetBeautifier.${{runner.os}}.zip
+        files: VelvetBeautifier.${{runner.os}}.zip
