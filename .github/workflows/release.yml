@@ -21,14 +21,13 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build/VelvetBeautifier.Linux --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
-        name: VelvetBeautifier.Linux
-        path: ./build/
+        path: ./build/VelvetBeautifier.Linux
   macos:
 
     runs-on: macos-latest
@@ -42,14 +41,13 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build/VelvetBeautifier.MacOS --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
-        name: VelvetBeautifier.MacOS
-        path: ./build/
+        path: ./build/VelvetBeautifier.MacOS/
   windows:
 
     runs-on: windows-latest
@@ -63,11 +61,10 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build/VelvetBeautifier.Windows --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
-        name: VelvetBeautifier.Windows
-        path: ./build/
+        path: ./build/VelvetBeautifier.Windows/
