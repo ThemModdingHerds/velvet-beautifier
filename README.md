@@ -2,8 +2,8 @@
 
 ![Icon](./assets/icon.png)
 
-![Build Workflow Status](https://img.shields.io/github/actions/workflow/status/ThemModdingHerds/velvet-beautifier/build.yml?label=Debug)
-![Release Workflow Status](https://img.shields.io/github/actions/workflow/status/ThemModdingHerds/velvet-beautifier/release.yml?label=Release)
+[![Build (Debug)](https://github.com/ThemModdingHerds/velvet-beautifier/actions/workflows/build.yml/badge.svg)](https://github.com/ThemModdingHerds/velvet-beautifier/actions/workflows/build.yml)
+[![Build (Release)](https://github.com/ThemModdingHerds/velvet-beautifier/actions/workflows/release.yml/badge.svg)](https://github.com/ThemModdingHerds/velvet-beautifier/actions/workflows/release.yml)
 ![GitHub License](https://img.shields.io/github/license/ThemModdingHerds/velvet-beautifier)
 
 Mod Loader/Tool for Z-Engine games
