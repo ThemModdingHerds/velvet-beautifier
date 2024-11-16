@@ -7,13 +7,13 @@ public static class Steam
 {
     public const string REGISTRY_KEY32 = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Valve\\Steam";
     public const string REGISTRY_KEY64 = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Valve\\Steam";
-    public const string DEFAULT_PATH = "C:\\Program Files (x86)\\Steam";
+    public const string WINDOWS_DEFAULT_PATH = "C:\\Program Files (x86)\\Steam";
     public static string? GetInstallPath()
     {
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             string regPath = Environment.Is64BitOperatingSystem ? REGISTRY_KEY64 : REGISTRY_KEY32;
-            string path = (string?)Microsoft.Win32.Registry.GetValue(regPath,"InstallPath",DEFAULT_PATH) ?? DEFAULT_PATH;
+            string path = (string?)Microsoft.Win32.Registry.GetValue(regPath,"InstallPath",WINDOWS_DEFAULT_PATH) ?? WINDOWS_DEFAULT_PATH;
             if(!Directory.Exists(path)) return null;
             return path;
         }

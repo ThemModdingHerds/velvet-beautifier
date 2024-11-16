@@ -8,7 +8,38 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <AssemblyName>VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
+    <Title>Velvet Beautifier Command Line Interface</Title>
+    <Authors>N1ghtTheF0x</Authors>
+    <Company>Them's Modding Herds</Company>
+    <Product>Velvet Beautifier Command Line Interface</Product>
+    <Description>Mod Loader/Tool for Z-Engine games</Description>
+    <PackageProjectUrl>https://github.com/ThemModdingHerds/</PackageProjectUrl>
+    <PackageIcon>icon_small.png</PackageIcon>
+    <PackageReadmeFile>CLI.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ThemModdingHerds/velvet-beautifier</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Assets\icon_small.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\CLI.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VelvetBeautifier\VelvetBeautifier.csproj" />

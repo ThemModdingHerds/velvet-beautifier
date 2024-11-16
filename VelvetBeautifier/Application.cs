@@ -11,13 +11,16 @@ public class Application
     public const string CONFIG_NAME = "config.json";
     public const string MODS_NAME = "mods";
     public const string BACKUP_NAME = "backup";
+    public CommandLine CommandLine {get;}
     public Config Config {get;}
     public ModDB ModDB {get;}
     public BackupManager BackupManager {get;}
     public Game Client {get;}
     public Game Server {get;}
-    public Application()
+    public Application(string[] argv)
     {
+        CommandLine = new(this,argv);
+        Console.Title = Velvet.NAME;
         Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Z-Engine games");
 
         string config = Path.Combine(Dotnet.ExecutableFolder,CONFIG_NAME);
@@ -31,6 +34,28 @@ public class Application
 
         Client = new Game(Config.ClientPath,Game.CLIENT_NAME);
         Server = new Game(Config.ServerPath,Game.SERVER_NAME);
+    }
+    public async void HandleArguments(string[] argv)
+    {
+        if(argv.Length == 1)
+        {
+            if(Uri.TryCreate(argv[0],UriKind.Absolute,out Uri? uri))
+            {
+                string content = uri.AbsolutePath;
+                ModInstallResult result = ModInstallResult.Invalid;
+                if(Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
+                {
+                    result = await InstallMod(content);
+                }
+                else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
+                {
+                    result = await InstallMod(argument.Link);
+                }
+                Velvet.Info("you can close this window now...");
+                Console.ReadLine();
+                Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
+            }
+        }
     }
     public SetupResult Setup()
     {
@@ -212,7 +237,7 @@ public class Application
         string file = await mod.DownloadLatestUpdate();
         return await InstallMod(file);
     }
-    public async Task InstallGameBananaMod(GameBanana.Argument argument) => await InstallGameBananaMod(argument.Id);
+    public async Task InstallGameBananaMod(GameBanana.Argument argument) => await InstallGameBananaMod(argument.GetId());
     public async Task<ModInstallResult> InstallMod(string? str)
     {
         if(str == null) return ModInstallResult.Invalid;
@@ -236,10 +261,7 @@ public class Application
         if(File.Exists(path))
         {
             Velvet.Info($"installing Mod file from {path}...");
-            ModInstallResult result = InstallFolder(FileSystem.ExtractZip(path));
-            if(result == ModInstallResult.Invalid)
-                result = InstallFolder(GFS.Utils.Extract(path));
-            return result;
+            return InstallFolder(ArchiveUtils.ExtractArchive(path));
         }
         Velvet.Error($"couldn't install Mod from {str}");
         return ModInstallResult.Invalid;
@@ -262,7 +284,7 @@ public class Application
         info.Write(Path.Combine(path,Mod.MODINFO_NAME));
         Velvet.Info($"created Mod '{id}' at {path}");
     }
-    public static void CreateGFS(string? input,string? output)
+    public static void CreateRevergePackage(string? input,string? output)
     {
         if(input == null || output == null) return;
         string inputPath = Path.Combine(Environment.CurrentDirectory,input);
@@ -272,7 +294,7 @@ public class Application
         writer.Write(gfs);
         Velvet.Info($"created GFS at {outputPath}");
     }
-    public static void CreateTFHRES(string? output)
+    public static void CreateTFHResource(string? output)
     {
         if(output == null) return;
         string outputPath = Path.Combine(Environment.CurrentDirectory,output.EndsWith(".tfhres") ? output : $"{output}.tfhres");

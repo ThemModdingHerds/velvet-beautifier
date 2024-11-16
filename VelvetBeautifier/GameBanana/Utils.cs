@@ -3,34 +3,6 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GameBanana;
 public static partial class Utils
 {
-    public static Argument ParseArgument(string line)
-    {
-        string[] args = line.Split(",");
-        // 0. url
-        // 1. itemtype
-        // 2. id
-        string url = args[0];
-        string itemtype = args[1];
-        int id = int.Parse(args[2]);
-        return new Argument()
-        {
-            Link = url,
-            ItemType = itemtype,
-            Id = id
-        };
-    }
-    public static bool HasArgument(string line)
-    {
-        try
-        {
-            ParseArgument(line);
-            return true;
-        }
-        catch(Exception)
-        {
-            return false;
-        }
-    }
     public static bool ValidUrl(string url)
     {
         return GameBananaURL().IsMatch(url);

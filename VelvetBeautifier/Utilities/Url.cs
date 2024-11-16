@@ -9,6 +9,6 @@ public static class Url
     }
     public static bool IsUrl(string url)
     {
-        return Uri.TryCreate(url,UriKind.RelativeOrAbsolute,out Uri? _);
+        return url.StartsWith("http") && Uri.TryCreate(url,UriKind.RelativeOrAbsolute,out Uri? _);
     }
 }

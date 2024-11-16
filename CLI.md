@@ -1,5 +1,7 @@
 # Command Line Usage
 
+![Icon](./Assets/inverted_icon_medium.png)
+
 the executable is called `VelvetBeautifier.CLI.exe`
 
 ## Arguments
@@ -150,4 +152,14 @@ example:
 
 ```sh
 VelvetBeautifier.CLI.exe --list
+```
+
+### `--register-scheme` (currently only Windows)
+
+registers the executable as a 1-Click Installer (for GameBanana or urls)
+
+example:
+
+```sh
+VelvetBeautifier.CLI.exe --register-scheme
 ```

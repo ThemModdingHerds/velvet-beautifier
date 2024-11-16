@@ -7,6 +7,6 @@
 
 ## Process of modding
 
-1. make backup of game file to temp file
-2. add items to temp file
+1. copy backup of game file to temp file
+2. merge items to temp file
 3. replace game file with temp file

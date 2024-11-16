@@ -1,5 +1,7 @@
-using System.IO.Compression;
 using System.Runtime.InteropServices;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+using ThemModdingHerds.IO.Binary;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class FileSystem
@@ -47,21 +49,11 @@ public static class FileSystem
             path = path.Replace(new string([no]),"");
         return path;
     }
-    public static bool ExtractZip(string path,string output)
+    private static readonly ExtractionOptions extractionOptions = new()
     {
-        try
-        {
-            ZipFile.ExtractToDirectory(path,output);
-        }
-        catch(Exception)
-        {
-            return false;
-        }
-        return true;
-    }
-    public static string? ExtractZip(string path)
-    {
-        string output = CreateTempFolder();
-        return ExtractZip(path,output) ? output : null;
-    }
+        Overwrite = true,
+        ExtractFullPath = true,
+        PreserveFileTime = true,
+        PreserveAttributes = true
+    };
 }

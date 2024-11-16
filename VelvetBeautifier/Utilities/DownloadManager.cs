@@ -1,4 +1,3 @@
-using System.Formats.Asn1;
 using System.Text.Json;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class DownloadManager
@@ -24,7 +23,7 @@ public static class DownloadManager
     public static async Task GetAndUnzip(string url,string path)
     {
         string temp = await GetTemp(url);
-        FileSystem.ExtractZip(temp,path);
+        ArchiveUtils.ExtractArchive(temp,path);
     }
     public static async Task<string> GetAndUnzip(string url)
     {
