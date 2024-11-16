@@ -20,6 +20,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
