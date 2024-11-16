@@ -26,7 +26,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Create Archive
-      run: tar -czvf velvet-beautifier-${{matrix.os}}.zip ./build/${{matrix.os}}/**/*
+      run: tar --create --file=velvet-beautifier-${{matrix.os}}.zip ./build/${{matrix.os}}/
     - name: Upload Build
       uses: softprops/action-gh-release@v2
       with:
