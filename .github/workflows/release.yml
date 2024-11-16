@@ -22,11 +22,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ${{matrix.os}} --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Create Archive
-      run: tar --create --file=velvet-beautifier-${{matrix.os}}.zip ./build/${{matrix.os}}/
+      run: tar -czvf velvet-beautifier-${{matrix.os}}.zip ${{matrix.os}}
     - name: Upload Build
       uses: softprops/action-gh-release@v2
       with:
