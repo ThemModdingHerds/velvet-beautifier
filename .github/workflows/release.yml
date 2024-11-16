@@ -8,29 +8,11 @@ on:
         types:
             - published
 jobs:
-  linux:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build/VelvetBeautifier.Linux --configuration Release
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Upload Build
-      uses: actions/upload-artifact@v4
-      with:
-        path: ./build/VelvetBeautifier.Linux/
-  macos:
-
-    runs-on: macos-latest
+  create-release:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{matrix.os}}
 
     steps:
     - uses: actions/checkout@v4
@@ -41,30 +23,19 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build/VelvetBeautifier.MacOS --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Create Archive
+      run: |
+        if [[ ${{runner.os}} == 'Windows']]; then
+          powershell Compress-Archive -Path ./build/**/* -DestinationPath VelvetBeautifier.${{runner.os}}.zip
+        else then
+          tar -czvf VelvetBeautifier.${{runner.os}}.tar.gz ./build/**/*
+        fi
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
-        path: ./build/VelvetBeautifier.MacOS/
-  windows:
-
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build/VelvetBeautifier.Windows --configuration Release
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Upload Build
-      uses: actions/upload-artifact@v4
-      with:
-        path: ./build/VelvetBeautifier.Windows/
+        path: |
+          VelvetBeautifier.${{runner.os}}.tar.gz
+          VelvetBeautifier.${{runner.os}}.zip
