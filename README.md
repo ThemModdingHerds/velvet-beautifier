@@ -1,6 +1,6 @@
 # Velvet Beautifier
 
-![Icon](./Assets/icon.png)
+![Icon](./assets/icon.png)
 
 ![Build Workflow Status](https://img.shields.io/github/actions/workflow/status/ThemModdingHerds/velvet-beautifier/build.yml?label=Debug)
 ![Release Workflow Status](https://img.shields.io/github/actions/workflow/status/ThemModdingHerds/velvet-beautifier/release.yml?label=Release)
@@ -39,9 +39,9 @@ Mod Loader/Tool for Z-Engine games
 
 [Configurations (config.json)](CONFIG.md)
 
-![CLI Icon](./Assets/inverted_icon_medium.png)
+![CLI Icon](./assets/inverted_icon_medium.png)
 [The Command Line (VelvetBeautifier.CLI)](./CLI.md)  
-![GUI Icon](./Assets/icon_medium.png)
+![GUI Icon](./assets/icon_medium.png)
 The Graphical User Interface does not exist yet
 
 ### How do I make mods?
