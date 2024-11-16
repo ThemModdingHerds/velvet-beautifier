@@ -36,6 +36,7 @@ jobs:
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
+        name: VelvetBeautifier.${{runner.os}}
         path: |
           VelvetBeautifier.${{runner.os}}.tar.gz
           VelvetBeautifier.${{runner.os}}.zip
