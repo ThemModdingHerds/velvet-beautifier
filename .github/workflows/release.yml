@@ -1,0 +1,73 @@
+name: Build (Release)
+
+on:
+    release:
+        types:
+            - published
+jobs:
+  linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Upload Build
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref,'refs/tags/')
+      with:
+        name: VelvetBeautifier.Linux
+        files: ./build/**/*
+  macos:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Upload Build
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref,'refs/tags/')
+      with:
+        name: VelvetBeautifier.MacOS
+        files: ./build/**/*
+  windows:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Release
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Upload Build
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref,'refs/tags/')
+      with:
+        name: VelvetBeautifier.Windows
+        files: ./build/**/*

@@ -9,22 +9,15 @@ public static partial class Utils
         // 0. url
         // 1. itemtype
         // 2. id
-        try
+        string url = args[0];
+        string itemtype = args[1];
+        int id = int.Parse(args[2]);
+        return new Argument()
         {
-            string url = args[0];
-            string itemtype = args[1];
-            int id = int.Parse(args[2]);
-            return new Argument()
-            {
-                Link = url,
-                ItemType = itemtype,
-                Id = id
-            };
-        }
-        catch(Exception err)
-        {
-            throw new VelvetException("GameBanana.ParseArgument",err.ToString());
-        }
+            Link = url,
+            ItemType = itemtype,
+            Id = id
+        };
     }
     public static bool HasArgument(string line)
     {

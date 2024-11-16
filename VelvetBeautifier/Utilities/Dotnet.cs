@@ -3,8 +3,10 @@ using System.Reflection;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class Dotnet
 {
-    public static Assembly AsmExe {get => Assembly.GetExecutingAssembly();}
-    public static string? ExecutablePath {get => Assembly.GetEntryAssembly()?.Location;}
-    public static AssemblyName AsmName {get => AsmExe.GetName();}
-    public static Version ExeVersion {get => AsmName.Version ?? new();}
+    public static Assembly Library {get => Assembly.GetExecutingAssembly();}
+    public static AssemblyName LibraryName {get => Library.GetName();}
+    public static Version LibraryVersion {get => LibraryName.Version ?? new();}
+    public static Assembly? Executable {get => Assembly.GetEntryAssembly();}
+    public static string? ExecutablePath {get => Executable?.Location;}
+    public static string ExecutableFolder {get => Path.GetDirectoryName(ExecutablePath) ?? Environment.CurrentDirectory;}
 }

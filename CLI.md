@@ -131,3 +131,23 @@ example:
 VelvetBeautifier.CLI.exe --enable mycoolmod # enables the mod called "mycoolmod"
 VelvetBeautifier.CLI.exe --disable randomuncoolmod # disables the mod called "randomuncoolmod"
 ```
+
+### `--reset`
+
+resets the program to it's default state
+
+example:
+
+```sh
+VelvetBeautifier.CLI.exe --reset
+```
+
+### `--list`
+
+lists all installed mods and shows if they're enabled/disabled
+
+example:
+
+```sh
+VelvetBeautifier.CLI.exe --list
+```

@@ -21,7 +21,7 @@ public static class FileSystem
     public static string CreateTempFile(string path)
     {
         if(!File.Exists(path))
-            throw new VelvetException("Utils.CreateTempFile",path + " does not exist");
+            throw new FileNotFoundException($"{path} does not exist",path);
         string folder = Directory.CreateTempSubdirectory().FullName;
         string filename = Path.GetFileName(path);
         string tempfile = Path.Combine(folder,filename);

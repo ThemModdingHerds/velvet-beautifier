@@ -4,16 +4,12 @@ using System.Text.Json;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class EpicGames
 {
+    public const string DEFAULT_PATH = "C:\\ProgramData\\Epic\\EpicGamesLauncher\\Data\\Manifests";
+    public const string KEYPATH = "HKEY_CURRENT_USER\\Software\\Epic Games\\EOS";
     public static string? GetManifestFolder()
     {
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            string defaultPath = "C:\\ProgramData\\Epic\\EpicGamesLauncher\\Data\\Manifests";
-            string keypath = "HKEY_CURRENT_USER\\Software\\Epic Games\\EOS";
-            string path = (string?)Microsoft.Win32.Registry.GetValue(keypath,"ModSdkMetadataDir",defaultPath) ?? defaultPath;
-            if(!Directory.Exists(path)) throw new VelvetException("EpicGames.GetManifestFolder","Invalid path: " + path);
-            return path;
-        }
+            return (string?)Microsoft.Win32.Registry.GetValue(KEYPATH,"ModSdkMetadataDir",DEFAULT_PATH) ?? DEFAULT_PATH;
         return null;
     }
     public static List<string> GetManifests()
@@ -36,5 +32,15 @@ public static class EpicGames
                 games.Add(name);
         }
         return games;
+    }
+    public static string? GetGamePath()
+    {
+        List<string> gamepaths = GetGames();
+        foreach(string gamepath in gamepaths)
+        {
+            if(gamepath.EndsWith(Game.CLIENT_NAME))
+                return gamepath;
+        }
+        return null;
     }
 }

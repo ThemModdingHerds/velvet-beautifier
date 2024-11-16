@@ -1,5 +1,6 @@
 using ThemModdingHerds.GFS;
 using ThemModdingHerds.IO.Binary;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.GFS;
 public static class Utils
@@ -25,5 +26,11 @@ public static class Utils
                 stream.Write(entry.Data);
             stream.Close();
         }
+    }
+    public static string Extract(string gfs_path)
+    {
+        string temp = FileSystem.CreateTempFolder();
+        Extract(gfs_path,temp);
+        return temp;
     }
 }

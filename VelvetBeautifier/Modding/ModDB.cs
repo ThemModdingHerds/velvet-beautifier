@@ -3,7 +3,6 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class ModDB
 {
-    public static string DefaultLocation {get;} = Path.Combine(Environment.CurrentDirectory,"mods");
     public string Folder {get;}
     private readonly List<Mod> mods = [];
     public List<Mod> Mods {get => mods;}
@@ -30,10 +29,6 @@ public class ModDB
         Directory.CreateDirectory(folder);
         Refresh();
     }
-    public ModDB() : this(DefaultLocation)
-    {
-
-    }
     public void Refresh()
     {
         mods.Clear();
@@ -53,12 +48,13 @@ public class ModDB
         if(folder == null || !Mod.IsMod(folder)) return ModInstallResult.Invalid;
         return InstallMod(new Mod(folder));
     }
-    public void UninstallMod(string id)
+    public bool UninstallMod(string id)
     {
         Refresh();
         Mod? mod = FindModById(id);
-        if(mod != null)
-            UninstallMod(mod);
+        if(mod == null) return false;
+        UninstallMod(mod);
+        return true;
     }
     public void UninstallMod(Mod mod)
     {
@@ -79,5 +75,10 @@ public class ModDB
             if(mod.Info.Id == id)
                 return mod;
         return null;
+    }
+    public void Clear()
+    {
+        if(Directory.Exists(Folder))
+            Directory.Delete(Folder);
     }
 }

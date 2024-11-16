@@ -14,13 +14,9 @@ public static class Velvet
     {
         return Special.IsAprilFools ? input
         .Replace("th","z")
-        .Replace("w","v")
+        .Replace('w','v')
         .Replace("Th","Z")
-        .Replace("W","Z")
+        .Replace('W','Z')
         .Replace("TH","Z") : input;
     }
-}
-public class VelvetException(string origin,string message) : Exception($"{origin}: {Velvet.Velvetify(message)}")
-{
-
 }

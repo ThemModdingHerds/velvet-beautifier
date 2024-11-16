@@ -66,4 +66,17 @@ public static class Steam
         }
         return games;
     }
+    public static string? GetGamePath()
+    {
+        List<string> gamepaths = GetGames();
+        string? path = null;
+        foreach(string gamepath in gamepaths)
+        {
+            if(gamepath.EndsWith(Game.CLIENT_NAME))
+                return gamepath;
+            if(gamepath.EndsWith(Game.SKULLGIRLS_NAME))
+                path = gamepath;
+        }
+        return path;
+    }
 }

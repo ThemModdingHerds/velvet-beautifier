@@ -8,7 +8,13 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "label": "Build"
+            "label": "Build (Debug)",
+        },
+        {
+            "type": "shell",
+            "label": "Build (Release)",
+            "group": "build",
+            "command": "dotnet publish"
         }
     ]
 }

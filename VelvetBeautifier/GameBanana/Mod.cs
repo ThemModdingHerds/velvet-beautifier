@@ -39,6 +39,6 @@ public class Mod
     }
     public async Task<string> DownloadLatestUpdate()
     {
-        return await DownloadManager.GetAndUnzip(GetLatestUpdate().DownloadUrl);
+        return await DownloadManager.GetTemp(GetLatestUpdate().DownloadUrl);
     }
 }

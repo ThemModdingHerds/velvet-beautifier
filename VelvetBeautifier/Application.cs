@@ -8,46 +8,90 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier;
 public class Application
 {
-    public Config Config {get;} = Config.Read();
-    public ModDB ModDB {get;} = new();
-    public BackupManager BackupManager {get;} = new();
+    public const string CONFIG_NAME = "config.json";
+    public const string MODS_NAME = "mods";
+    public const string BACKUP_NAME = "backup";
+    public Config Config {get;}
+    public ModDB ModDB {get;}
+    public BackupManager BackupManager {get;}
     public Game Client {get;}
     public Game Server {get;}
     public Application()
     {
+        Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Z-Engine games");
+
+        string config = Path.Combine(Dotnet.ExecutableFolder,CONFIG_NAME);
+        Config = Config.ReadOrCreate(config);
+
+        string mods = Path.Combine(Dotnet.ExecutableFolder,MODS_NAME);
+        ModDB = new(mods);
+
+        string backup = Path.Combine(Dotnet.ExecutableFolder,BACKUP_NAME);
+        BackupManager = new(backup);
+
         Client = new Game(Config.ClientPath,Game.CLIENT_NAME);
         Server = new Game(Config.ServerPath,Game.SERVER_NAME);
     }
-    public void BackupGameFiles()
+    public SetupResult Setup()
     {
-        if(Client.Valid())
-            BackupGameFiles(Client);
-        if(Server.Valid())
-            BackupGameFiles(Server);
+        if(Directory.Exists(BackupManager.Folder) && Directory.Exists(ModDB.Folder) && File.Exists(CONFIG_NAME)) return SetupResult.NotRequired;
+        Velvet.Info("setting up for first lanuch...");
+        if(Config.IsOld(CONFIG_NAME))
+        {
+            Velvet.Error("your config file is old! Delete it and let it create a new one");
+            return SetupResult.OldConfig;
+        }
+        if(!BackupGameFiles())
+        {
+            BackupManager.Clear();
+            Velvet.Error("some of your game files have been tampered with! Make sure they're the original files!");
+            return SetupResult.BackupFail;
+        }
+        Velvet.Info("finished setup!");
+        return SetupResult.Success;
     }
-    private void BackupGameFiles(Game game)
+    public void Reset()
     {
-        if(Directory.Exists(BackupManager.Folder)) return;
+        BackupManager.Clear();
+        ModDB.Clear();
+        if(File.Exists(CONFIG_NAME))
+            File.Delete(CONFIG_NAME);
+    }
+    private bool BackupGameFiles()
+    {
+        if(Directory.Exists(BackupManager.Folder)) return true;
+        bool noTampering = true;
+        if(Client.Valid())
+            noTampering = BackupGameFiles(Client);
+        if(Server.Valid())
+            noTampering = BackupGameFiles(Server);
+        return noTampering;
+    }
+    private bool BackupGameFiles(Game game)
+    {
+        bool Backup(string folder,IEnumerable<GameFile> gameFiles)
+        {
+            foreach(GameFile gameFile in gameFiles)
+            {
+                string file = Path.Combine(folder,gameFile.Name);
+                if(!gameFile.Verify(file))
+                {
+                    Velvet.Error($"{gameFile.Name} has been tampered with! Make sure it's the original file");
+                    return false;
+                }
+                if(!BackupManager.ExistsBackup(file))
+                    Velvet.Info($"creating backup of {gameFile.Name}...");
+                BackupManager.MakeBackup(file);
+                continue;
+            }
+            return true;
+        }
+        bool noTampering = true;
         if(game.ExistsData01Folder())
-        {
-            string folder = game.GetData01Folder();
-            foreach(GameFile gameFile in GameFiles.Data01)
-            {
-                string file = Path.Combine(folder,gameFile.Name);
-                if(gameFile.Verify(file))
-                    BackupManager.MakeBackup(file);
-            }
-        }
+            noTampering = Backup(game.GetData01Folder(),GameFiles.Data01);
         if(game.ExistsTFHResourcesFolder())
-        {
-            string folder = game.GetTFHResourcesFolder();
-            foreach(GameFile gameFile in GameFiles.TFHResources)
-            {
-                string file = Path.Combine(folder,gameFile.Name);
-                if(gameFile.Verify(file))
-                    BackupManager.MakeBackup(file);
-            }
-        }
+            noTampering = Backup(game.GetTFHResourcesFolder(),GameFiles.TFHResources);
+        return noTampering;
     }
     public void ApplyMods()
     {
@@ -63,23 +107,6 @@ public class Application
             Velvet.Info("applying mods to server...");
             ApplyMods(Server);
         }
-    }
-    public Dictionary<string,bool> VerifyFiles()
-    {
-        Dictionary<string,bool> dict = [];
-        if(Client.Valid())
-        {
-            Velvet.Info("verifying files in client...");
-            foreach(var pair in VerifyFiles(Client))
-                dict.Add(pair.Key,pair.Value);
-        }
-        if(Server.Valid())
-        {
-            Velvet.Info("verifying files in server...");
-            foreach(var pair in VerifyFiles(Server))
-                dict.Add(pair.Key,pair.Value);
-        }
-        return dict;
     }
     public void Revert()
     {
@@ -116,43 +143,12 @@ public class Application
             }
         }
     }
-    private Dictionary<string,bool> VerifyFiles(Game game)
-    {
-        Dictionary<string,bool> dict = [];
-        if(game.ExistsData01Folder())
-        {
-            string folder = game.GetData01Folder();
-            foreach(GameFile gameFile in GameFiles.Data01)
-            {
-                string file = Path.Combine(folder,gameFile.Name);
-                string checksum = Crypto.Checksum(file);
-                string secure = gameFile.CanModify ? "Secured" : "Not Secured";
-                string result = checksum == gameFile.Checksum ? "same file" : $"not the same file, got {checksum}";
-                Velvet.Info($"{gameFile.Name} [{secure}] [{gameFile.Checksum}] = {result}");
-                dict.Add(gameFile.Name,checksum == gameFile.Checksum);
-            }
-        }
-        if(game.ExistsTFHResourcesFolder())
-        {
-            string folder = game.GetTFHResourcesFolder();
-            foreach(GameFile gameFile in GameFiles.TFHResources)
-            {
-                string file = Path.Combine(folder,gameFile.Name);
-                string checksum = Crypto.Checksum(file);
-                string secure = gameFile.CanModify ? "Secured" : "Not Secured";
-                string result = checksum == gameFile.Checksum ? "same file" : $"not the same file, got {checksum}";
-                Velvet.Info($"{gameFile.Name} [{secure}] [{gameFile.Checksum}] = {result}");
-                dict.Add(gameFile.Name,checksum == gameFile.Checksum);
-            }
-        }
-        return dict;
-    }
     private void ApplyMods(Game game)
     {
         if(game.ExistsData01Folder())
         {
             string folder = game.GetData01Folder();
-            foreach(GameFile gameFile in GameFiles.Data01)
+            foreach(GameFile gameFile in game.GetData01Files())
             {
                 if(!gameFile.CanModify)
                     Velvet.Error($"WARN: {gameFile.Name} cannot be modified! Expect the game not lanuching!");
@@ -208,45 +204,51 @@ public class Application
             }
         }
     }
-    private void InstallFolder(string? modFolder) => ModDB.InstallMod(modFolder);
-    public async Task InstallGameBananaMod(int id)
+    private ModInstallResult InstallFolder(string? modFolder) => ModDB.InstallMod(modFolder);
+    public async Task<ModInstallResult> InstallGameBananaMod(int id)
     {
         GameBanana.Mod? mod = await GameBanana.Mod.Fetch(id);
-        if(mod == null) return;
-        string modFolder = await mod.DownloadLatestUpdate();
-        InstallFolder(modFolder);
+        if(mod == null) return ModInstallResult.Invalid;
+        string file = await mod.DownloadLatestUpdate();
+        return await InstallMod(file);
     }
     public async Task InstallGameBananaMod(GameBanana.Argument argument) => await InstallGameBananaMod(argument.Id);
-    public async Task InstallMod(string? str)
+    public async Task<ModInstallResult> InstallMod(string? str)
     {
-        if(str == null) return;
+        if(str == null) return ModInstallResult.Invalid;
         if(int.TryParse(str,out int id))
         {
-            await InstallGameBananaMod(id);
-            return;
+            Velvet.Info($"installing GameBanana Mod with id '{id}'...");
+            return await InstallGameBananaMod(id);
         }
         if(Url.IsUrl(str))
         {
-            InstallFolder(await DownloadManager.GetAndUnzip(str));
-            return;
+            Velvet.Info($"installing Mod from {str}...");
+            string temp = await DownloadManager.GetTemp(str);
+            return await InstallMod(temp);
         }
         string path = Path.Combine(Environment.CurrentDirectory,str);
         if(Directory.Exists(path))
         {
-            InstallFolder(path);
-            return;
+            Velvet.Info($"installing Mod folder from {path}...");
+            return InstallFolder(path);
         }
         if(File.Exists(path))
         {
-            InstallFolder(FileSystem.ExtractZip(path));
-            return;
+            Velvet.Info($"installing Mod file from {path}...");
+            ModInstallResult result = InstallFolder(FileSystem.ExtractZip(path));
+            if(result == ModInstallResult.Invalid)
+                result = InstallFolder(GFS.Utils.Extract(path));
+            return result;
         }
+        Velvet.Error($"couldn't install Mod from {str}");
+        return ModInstallResult.Invalid;
     }
-    public void UninstallMod(string? id)
+    public bool UninstallMod(string? id)
     {
-        if(id == null) return;
-        ModDB.UninstallMod(id);
-        return;
+        if(id == null) return false;
+        Velvet.Info($"uninstalling Mod id '{id}'...");
+        return ModDB.UninstallMod(id);
     }
     public void CreateMod(string? id)
     {
@@ -258,6 +260,7 @@ public class Application
         string path = Path.Combine(ModDB.Folder,id);
         Directory.CreateDirectory(path);
         info.Write(Path.Combine(path,Mod.MODINFO_NAME));
+        Velvet.Info($"created Mod '{id}' at {path}");
     }
     public static void CreateGFS(string? input,string? output)
     {
@@ -267,6 +270,7 @@ public class Application
         RevergePackage gfs = RevergePackage.Create(inputPath);
         Writer writer = new(outputPath);
         writer.Write(gfs);
+        Velvet.Info($"created GFS at {outputPath}");
     }
     public static void CreateTFHRES(string? output)
     {
@@ -274,6 +278,7 @@ public class Application
         string outputPath = Path.Combine(Environment.CurrentDirectory,output.EndsWith(".tfhres") ? output : $"{output}.tfhres");
         Database database = new();
         database.Save(outputPath);
+        Velvet.Info($"created TFHRES at {outputPath}");
     }
     public static void Extract(string? input,string? output)
     {
@@ -282,11 +287,13 @@ public class Application
         string outputPath = Path.Combine(Environment.CurrentDirectory,output);
         if(inputPath.EndsWith(".gfs"))
         {
+            Velvet.Info($"extracting GFS at {inputPath} to {outputPath}...");
             GFS.Utils.Extract(inputPath,outputPath);
             return;
         }
         if(inputPath.EndsWith(".tfhres"))
         {
+            Velvet.Info($"extracting GFS at {inputPath} to {outputPath}...");
             TFHResource.Utils.Extract(inputPath,outputPath);
             return;
         }
@@ -296,13 +303,25 @@ public class Application
         if(id == null) return;
         ModDB.Refresh();
         Mod? mod = ModDB.FindModById(id);
-        mod?.Enable();
+        if(mod == null)
+        {
+            Velvet.Error($"no Mod with id '{id}' exists!");
+            return;
+        }
+        Velvet.Info($"enabling Mod id '{id}'...");
+        mod.Enable();
     }
     public void DisableMod(string? id)
     {
         if(id == null) return;
         ModDB.Refresh();
         Mod? mod = ModDB.FindModById(id);
-        mod?.Disable();
+        if(mod == null)
+        {
+            Velvet.Error($"no Mod with id '{id}' exists!");
+            return;
+        }
+        Velvet.Info($"disabling Mod id '{id}'...");
+        mod.Disable();
     }
 }

@@ -5,8 +5,7 @@
             "type": "dotnet",
             "name": "Launch VelvetBeautifier (Client)",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/CLI/CLI.csproj",
-            "preLaunchTask": "Build"
+            "projectPath": "${workspaceFolder}/CLI/CLI.csproj"
         }
     ]
 }

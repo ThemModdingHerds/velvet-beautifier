@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET Build
+name: Build (Debug)
 
 on:
   push:
@@ -23,14 +20,14 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Debug
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
         name: VelvetBeautifier.Linux
-        path: build
+        path: ./build
   macos:
 
     runs-on: macos-latest
@@ -44,14 +41,14 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Debug
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
         name: VelvetBeautifier.MacOS
-        path: build
+        path: ./build
   windows:
 
     runs-on: windows-latest
@@ -65,11 +62,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ./CLI/CLI.csproj --no-restore --output ./build --configuration Debug
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
         name: VelvetBeautifier.Windows
-        path: build
+        path: ./build

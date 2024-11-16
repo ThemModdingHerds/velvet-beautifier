@@ -6,7 +6,39 @@
     <Nullable>enable</Nullable>
     <AssemblyName>ThemModdingHerds.VelvetBeautifier</AssemblyName>
     <RootNamespace>ThemModdingHerds.VelvetBeautifier</RootNamespace>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Title>Velvet Beautifier</Title>
+    <Version>2.1.0</Version>
+    <Authors>N1ghtTheF0x</Authors>
+    <Company>Them's Modding' Herds</Company>
+    <Product>Velvet Beautifier</Product>
+    <Description>Mod Loader/Tool for Them's Fightin' Herds</Description>
+    <PackageProjectUrl>https://github.com/ThemModdingHerds</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ThemModdingHerds/velvet-beautifier</RepositoryUrl>
+    <PackageIcon>icon_small.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Assets\icon_small.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />

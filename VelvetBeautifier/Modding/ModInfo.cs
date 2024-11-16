@@ -1,6 +1,6 @@
+using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class ModInfo
 {
@@ -13,12 +13,12 @@ public class ModInfo
     [JsonPropertyName("desc")]
     public string Description {get; set;} = "This is an Example Mod";
     [JsonPropertyName("version")]
-    public string Version {get; set;} = "legacy";
+    public Version Version {get; set;} = new();
     [JsonPropertyName("url")]
     public string? Url {get; set;}
     public static ModInfo Read(string filepath)
     {
-        return JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new VelvetException("new Mod","couldn't read mod entry at " + filepath);
+        return JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new SerializationException($"couldn't read mod entry at {filepath}");
     }
     public void Write(string filepath)
     {

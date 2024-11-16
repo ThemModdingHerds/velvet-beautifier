@@ -1,24 +1,24 @@
+using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Config
 {
-    public static readonly string CONFIG_PATH = Path.Combine(Environment.CurrentDirectory,"config.json");
     [JsonPropertyName("client_path")]
     public string ClientPath {get; set;} = Game.FindGamePath() ?? "";
     [JsonPropertyName("server_path")]
     public string ServerPath {get; set;} = "";
     [JsonPropertyName("version")]
-    public Version Version {get; set;} = Dotnet.ExeVersion;
+    public Version Version {get; set;} = Dotnet.LibraryVersion;
     public static Config Read(string path)
+    {
+        return JsonSerializer.Deserialize<Config>(File.ReadAllText(path)) ?? throw new SerializationException("couldn't read config file");
+    }
+    public static Config ReadOrCreate(string path)
     {
         if(!File.Exists(path))
             Create(path);
-        return JsonSerializer.Deserialize<Config>(File.ReadAllText(path)) ?? throw new VelvetException("Config.Read","couldn't read config file");
-    }
-    public static Config Read()
-    {
-        return Read(CONFIG_PATH);
+        return Read(path);
     }
     public static void Create(string path)
     {
@@ -35,10 +35,6 @@ public class Config
     {
         Write(path,this);
     }
-    public void Save()
-    {
-        Save(CONFIG_PATH);
-    }
     public bool ExistsGameFolder()
     {
         return Directory.Exists(ClientPath);
@@ -46,5 +42,17 @@ public class Config
     public bool ExistsServerFolder()
     {
         return Directory.Exists(ServerPath);
+    }
+    public bool Valid()
+    {
+        return ExistsGameFolder() || ExistsServerFolder();
+    }
+    public static bool IsOld(string path)
+    {
+        JsonDocument json = JsonDocument.Parse(File.ReadAllText(path));
+        JsonElement element = json.RootElement;
+        JsonElement versionProp = element.GetProperty("version");
+        Version version = new(versionProp.GetString() ?? "0.0.0.0");
+        return version < Dotnet.LibraryVersion;
     }
 }

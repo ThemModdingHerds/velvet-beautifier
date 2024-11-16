@@ -1,12 +1,7 @@
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class BackupManager(string folder)
 {
-    public static readonly string BACKUP_FOLDER = Path.Combine(Environment.CurrentDirectory,"backup");
     public string Folder {get;} = folder;
-    public BackupManager() : this(BACKUP_FOLDER)
-    {
-
-    }
     public static string GetBackupName(string path)
     {
         return Path.GetFileName(path) + ".bak";
@@ -57,5 +52,10 @@ public class BackupManager(string folder)
             if(!ExistsBackup(file))
                 return false;
         return true;
+    }
+    public void Clear()
+    {
+        if(Directory.Exists(Folder))
+            Directory.Delete(Folder,true);
     }
 }

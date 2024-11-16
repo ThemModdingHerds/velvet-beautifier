@@ -26,5 +26,5 @@ public static class GameFiles
         new("ui.gfs","c74ef5975b5a309829ec704d135505ee72f4546f82cefa6f72cdac5f2c55a5fd",true),
         new("ui-win.gfs","ee8a29fe4a7c190a18e71824ac6e0dfb3158910c925803d7ec9a412d60dc7d49",true)
     ];
-    public static List<GameFile> All {get;} = [..TFHResources,..Data01];
+    public static List<GameFile> SkullGirls {get;} = [];
 }

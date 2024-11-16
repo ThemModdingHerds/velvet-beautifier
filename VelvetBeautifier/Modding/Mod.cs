@@ -19,7 +19,7 @@ public class Mod
         Folder = folder;
         string filepath = Path.Combine(folder,MODINFO_NAME);
         if(!IsMod(folder))
-            throw new VelvetException("new Mod",$"no mod entry in {folder}");
+            throw new FileNotFoundException($"no mod entry in {folder}",filepath);
         Info = ModInfo.Read(filepath);
     }
     public void Enable()
