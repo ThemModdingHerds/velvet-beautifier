@@ -21,7 +21,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --os ${{matrix.os}} --output ./build/${{matrix.os}} --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Release
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
