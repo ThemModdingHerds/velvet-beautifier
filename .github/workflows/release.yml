@@ -11,7 +11,7 @@ jobs:
   create-release:
     strategy:
       matrix:
-        os: [linux-x64, win-x64, osx-x64]
+        os: [linux, win, osx]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
