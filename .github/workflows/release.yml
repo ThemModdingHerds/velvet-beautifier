@@ -27,7 +27,7 @@ jobs:
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
-        path: ./build/VelvetBeautifier.Linux
+        path: ./build/VelvetBeautifier.Linux/
   macos:
 
     runs-on: macos-latest
