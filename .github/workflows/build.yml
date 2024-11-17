@@ -50,7 +50,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./GUI/${{matrix.framework}}/GUI.${{matrix.framework}}.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Debug
+      run: dotnet build ./GUI/GUI.${{matrix.framework}}/GUI.${{matrix.framework}}.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Debug
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
