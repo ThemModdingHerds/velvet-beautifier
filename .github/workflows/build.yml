@@ -36,11 +36,14 @@ jobs:
         include:
           - os: linux
             framework: Gtk
+            builder: ubuntu-latest
           - os: win
             framework: Wpf
+            builder: windows-latest
           - os: osx
             framework: Mac
-    runs-on: ubuntu-latest
+            builder: ubuntu-latest
+    runs-on: ${{matrix.builder}}
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
