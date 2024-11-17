@@ -4,6 +4,10 @@
 
 the executable is called `VelvetBeautifier.CLI.exe`
 
+## Some neat features
+
+- you can drag & drop a file or folder to install it
+
 ## Arguments
 
 some commands require these arguments
