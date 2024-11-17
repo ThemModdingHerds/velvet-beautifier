@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SharpCompress.Common;
 using SharpCompress.Readers;
@@ -49,11 +50,9 @@ public static class FileSystem
             path = path.Replace(new string([no]),"");
         return path;
     }
-    private static readonly ExtractionOptions extractionOptions = new()
+    public static void OpenFolder(string path)
     {
-        Overwrite = true,
-        ExtractFullPath = true,
-        PreserveFileTime = true,
-        PreserveAttributes = true
-    };
+        if(!Directory.Exists(path)) return;
+        Process.Start(path);
+    }
 }

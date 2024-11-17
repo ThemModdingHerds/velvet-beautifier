@@ -6,7 +6,7 @@ using ThemModdingHerds.VelvetBeautifier.Modding;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier;
-public class Application
+public class ModLoaderTool
 {
     public const string CONFIG_NAME = "config.json";
     public const string MODS_NAME = "mods";
@@ -17,10 +17,11 @@ public class Application
     public BackupManager BackupManager {get;}
     public Game Client {get;}
     public Game Server {get;}
-    public Application(string[] argv)
+    public ModLoaderTool(string[] argv)
     {
         CommandLine = new(this,argv);
-        Console.Title = Velvet.NAME;
+        if(Dotnet.IsConsoleAvailable)
+            Console.Title = Velvet.NAME;
         Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Z-Engine games");
 
         string config = Path.Combine(Dotnet.ExecutableFolder,CONFIG_NAME);
@@ -265,6 +266,11 @@ public class Application
         }
         Velvet.Error($"couldn't install Mod from {str}");
         return ModInstallResult.Invalid;
+    }
+    public ModInstallResult InstallStream(Stream stream)
+    {
+        Velvet.Info("installing Mod from stream...");
+        return InstallFolder(ArchiveUtils.ExtractArchive(stream));
     }
     public bool UninstallMod(string? id)
     {

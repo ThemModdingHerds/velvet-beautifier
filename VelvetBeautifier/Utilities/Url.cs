@@ -5,6 +5,7 @@ public static class Url
 {
     public static void OpenUrl(string url)
     {
+        if(!IsUrl(url)) return;
         Process.Start(new ProcessStartInfo(url){UseShellExecute = true});
     }
     public static bool IsUrl(string url)

@@ -41,6 +41,15 @@ public class Mod
         }
         Enable();
     }
+    public void SetEnabled(bool enabled)
+    {
+        if(enabled)
+        {
+            Enable();
+            return;
+        }
+        Disable();
+    }
     public Database? GetTFHResource(string name)
     {
         string database = Path.Combine(Folder,name);

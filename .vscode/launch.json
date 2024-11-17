@@ -3,9 +3,15 @@
     "configurations": [
         {
             "type": "dotnet",
-            "name": "Launch VelvetBeautifier (Client)",
+            "name": "Launch Velvet Beautifier (CLI)",
             "request": "launch",
             "projectPath": "${workspaceFolder}/CLI/CLI.csproj"
+        },
+        {
+            "type": "dotnet",
+            "name": "Launch Velvet Beautifier (GUI-Windows)",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/GUI/GUI.Wpf/GUI.Wpf.csproj"
         }
     ]
 }

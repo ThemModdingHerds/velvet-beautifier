@@ -2,6 +2,10 @@ namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class Velvet
 {
     public const string NAME = "Velvet Beautifier";
+    public const string AUTHOR = "N1ghtTheF0x";
+    public const string GROUP = "Them's Modding Herds";
+    public const string PROJECT_URL = "https://github.com/ThemModdingHerds";
+    public const string REPO_URL = "https://github.com/ThemModdingHerds/velvet-beautifier";
     public static void Info(string text)
     {
         Console.WriteLine(Velvetify(text));

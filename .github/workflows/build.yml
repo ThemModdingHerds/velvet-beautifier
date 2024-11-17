@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  create-release:
+  cli:
     strategy:
       matrix:
         os: [linux, win, osx]
@@ -21,7 +21,36 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Release
+      run: dotnet build ./CLI/CLI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Debug
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Upload Build
+      uses: actions/upload-artifact@v4
+      with:
+        name: velvet-beautifier-${{matrix.os}}
+        path: ./build/${{matrix.os}}
+  gui:
+    strategy:
+      matrix:
+        os: [linux, win, osx]
+        include:
+          - os: linux
+            framework: Gtk
+          - os: win
+            framework: Wpf
+          - os: osx
+            framework: Mac
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build ./GUI/${{matrix.framework}}//GUI.${{matrix.framework}}.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Debug
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build

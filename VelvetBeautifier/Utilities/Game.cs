@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Game(string folder,string name)
 {
@@ -48,6 +50,12 @@ public class Game(string folder,string name)
         return Path.Combine(Folder,"data01");
     }
     public bool ExistsData01Folder() => Directory.Exists(GetData01Folder());
-    public List<GameFile> GetData01Files() => IsSkullGirls() ? GameFiles.SkullGirls : GameFiles.Data01;
+    public List<GameFile> GetData01Files() => IsSkullGirls() ? GameFiles.SkullGirlsData01 : GameFiles.Data01;
     public bool ExistsExecutable() => File.Exists(Executable);
+    public GameFile GetExecutable() => IsSkullGirls() ? GameFiles.SkullGirlsExecutable : GameFiles.Executable;
+    public void Launch()
+    {
+        if(!ExistsExecutable() && !GetExecutable().Verify(Executable)) return;
+        Process.Start(Executable);
+    }
 }

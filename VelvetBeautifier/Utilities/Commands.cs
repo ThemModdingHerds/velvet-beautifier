@@ -4,7 +4,7 @@ namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class RegisterSchemeHandler : ICommandArgumentHandler
 {
     public string Name => "register-scheme";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         bool result = Win32.CreateURIScheme();
         Environment.Exit(result ? 0 : 1);
@@ -13,7 +13,7 @@ public class RegisterSchemeHandler : ICommandArgumentHandler
 public class InstallModHandler : ICommandArgumentHandler
 {
     public string Name => "install";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         var task = application.InstallMod(value);
         task.Wait();
@@ -24,7 +24,7 @@ public class InstallModHandler : ICommandArgumentHandler
 public class RemoveModHandler : ICommandArgumentHandler
 {
     public string Name => "remove";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         bool result = application.UninstallMod(value);
         Environment.Exit(result ? 0 : 1);
@@ -33,7 +33,7 @@ public class RemoveModHandler : ICommandArgumentHandler
 public class ApplyModsHandler : ICommandArgumentHandler
 {
     public string Name => "apply";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         application.ApplyMods();
         Environment.Exit(0);
@@ -42,7 +42,7 @@ public class ApplyModsHandler : ICommandArgumentHandler
 public class RevertHandler : ICommandArgumentHandler
 {
     public string Name => "revert";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         application.Revert();
         Environment.Exit(0);
@@ -51,7 +51,7 @@ public class RevertHandler : ICommandArgumentHandler
 public class CreateModHandler : ICommandArgumentHandler
 {
     public string Name => "create";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         application.CreateMod(value);
         Environment.Exit(0);
@@ -60,43 +60,43 @@ public class CreateModHandler : ICommandArgumentHandler
 public class CreateRevergePackageHandler : ICommandArgumentHandler
 {
     public string Name => "create-gfs";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         if(
             application.CommandLine.Arguments.TryGetValue("input",out string? input) &&
             application.CommandLine.Arguments.TryGetValue("output",out string? output)
         )
-            Application.CreateRevergePackage(input,output);
+            ModLoaderTool.CreateRevergePackage(input,output);
         Environment.Exit(0);
     }
 }
 public class CreateTFHResourceHandler : ICommandArgumentHandler
 {
     public string Name => "create-tfhres";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         if(application.CommandLine.Arguments.TryGetValue("output",out string? output))
-            Application.CreateTFHResource(output);
+            ModLoaderTool.CreateTFHResource(output);
         Environment.Exit(0);
     }
 }
 public class ExtractHandler : ICommandArgumentHandler
 {
     public string Name => "extract";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         if(
             application.CommandLine.Arguments.TryGetValue("input",out string? input) &&
             application.CommandLine.Arguments.TryGetValue("output",out string? output)
         )
-            Application.Extract(input,output);
+            ModLoaderTool.Extract(input,output);
         Environment.Exit(0);
     }
 }
 public class EnableModHandler : ICommandArgumentHandler
 {
     public string Name => "enable";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         if(application.CommandLine.Arguments.TryGetValue("id",out string? id))
             application.EnableMod(id);
@@ -106,7 +106,7 @@ public class EnableModHandler : ICommandArgumentHandler
 public class DisableModHandler : ICommandArgumentHandler
 {
     public string Name => "disable";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         if(application.CommandLine.Arguments.TryGetValue("id",out string? id))
             application.DisableMod(id);
@@ -116,7 +116,7 @@ public class DisableModHandler : ICommandArgumentHandler
 public class ListModsHandler : ICommandArgumentHandler
 {
     public string Name => "list";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         List<Mod> mods = application.ModDB.Mods;
         if(mods.Count == 0)
@@ -140,7 +140,7 @@ public class ListModsHandler : ICommandArgumentHandler
 public class ResetHandler : ICommandArgumentHandler
 {
     public string Name => "reset";
-    public void OnExecute(Application application,string? value)
+    public void OnExecute(ModLoaderTool application,string? value)
     {
         bool forced = application.CommandLine.Arguments.ContainsKey("force");
         if(!forced)

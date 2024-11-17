@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Velvet Beautifier
 release
+mods
+config.json
+backup

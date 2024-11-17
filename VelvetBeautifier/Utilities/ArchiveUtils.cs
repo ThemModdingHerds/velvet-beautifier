@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using SharpCompress.Archives;
 using SharpCompress.Archives.GZip;
 using SharpCompress.Archives.Rar;
@@ -11,7 +12,7 @@ using ThemModdingHerds.IO.Binary;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class ArchiveUtils
 {
-    private static bool IsRevergePackage(string file)
+    private static bool IsRevergePackage(Stream file)
     {
         try
         {
@@ -25,23 +26,30 @@ public static class ArchiveUtils
             return false;
         }
     }
-    public static ArchiveType DetectArchive(string file)
+    public static ArchiveType DetectArchive(Stream stream)
     {
-        if(ZipArchive.IsZipFile(file))
+        if(ZipArchive.IsZipFile(stream))
             return ArchiveType.Zip;
-        if(RarArchive.IsRarFile(file))
+        if(RarArchive.IsRarFile(stream))
             return ArchiveType.Rar;
-        if(SevenZipArchive.IsSevenZipFile(file))
+        if(SevenZipArchive.IsSevenZipFile(stream))
             return ArchiveType.SevenZip;
-        if(TarArchive.IsTarFile(file))
+        if(TarArchive.IsTarFile(stream))
             return ArchiveType.Tar;
-        if(GZipArchive.IsGZipFile(file))
+        if(GZipArchive.IsGZipFile(stream))
             return ArchiveType.GZip;
-        if(IsRevergePackage(file))
+        if(IsRevergePackage(stream))
             return ArchiveType.RevergePackage;
         throw new Exception("unknown archive type");
     }
     public static bool ExtractArchive(string file,string output)
+    {
+        FileStream stream = File.OpenRead(file);
+        bool result = ExtractArchive(stream,output);
+        stream.Close();
+        return result;
+    }
+    public static bool ExtractArchive(Stream file,string output)
     {
         try
         {
@@ -73,5 +81,10 @@ public static class ArchiveUtils
     {
         string temp = FileSystem.CreateTempFolder();
         return ExtractArchive(file,temp) ? temp : null;
+    }
+    public static string? ExtractArchive(Stream stream)
+    {
+        string temp = FileSystem.CreateTempFolder();
+        return ExtractArchive(stream,temp) ? temp : null;
     }
 }

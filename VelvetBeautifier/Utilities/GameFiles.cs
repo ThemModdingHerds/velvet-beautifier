@@ -12,6 +12,7 @@ public static class GameFiles
         new("resources_prod.tfhres","be40aa608b857449bd2767b279dccc7a561db2f9875544da7dcbcf867feb8bfb",true),
         new("testroomd_prod.tfhres","02c367d74d5dbd7bf04e647185940aef429ae4c82fd1f2525c29f7aa03a4dac2",true)
     ];
+    public static GameFile Executable {get;} = new(Game.CLIENT_NAME,"03e20eece23f39fb1012061a5a7ff92f4b63da23eb8eb641cf6ee379cbce373d",false);
     public static List<GameFile> Data01 {get;} = [
         new("ai-libs.gfs","ec041023c6c6747bbcb9b390f09f9d42ce05d9f8e9a45749d594349053535223",true),
         new("characters-art.gfs","1d9e09ba88c402a7af7f419da31ec26eb52e6ac335223852ae00c098f543684f",true),
@@ -26,5 +27,6 @@ public static class GameFiles
         new("ui.gfs","c74ef5975b5a309829ec704d135505ee72f4546f82cefa6f72cdac5f2c55a5fd",true),
         new("ui-win.gfs","ee8a29fe4a7c190a18e71824ac6e0dfb3158910c925803d7ec9a412d60dc7d49",true)
     ];
-    public static List<GameFile> SkullGirls {get;} = [];
+    public static List<GameFile> SkullGirlsData01 {get;} = [];
+    public static GameFile SkullGirlsExecutable {get;} = new(Game.SKULLGIRLS_NAME,"fb757433d2d11602ded18040078e70319afdae98c35fc22d789b38d012ad400b",false);
 }

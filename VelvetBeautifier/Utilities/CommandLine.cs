@@ -1,12 +1,12 @@
 using ThemModdingHerds.VelvetBeautifier.Modding;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
-public class CommandLine(Application application,string[] argv)
+public class CommandLine(ModLoaderTool application,string[] argv)
 {
     public string[] Argv {get;} = argv;
     public Dictionary<string,string?> Arguments {get;} = Create(argv);
     public const string ARGUMENT_PREFIX = "--";
-    public Application App {get;} = application;
+    public ModLoaderTool App {get;} = application;
     public IReadOnlyList<ICommandArgumentHandler> Handlers {get;} = [
         new RegisterSchemeHandler(),
         new InstallModHandler(),
@@ -27,7 +27,7 @@ public class CommandLine(Application application,string[] argv)
     {
         if(Argv.Length == 1)
         {
-            if(Uri.TryCreate(Argv[0],UriKind.Absolute,out Uri? uri))
+            if(Argv[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(Argv[0],UriKind.Absolute,out Uri? uri))
             {
                 string content = uri.AbsolutePath;
                 ModInstallResult result = ModInstallResult.Invalid;
@@ -51,9 +51,6 @@ public class CommandLine(Application application,string[] argv)
         foreach(ICommandArgumentHandler handler in Handlers)
             if(Arguments.TryGetValue(handler.Name,out string? value))
                 handler.OnExecute(App,value);
-        Velvet.Info("no parameters specified, check out the guide for usage:");
-        Console.WriteLine("https://github.com/ThemModdingHerds/velvet-beautifier/blob/main/CLI.md");
-        Environment.Exit(1);
     }
     private static bool IsArg(string arg)
     {
@@ -89,5 +86,5 @@ public class CommandLine(Application application,string[] argv)
 public interface ICommandArgumentHandler
 {
     public string Name {get;}
-    public void OnExecute(Application application,string? value);
+    public void OnExecute(ModLoaderTool application,string? value);
 }
