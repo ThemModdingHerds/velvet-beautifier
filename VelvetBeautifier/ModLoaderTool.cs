@@ -1,7 +1,9 @@
 using ThemModdingHerds.GFS;
 using ThemModdingHerds.IO.Binary;
+using ThemModdingHerds.Levels;
 using ThemModdingHerds.TFHResource;
 using ThemModdingHerds.TFHResource.Data;
+using ThemModdingHerds.VelvetBeautifier.GameNews;
 using ThemModdingHerds.VelvetBeautifier.Modding;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
@@ -11,8 +13,12 @@ public class ModLoaderTool
     public const string CONFIG_NAME = "config.json";
     public const string MODS_NAME = "mods";
     public const string BACKUP_NAME = "backup";
+    public const string LEVELS_NAME = "levels";
+    private readonly string levelsPath;
+    private readonly string gamenewsPath;
     public CommandLine CommandLine {get;}
     public Config Config {get;}
+    private readonly string configPath;
     public ModDB ModDB {get;}
     public BackupManager BackupManager {get;}
     public Game Client {get;}
@@ -20,18 +26,20 @@ public class ModLoaderTool
     public ModLoaderTool(string[] argv)
     {
         CommandLine = new(this,argv);
-        if(Dotnet.IsConsoleAvailable)
-            Console.Title = Velvet.NAME;
+        Dotnet.ConsoleTitle = Velvet.NAME;
         Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Z-Engine games");
 
-        string config = Path.Combine(Dotnet.ExecutableFolder,CONFIG_NAME);
-        Config = Config.ReadOrCreate(config);
+        levelsPath = Path.Combine(Dotnet.ExecutableFolder,LEVELS_NAME);
+
+        configPath = Path.Combine(Dotnet.ExecutableFolder,CONFIG_NAME);
+        Config = Config.ReadOrCreate(configPath);
 
         string mods = Path.Combine(Dotnet.ExecutableFolder,MODS_NAME);
         ModDB = new(mods);
 
         string backup = Path.Combine(Dotnet.ExecutableFolder,BACKUP_NAME);
         BackupManager = new(backup);
+        gamenewsPath = Path.Combine(Dotnet.ExecutableFolder,BACKUP_NAME,BackupManager.GetBackupName(News.GAMENEWS_FILEPATH));
 
         Client = new Game(Config.ClientPath,Game.CLIENT_NAME);
         Server = new Game(Config.ServerPath,Game.SERVER_NAME);
@@ -58,21 +66,32 @@ public class ModLoaderTool
             }
         }
     }
+    private bool SetupNotRequired()
+    {
+        return Directory.Exists(BackupManager.Folder) &&
+               Directory.Exists(ModDB.Folder) &&
+               File.Exists(configPath) &&
+               Directory.Exists(levelsPath) &&
+               File.Exists(gamenewsPath);
+    }
     public SetupResult Setup()
     {
-        if(Directory.Exists(BackupManager.Folder) && Directory.Exists(ModDB.Folder) && File.Exists(CONFIG_NAME)) return SetupResult.NotRequired;
-        Velvet.Info("setting up for first lanuch...");
         if(Config.IsOld(CONFIG_NAME))
         {
             Velvet.Error("your config file is old! Delete it and let it create a new one");
             return SetupResult.OldConfig;
         }
+        if(SetupNotRequired())
+            return SetupResult.NotRequired;
+        Velvet.Info("setting up for first lanuch...");
         if(!BackupGameFiles())
         {
             BackupManager.Clear();
             Velvet.Error("some of your game files have been tampered with! Make sure they're the original files!");
             return SetupResult.BackupFail;
         }
+        Velvet.Info("creating level pack from game...");
+        CreateLevelPack();
         Velvet.Info("finished setup!");
         return SetupResult.Success;
     }
@@ -82,6 +101,15 @@ public class ModLoaderTool
         ModDB.Clear();
         if(File.Exists(CONFIG_NAME))
             File.Delete(CONFIG_NAME);
+        if(Directory.Exists(LEVELS_NAME))
+            Directory.Delete(LEVELS_NAME);
+    }
+    private void CreateLevelPack()
+    {
+        string levelsgfs = BackupManager.GetBackupPath("levels.gfs");
+        string levels = GFS.Utils.Extract(levelsgfs);
+        LevelPack pack = LevelPack.Read(Path.Combine(levels,"temp","levels"));
+        pack.Save(levelsPath);
     }
     private bool BackupGameFiles()
     {
@@ -117,6 +145,8 @@ public class ModLoaderTool
             noTampering = Backup(game.GetData01Folder(),GameFiles.Data01);
         if(game.ExistsTFHResourcesFolder())
             noTampering = Backup(game.GetTFHResourcesFolder(),GameFiles.TFHResources);
+        if(game.ExistsGameNews() && game.IsClient())
+            BackupManager.MakeBackup(game.GetGameNewsFile());
         return noTampering;
     }
     public void ApplyMods()
@@ -133,6 +163,7 @@ public class ModLoaderTool
             Velvet.Info("applying mods to server...");
             ApplyMods(Server);
         }
+        
     }
     public void Revert()
     {
@@ -169,10 +200,51 @@ public class ModLoaderTool
             }
         }
     }
+    private void ApplyLevels(Game game)
+    {
+        string temp = FileSystem.CreateTempFolder();
+        string tempLevels = Path.Combine(temp,"temp","levels");
+        Directory.CreateDirectory(tempLevels);
+        List<LevelPack> modpacks = [];
+        foreach(Mod mod in ModDB.EnabledMods)
+        {
+            LevelPack? modpack = mod.GetLevelPack();
+            if(modpack == null) continue;
+            modpacks.Add(modpack);
+        }
+        if(modpacks.Count == 0) return;
+        LevelPack.Combine(tempLevels,[GetLevelPack(),..modpacks]).Save();
+        string levelsgfs = Path.Combine(game.GetData01Folder(),"levels.gfs");
+        RevergePackage levels = RevergePackage.Create(temp);
+        Writer writer = new(levelsgfs);
+        writer.Write(levels);
+    }
     private void ApplyMods(Game game)
     {
+        if(game.ExistsGameNews())
+        {
+            List<News> gamenews = [
+                new(
+                    1,
+                    Velvet.Velvetify($"{ModDB.EnabledMods.Count} mods loaded"),
+                    Velvet.GAMENEWS_MODLIST_FILENAME,
+                    Velvet.Velvetify(Velvet.NAME),
+                    Velvet.Velvetify("this game has been modified, you may experience unstable/broken sessions"),
+                    Velvet.GITHUB_PROJECT_URL
+                ),
+                ..GetGameNews()
+            ];
+            News.WriteGameNews(Client.GetGameNewsFile(),gamenews);
+            string gamenews_modlist_path = Path.Combine(Client.GetGameNewsImageFolder(),Velvet.GAMENEWS_MODLIST_FILENAME);
+            if(File.Exists(gamenews_modlist_path))
+                File.Delete(gamenews_modlist_path);
+            FileStream gamenews_modlist = File.OpenWrite(gamenews_modlist_path);
+            Dotnet.GetGameNewsModsListResource().CopyTo(gamenews_modlist);
+            gamenews_modlist.Close();
+        }
         if(game.ExistsData01Folder())
         {
+            ApplyLevels(game);
             string folder = game.GetData01Folder();
             foreach(GameFile gameFile in game.GetData01Files())
             {
@@ -196,7 +268,8 @@ public class ModLoaderTool
                 }
                 if(modCount == 0) continue;
                 Velvet.Info($"applying {modCount} to {gameFile.Name}");
-                File.Delete(file);
+                if(File.Exists(file))
+                    File.Delete(file);
                 Writer writer = new(file);
                 writer.Write(modded);
             }
@@ -351,5 +424,13 @@ public class ModLoaderTool
         }
         Velvet.Info($"disabling Mod id '{id}'...");
         mod.Disable();
+    }
+    public LevelPack GetLevelPack()
+    {
+        return LevelPack.Read(levelsPath);
+    }
+    public List<News> GetGameNews()
+    {
+        return News.ReadGameNews(gamenewsPath);
     }
 }

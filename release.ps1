@@ -1,10 +1,8 @@
 # usage: release.ps1 <version>
-[CmdletBinding()]
-param (
-    [Parameter()]
-    [string]
-    $Version = "0.0.0"
-)
+If(!$Version)
+{
+    throw "no version specified"
+}
 $operatingsystem = @{
     Windows = "win-x64"
     Linux = "linux-x64"
@@ -29,8 +27,8 @@ New-Item -ItemType Directory -Force -Path .\$outputFolder\
 $operatingsystem.GetEnumerator() | ForEach-Object{
     $rid = $_.Value;
     $name = $_.Key;
-    dotnet build .\CLI\CLI.csproj --runtime $rid --configuration Release
-    Compress-Archive -Path .\CLI\bin\Release\net8.0\$rid\* -DestinationPath .\$outputFolder\VelvetBeautifier.CLI.$Version.$name.zip
+    dotnet publish .\CLI\CLI.csproj --runtime $rid --configuration Release
+    Compress-Archive -Path .\CLI\bin\Release\net8.0\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.CLI.$Version.$name.zip
 }
 # GUI
 $operatingsystem.GetEnumerator() | ForEach-Object{
@@ -38,6 +36,6 @@ $operatingsystem.GetEnumerator() | ForEach-Object{
     $name = $_.Key;
     $gui = $guiframework[$name]
     $net = $guinet[$name]
-    dotnet build .\GUI\GUI.$gui\GUI.$gui.csproj --runtime $rid --configuration Release
-    Compress-Archive -Path .\GUI\GUI.$gui\\bin\Release\$net\$rid\* -DestinationPath .\$outputFolder\VelvetBeautifier.GUI.$Version.$name.zip
+    dotnet publish .\GUI\GUI.$gui\GUI.$gui.csproj --runtime $rid --configuration Release
+    Compress-Archive -Path .\GUI\GUI.$gui\bin\Release\$net\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.GUI.$Version.$name.zip
 }

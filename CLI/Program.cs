@@ -7,7 +7,7 @@ class Program
     {
         ModLoaderTool app = new(argv);
         SetupResult setup = app.Setup();
-        if(setup != SetupResult.Success || setup != SetupResult.NotRequired)
+        if(setup != SetupResult.Success && setup != SetupResult.NotRequired)
         {
             Environment.Exit(1);
             return;

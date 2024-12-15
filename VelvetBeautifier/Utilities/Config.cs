@@ -49,10 +49,13 @@ public class Config
     }
     public static bool IsOld(string path)
     {
+        return GetVersion(path) < Dotnet.LibraryVersion;
+    }
+    public static Version GetVersion(string path)
+    {
         JsonDocument json = JsonDocument.Parse(File.ReadAllText(path));
         JsonElement element = json.RootElement;
         JsonElement versionProp = element.GetProperty("version");
-        Version version = new(versionProp.GetString() ?? "0.0.0.0");
-        return version < Dotnet.LibraryVersion;
+        return new(versionProp.GetString() ?? "0.0.0.0");
     }
 }

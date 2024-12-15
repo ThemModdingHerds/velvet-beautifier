@@ -2,12 +2,13 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Eto.Drawing;
 using Eto.Forms;
 using ThemModdingHerds.VelvetBeautifier.GUI.Interfaces;
 using ThemModdingHerds.VelvetBeautifier.Modding;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI.Items;
-public class ModListView : ListBox, IMainFormItem
+public class ModListView : TableLayout, IMainFormItem
 {
     public ModDB ModDB {get => MainForm.ModLoaderTool.ModDB;}
     public MainForm MainForm {get;private set;}
@@ -20,14 +21,16 @@ public class ModListView : ListBox, IMainFormItem
     public void RefreshModList()
     {
         ModDB.Refresh();
-        Items.Clear();
         foreach(Mod mod in ModDB.Mods)
-            Items.Add(new ModListItem(mod));
-    }
-    public ModListItem? GetItem(int index)
-    {
-        if(index < 0 || index >= Items.Count) return null;
-        return (ModListItem)Items[index];
+            Rows.Add(
+                new TableRow
+                {
+                    ScaleHeight = true,
+                    Cells = {
+                        new TableCell(new ModListItem(mod),true)
+                    }
+                }
+            );
     }
     protected override void OnDragDrop(DragEventArgs e)
     {
@@ -49,11 +52,5 @@ public class ModListView : ListBox, IMainFormItem
             return;
         }
         e.Effects = DragEffects.Copy;
-    }
-    protected override void OnSelectedIndexChanged(EventArgs e)
-    {
-        base.OnSelectedIndexChanged(e);
-        ModListItem? item = GetItem(SelectedIndex);
-        MainForm.ModView.SetContent(item?.Mod);
     }
 }

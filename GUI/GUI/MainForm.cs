@@ -12,8 +12,7 @@ namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public partial class MainForm : Form
 {
 	public ModLoaderTool ModLoaderTool {get;}
-	public ModListView ModList {get;}
-	public ModView ModView {get;}
+	public ModListView ModList {get => (ModListView)Content;}
 	public MainForm()
 	{
 		ModLoaderTool = new(Environment.GetCommandLineArgs());
@@ -24,19 +23,11 @@ public partial class MainForm : Form
 			Environment.Exit(1);
 		}
 		ModLoaderTool.CommandLine.Process();
-		ModList = new ModListView(this);
-		ModView = new ModView(this);
 		Title = Velvet.Velvetify(Velvet.NAME);
 		ClientSize = new(600,400);
 		Icon = Utils.WindowIcon;
 		Menu = new MenuBar(this);
 		ToolBar = new ToolBar(this);
-		TableLayout layout = new()
-		{
-			Rows = {
-				new TableRow([ModList,ModView])
-			}
-		};
-	Content = layout;
+		Content = new ModListView(this);
 	}
 }

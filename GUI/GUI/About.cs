@@ -14,6 +14,6 @@ public class About : AboutDialog
         License = Utils.License;
         Logo = Utils.VelvetImage;
         WebsiteLabel = Velvet.Velvetify("Source Code");
-        Website = new System.Uri(Velvet.REPO_URL);
+        Website = new System.Uri(Velvet.GITHUB_REPO_URL);
     }
 }

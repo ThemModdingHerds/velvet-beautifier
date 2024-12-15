@@ -1,4 +1,5 @@
 using ThemModdingHerds.GFS;
+using ThemModdingHerds.Levels;
 using ThemModdingHerds.TFHResource;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
@@ -6,6 +7,7 @@ public class Mod
 {
     public const string MOD_ENABLED_NAME = "enabled";
     public const string MODINFO_NAME = "mod.json";
+    public const string LEVELS_NAME = "levels";
     public ModInfo Info {get;}
     public string Folder {get;}
     public bool Enabled {get => File.Exists(Path.Combine(Folder,MOD_ENABLED_NAME));}
@@ -83,5 +85,11 @@ public class Mod
             packages.Add(gameFile.Name,gfs);
         }
         return packages;
+    }
+    public LevelPack? GetLevelPack()
+    {
+        string folder = Path.Combine(Folder,LEVELS_NAME);
+        if(!Directory.Exists(folder)) return null;
+        return LevelPack.Read(folder);
     }
 }

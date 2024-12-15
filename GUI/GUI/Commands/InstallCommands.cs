@@ -30,6 +30,7 @@ public class InstallFileCommand : Command
                     count++;
             }
             VelvetEto.ShowMessageBox($"Installed {count} mod/s");
+            MainForm.ModList.RefreshModList();
         }
     }
 }
@@ -53,6 +54,7 @@ public class InstallFolderCommand : Command
             task.Wait();
             if(task.Result == Modding.ModInstallResult.Ok)
             VelvetEto.ShowMessageBox($"Installed mods");
+            MainForm.ModList.RefreshModList();
         }
     }
 }

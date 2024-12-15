@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class Dotnet
@@ -13,16 +14,32 @@ public static class Dotnet
     public static string? ExecutableDllPath {get => ExecutableDll?.Location;}
     public static string? ExecutablePath {get => Path.ChangeExtension(ExecutableDllPath,".exe");}
     public static string ExecutableFolder {get => Path.GetDirectoryName(ExecutableDllPath) ?? Environment.CurrentDirectory;}
-    public static bool IsConsoleAvailable {get
+    public static string ConsoleTitle {
+        get
+        {
+            try
+            {
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Console.Title : "";
+            }
+            catch(Exception)
+            {
+                return "";
+            }
+        }
+        set
+        {
+            try
+            {
+                Console.Title = value;
+            }
+            catch(Exception)
+            {
+
+            }
+        }
+    }
+    public static Stream GetGameNewsModsListResource()
     {
-        try
-        {
-            int height = Console.WindowHeight;
-            return true;
-        }
-        catch(Exception)
-        {
-            return false;
-        }
-    }}
+        return Library.GetManifestResourceStream(Velvet.GAMENEWS_MODLIST_RESOURCE_PATH) ?? throw new Exception("impossible");
+    }
 }

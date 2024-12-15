@@ -79,6 +79,6 @@ public class ModDB
     public void Clear()
     {
         if(Directory.Exists(Folder))
-            Directory.Delete(Folder);
+            Directory.Delete(Folder,true);
     }
 }

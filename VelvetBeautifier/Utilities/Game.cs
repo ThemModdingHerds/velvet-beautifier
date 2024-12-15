@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ThemModdingHerds.VelvetBeautifier.GameNews;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Game(string folder,string name)
@@ -58,4 +59,8 @@ public class Game(string folder,string name)
         if(!ExistsExecutable() && !GetExecutable().Verify(Executable)) return;
         Process.Start(Executable);
     }
+    public string GetGameNewsFile() => Path.Combine(Folder,News.GAMENEWS_FILEPATH);
+    public string GetGameNewsImageFolder() => Path.Combine(Folder,News.GAMENEWS_IMAGE_FOLDER);
+    public bool ExistsGameNews() => File.Exists(GetGameNewsFile()) && Directory.Exists(GetGameNewsImageFolder());
+    public List<News> ReadGameNews() => News.ReadGameNews(GetGameNewsFile());
 }
