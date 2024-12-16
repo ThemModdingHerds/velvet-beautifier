@@ -57,7 +57,12 @@ public class Game(string folder,string name)
     public void Launch()
     {
         if(!ExistsExecutable() && !GetExecutable().Verify(Executable)) return;
-        Process.Start(Executable);
+        Process.Start(new ProcessStartInfo()
+        {
+            FileName = Executable,
+            Verb = "open",
+            WorkingDirectory = Path.GetDirectoryName(Executable)
+        });
     }
     public string GetGameNewsFile() => Path.Combine(Folder,News.GAMENEWS_FILEPATH);
     public string GetGameNewsImageFolder() => Path.Combine(Folder,News.GAMENEWS_IMAGE_FOLDER);

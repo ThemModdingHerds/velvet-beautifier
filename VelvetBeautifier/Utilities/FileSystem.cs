@@ -53,6 +53,11 @@ public static class FileSystem
     public static void OpenFolder(string path)
     {
         if(!Directory.Exists(path)) return;
-        Process.Start(path);
+        Process.Start(new ProcessStartInfo()
+        {
+            FileName = path.EndsWith(Path.DirectorySeparatorChar) ? path : path + Path.DirectorySeparatorChar,
+            UseShellExecute = true,
+            Verb = "open"
+        });
     }
 }

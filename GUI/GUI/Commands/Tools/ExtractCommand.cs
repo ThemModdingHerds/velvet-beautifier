@@ -9,6 +9,7 @@ public class ExtractCommand : Command
     public ExtractCommand(IMainFormItem parent): base(parent)
     {
         SetText("&Extract","Extract .gfs or .tfhres files");
+        Shortcut = Keys.Control | Keys.E;
     }
     protected override void OnExecuted(EventArgs e)
     {

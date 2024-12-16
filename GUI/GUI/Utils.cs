@@ -1,9 +1,11 @@
+using System;
 using System.IO;
 using System.Reflection;
 using System.Resources;
 using System.Text;
 using Eto.Drawing;
 using Eto.Forms;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public static class Utils
@@ -25,4 +27,44 @@ public static class Utils
     }
     public static FileFilter GFSFilter {get => new("Reverge Package File",[".gfs"]);}
     public static FileFilter TFHRESFilter {get => new("TFHResouce File",[".tfhres"]);}
+    public static void SaveExceptionReport(this Control parent,Exception exception,string origin)
+    {
+        SaveFileDialog output = new()
+        {
+            Title = Velvet.Velvetify("Save Report file"),
+            Filters = {new FileFilter("Text file",[".txt"])},
+            CheckFileExists = true
+        };
+        if(output.ShowDialog(parent) == DialogResult.Ok)
+        {
+            string filepath = output.FileName;
+            string content = string.Join('\n',[
+                $"{Velvet.NAME} v{Dotnet.LibraryVersion}",
+                "",
+                $"caught exception at {origin}:",
+                exception.ToString()
+            ]);
+            File.WriteAllText(filepath,content);
+        }
+    }
+    public static void SaveExceptionReport(this Window parent,Exception exception,string origin)
+    {
+        SaveFileDialog output = new()
+        {
+            Title = Velvet.Velvetify("Save Report file"),
+            Filters = {new FileFilter("Text file",[".txt"])},
+            CheckFileExists = true
+        };
+        if(output.ShowDialog(parent) == DialogResult.Ok)
+        {
+            string filepath = output.FileName;
+            string content = string.Join('\n',[
+                $"{Velvet.NAME} v{Dotnet.LibraryVersion}",
+                "",
+                $"caught exception at {origin}:",
+                exception.ToString()
+            ]);
+            File.WriteAllText(filepath,content);
+        }
+    }
 }

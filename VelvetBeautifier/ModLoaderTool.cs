@@ -188,7 +188,7 @@ public class ModLoaderTool
             Velvet.Info("applying mods to server...");
             ApplyMods(Server);
         }
-        
+        Velvet.Info("mods have been applied!");
     }
     public void Revert()
     {
@@ -344,7 +344,8 @@ public class ModLoaderTool
         string file = await mod.DownloadLatestUpdate();
         return await InstallMod(file);
     }
-    public async Task InstallGameBananaMod(GameBanana.Argument argument) => await InstallGameBananaMod(argument.GetId());
+    public async Task<ModInstallResult> InstallGameBananaMod(GameBanana.Argument argument) => await InstallGameBananaMod(argument.GetId());
+    public async Task<ModInstallResult> InstallGameBananaMod(string url) => await InstallGameBananaMod(GameBanana.Utils.GetModId(url));
     public async Task<ModInstallResult> InstallMod(string? str)
     {
         if(str == null) return ModInstallResult.Invalid;
@@ -352,6 +353,11 @@ public class ModLoaderTool
         {
             Velvet.Info($"installing GameBanana Mod with id '{id}'...");
             return await InstallGameBananaMod(id);
+        }
+        if(GameBanana.Utils.ValidUrl(str))
+        {
+            Velvet.Info($"installing GameBanana Mod with url '{str}'");
+            return await InstallGameBananaMod(str);
         }
         if(Url.IsUrl(str))
         {

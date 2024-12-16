@@ -1,18 +1,17 @@
 using System;
-using Eto.Forms;
 using ThemModdingHerds.VelvetBeautifier.GUI.Interfaces;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI.Commands.Help;
-public class ReportIssueCommand : Command
+public class FeatureRequestCommand : Command
 {
-    public ReportIssueCommand(IMainFormItem parent): base(parent)
+    public FeatureRequestCommand(IMainFormItem parent) : base(parent)
     {
-        SetText("Report &issue","Report an issue to GitHub");
+        SetText("Request &feature","Suggest an idea for this project");
     }
     protected override void OnExecuted(EventArgs e)
     {
         base.OnExecuted(e);
-        Url.OpenUrl(Velvet.GITHUB_REPO_BUG_REPORT_URL);
+        Url.OpenUrl(Velvet.GITHUB_REPO_FEATURE_REQUEST_URL);
     }
 }

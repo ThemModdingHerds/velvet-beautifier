@@ -6,7 +6,7 @@ the executable is called `VelvetBeautifier.CLI.exe`
 
 ## Some neat features
 
-- you can drag & drop a file or folder to install it
+- you can drag & drop a file or folder to install it as a mod
 
 ## Arguments
 

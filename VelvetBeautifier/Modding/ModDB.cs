@@ -29,7 +29,7 @@ public class ModDB
     public ModInstallResult InstallMod(Mod mod)
     {
         ModInstallResult result = ModInstallResult.Ok;
-        if(Mods.Contains(mod))
+        if(ContainsMod(mod))
         {
             UninstallMod(mod);
             result = ModInstallResult.AlreadyExists;
@@ -55,7 +55,7 @@ public class ModDB
     }
     public void UninstallMod(Mod mod)
     {
-        if(!Mods.Contains(mod)) return;
+        if(!ContainsMod(mod)) return;
 
         Directory.Delete(mod.Folder,true);
     }
@@ -72,6 +72,17 @@ public class ModDB
             if(mod.Info.Id == id)
                 return mod;
         return null;
+    }
+    public bool ContainsMod(string id)
+    {
+        foreach(Mod mod in Mods)
+            if(mod.Info.Id == id)
+                return true;
+        return false;
+    }
+    public bool ContainsMod(Mod mod)
+    {
+        return ContainsMod(mod.Info.Id);
     }
     public void Clear()
     {

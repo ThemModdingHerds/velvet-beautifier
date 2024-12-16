@@ -1,12 +1,12 @@
 using ThemModdingHerds.VelvetBeautifier.Modding;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
-public class CommandLine(ModLoaderTool application,string[] argv)
+public class CommandLine(ModLoaderTool mlt,string[] argv)
 {
     public string[] Argv {get;} = argv;
     public Dictionary<string,string?> Arguments {get;} = Create(argv);
     public const string ARGUMENT_PREFIX = "--";
-    public ModLoaderTool App {get;} = application;
+    public ModLoaderTool ModLoaderTool {get;} = mlt;
     public IReadOnlyList<ICommandArgumentHandler> Handlers {get;} = [
         new RegisterSchemeHandler(),
         new InstallModHandler(),
@@ -33,13 +33,13 @@ public class CommandLine(ModLoaderTool application,string[] argv)
                 ModInstallResult result = ModInstallResult.Invalid;
                 if(Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
                 {
-                    var task = App.InstallMod(content);
+                    var task = ModLoaderTool.InstallMod(content);
                     task.Wait();
                     result = task.Result;
                 }
                 else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
                 {
-                    var task = App.InstallMod(argument.Link);
+                    var task = ModLoaderTool.InstallMod(argument.Link);
                     task.Wait();
                     result = task.Result;
                 }
@@ -50,7 +50,7 @@ public class CommandLine(ModLoaderTool application,string[] argv)
         }
         foreach(ICommandArgumentHandler handler in Handlers)
             if(Arguments.TryGetValue(handler.Name,out string? value))
-                handler.OnExecute(App,value);
+                handler.OnExecute(ModLoaderTool,value);
     }
     private static bool IsArg(string arg)
     {

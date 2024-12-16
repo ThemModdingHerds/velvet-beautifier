@@ -58,3 +58,15 @@ public class InstallFolderCommand : Command
         }
     }
 }
+public class InstallTextCommand : Command
+{
+    public InstallTextCommand(IMainFormItem parent): base(parent)
+    {
+        SetText("From &text","Install mod from a Text (URL, GameBanana ID)");
+    }
+    protected override void OnExecuted(EventArgs e)
+    {
+        base.OnExecuted(e);
+        new InstallTextModForm(MainForm).Show();
+    }
+}

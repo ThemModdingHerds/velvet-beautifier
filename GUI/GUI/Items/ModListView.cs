@@ -6,9 +6,10 @@ using Eto.Drawing;
 using Eto.Forms;
 using ThemModdingHerds.VelvetBeautifier.GUI.Interfaces;
 using ThemModdingHerds.VelvetBeautifier.Modding;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI.Items;
-public class ModListView : TableLayout, IMainFormItem
+public class ModListView : Panel, IMainFormItem
 {
     public ModDB ModDB {get => MainForm.ModLoaderTool.ModDB;}
     public MainForm MainForm {get;private set;}
@@ -20,8 +21,24 @@ public class ModListView : TableLayout, IMainFormItem
     }
     public void RefreshModList()
     {
+        TableLayout table = new()
+        {
+            Rows = {
+                new TableRow
+                {
+                    ScaleHeight = false,
+                    Cells = {
+                        new TableCell(new Label{BackgroundColor = Colors.LightGrey,Text = Velvet.Velvetify("Name")},true),
+                        new TableCell(new Label{BackgroundColor = Colors.LightGrey,Text = Velvet.Velvetify("Version")},true),
+                        new TableCell(new Label{BackgroundColor = Colors.LightGrey,Text = Velvet.Velvetify("Author")},true),
+                    }
+                }
+            }
+        };
         foreach(Mod mod in ModDB.Mods)
-            Rows.Add(new ModListItemRow(mod));
+            table.Rows.Add(new ModListItemRow(mod,MainForm));
+        table.Rows.Add(null);
+        Content = table;
     }
     protected override void OnDragDrop(DragEventArgs e)
     {
@@ -29,7 +46,7 @@ public class ModListView : TableLayout, IMainFormItem
         Uri[] uris = e.Data?.Uris ?? [];
         foreach(Uri uri in uris)
         {
-            string path = uri.LocalPath;
+            string path = uri.IsFile ? uri.LocalPath : uri.AbsoluteUri;
             Task task = MainForm.ModLoaderTool.InstallMod(path);
             task.Wait();
         }

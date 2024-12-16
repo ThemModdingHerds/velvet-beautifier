@@ -19,17 +19,15 @@ Mod Loader/Tool for Z-Engine games
   - GameBanana links/ids
   - URI Scheme
     - for GameBanana: `velvetbeautifier:https://gamebanana.com/mmdl/<id>,Mod,<mod-id>` [Example](velvetbeautifier:https://gamebanana.com/mmdl/1108068,Mod,485712)
-    - for anything else: `velvetbeautifier:<url>`
+    - for anything else: `velvetbeautifier:<url/file/folder>`
 
 ### Possible Features
 
 - custom Stages (levels)
 - custom Pixel Lobbies
-- custom Color palettes
 
 ### Planned features
 
-- GUI program
 - modding `.tfhres` a little bit easier
 
 ## Usage
@@ -41,7 +39,7 @@ Mod Loader/Tool for Z-Engine games
 ![CLI Icon](./assets/inverted_icon_medium.png)
 [The Command Line (VelvetBeautifier.CLI)](./CLI.md)  
 ![GUI Icon](./assets/icon_medium.png)
-The Graphical User Interface does not exist yet
+[The Graphical User Interface (VelvetBeautifier.GUI)](GUI.md)
 
 ### How do I make mods?
 
@@ -54,10 +52,10 @@ The Graphical User Interface does not exist yet
 ## Frequently asked questions
 
 Q: _yo, you can add custom stages?_  
-A: yes but you'll have to modify the `worlds.ini` and other mods might cause a conflict but I will work on making some kind of sub manager for custom stages
+A: yes you can check [this](GUIDE.md#level-packs) guide out
 
 Q: _when is the next update?_  
-A: when I can work, I can't work 24/7  
+A: when I can work, I am a busy man just like you
 
 Q: _can I modify base assets?_  
 A: yes but I hope you know what you're doing
@@ -83,7 +81,20 @@ A: these are backups of games files, required for modding the game, if there's o
 
 ## Building
 
-You need the .NET 8.0 SDK and Visual Studio, open the solution and build. That's it
+You need the .NET 8.0 SDK, open the solution and build. That's it
+
+## Disclaimer
+
+To make this clear, some terms have a strict definition:  
+`We` is defined as:
+
+- this software (Velvet Beautifier)
+- me (N1ghtTheF0x)
+- any contributer on this repository
+
+_We_ have **no relation** to Mane6/Modus/Them's Fightin' Herds, all assets used here are from the game and fall under their copyright.  
+_We_ are **not responsible** for you getting banned from online play if you use any mods that might change online gameplay/features.  
+_We_ do **not support** piracy/cheating/hacking or any kind of harm to the online community
 
 ## License
 

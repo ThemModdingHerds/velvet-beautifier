@@ -59,6 +59,7 @@ public class CreateModCommand : Command
     public CreateModCommand(IMainFormItem parent): base(parent)
     {
         SetText("Create new &mod","Create a new empty mod");
+        Shortcut = Keys.Control | Keys.N;
     }
     protected override void OnExecuted(EventArgs e)
     {

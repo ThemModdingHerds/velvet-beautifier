@@ -30,6 +30,6 @@ public static partial class Utils
         return $"https://api.gamebanana.com/Core/Item/Data?itemtype={itemtype}&itemid={id}&fields={field}&format=json&return_keys=true";
     }
 
-    [GeneratedRegex(@"/^(https?:\/\/)?(www\.)?gamebanana\.com.*$/gm")]
+    [GeneratedRegex(@"^(https?:\/\/)?(www\.)?gamebanana\.com.*$")]
     private static partial Regex GameBananaURL();
 }

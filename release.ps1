@@ -1,8 +1,10 @@
 # usage: release.ps1 <version>
-If(!$Version)
-{
-    throw "no version specified"
-}
+Param
+    (
+        [parameter(Position=0,Mandatory=$true)]
+        [String]
+        $Version
+    )
 $operatingsystem = @{
     Windows = "win-x64"
     Linux = "linux-x64"
@@ -20,7 +22,7 @@ $guinet = @{
 }
 # create output folder if it doesn't exist
 $outputFolder = "release"
-Remove-Item -Force -Path .\$outputFolder\
+Remove-Item -Force -Recurse -Path .\$outputFolder\
 New-Item -ItemType Directory -Force -Path .\$outputFolder\
 
 # CLI

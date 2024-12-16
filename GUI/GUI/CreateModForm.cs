@@ -40,6 +40,7 @@ public partial class CreateModForm : Form, IMainFormItem
         Mod mod = Mod.Create(info);
         mainForm.ModLoaderTool.ModDB.InstallMod(mod);
         VelvetEto.ShowMessageBox($"Created mod '{info.Name}'");
+        mainForm.ModList.RefreshModList();
         Close();
     }
     private ModInfo CreateModInfo()

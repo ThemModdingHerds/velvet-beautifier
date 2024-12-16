@@ -16,6 +16,7 @@ public class Mod
     [JsonPropertyName("Files().aFiles()")]
     public Dictionary<string,ModFile> Files {get;set;} = [];
     public static async Task<Mod?> Fetch(Argument argument) => await Fetch(argument.GetId());
+    public static async Task<Mod?> Fetch(string url) => await Fetch(Utils.GetModId(url));
     public static async Task<Mod?> Fetch(int id)
     {
         string url = Utils.CreateCoreItemDataRequestUrl("Mod",id,[

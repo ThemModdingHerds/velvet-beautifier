@@ -14,7 +14,8 @@ public class MenuBar : Eto.Forms.MenuBar, IMainFormItem
         Parent = parent;
         AboutItem = new AboutCommand(this);
         HelpItems.AddRange([
-            new ReportIssueCommand(this)
+            new ReportIssueCommand(this),
+            new FeatureRequestCommand(this)
         ]);
         Items.AddRange([
             CreateFile(),
@@ -26,7 +27,8 @@ public class MenuBar : Eto.Forms.MenuBar, IMainFormItem
         SubMenuItem installMod = new
         ([
             new InstallFileCommand(this),
-            new InstallFolderCommand(this)
+            new InstallFolderCommand(this),
+            new InstallTextCommand(this)
         ])
         {
             Text = "&Install Mod"

@@ -12,6 +12,8 @@ public static class Velvet
     public const string GITHUB_REPO_LATEST_RELEASE_URL = $"${GITHUB_REPO_RELEASES_URL}/latest";
     public const string GAMENEWS_MODLIST_FILENAME = "GameNews-ModList.png";
     public const string GAMENEWS_MODLIST_RESOURCE_PATH = $"ThemModdingHerds.VelvetBeautifier.{GAMENEWS_MODLIST_FILENAME}";
+    public const string GITHUB_REPO_BUG_REPORT_URL = $"{GITHUB_REPO_URL}/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=";
+    public const string GITHUB_REPO_FEATURE_REQUEST_URL = $"{GITHUB_REPO_URL}/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=";
     public static void Info(string text)
     {
         Console.WriteLine(Velvetify(text));
