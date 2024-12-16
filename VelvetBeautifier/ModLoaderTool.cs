@@ -171,7 +171,7 @@ public class ModLoaderTool
             noTampering = Backup(game.GetData01Folder(),GameFiles.Data01);
         if(game.ExistsTFHResourcesFolder())
             noTampering = Backup(game.GetTFHResourcesFolder(),GameFiles.TFHResources);
-        if(game.ExistsGameNews() && game.IsClient())
+        if(game.ExistsGameNews())
             BackupManager.MakeBackup(game.GetGameNewsFile());
         return noTampering;
     }
