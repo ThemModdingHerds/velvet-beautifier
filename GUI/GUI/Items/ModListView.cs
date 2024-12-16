@@ -20,17 +20,8 @@ public class ModListView : TableLayout, IMainFormItem
     }
     public void RefreshModList()
     {
-        ModDB.Refresh();
         foreach(Mod mod in ModDB.Mods)
-            Rows.Add(
-                new TableRow
-                {
-                    ScaleHeight = true,
-                    Cells = {
-                        new TableCell(new ModListItem(mod),true)
-                    }
-                }
-            );
+            Rows.Add(new ModListItemRow(mod));
     }
     protected override void OnDragDrop(DragEventArgs e)
     {

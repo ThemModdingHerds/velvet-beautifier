@@ -16,6 +16,14 @@ public class Mod
         string modinfo_path = Path.Combine(folder,MODINFO_NAME);
         return File.Exists(modinfo_path);
     }
+    public static Mod Create(string path,ModInfo info)
+    {
+        string modinfoPath = Path.Combine(path,MODINFO_NAME);
+        Directory.CreateDirectory(path);
+        info.Write(modinfoPath);
+        return new(path);
+    }
+    public static Mod Create(ModInfo info) => Create(FileSystem.CreateTempFolder(),info);
     public Mod(string folder)
     {
         Folder = folder;

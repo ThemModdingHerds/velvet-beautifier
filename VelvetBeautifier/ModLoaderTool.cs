@@ -66,9 +66,30 @@ public class ModLoaderTool
             }
         }
     }
+    private bool HasBackups()
+    {
+        bool flag = false;
+        if(Client.Valid())
+            flag = HasBackups(Client);
+        if(Server.Valid())
+            flag = HasBackups(Server);
+        return flag;
+    }
+    private bool HasBackups(Game game)
+    {
+        if(game.ExistsData01Folder())
+        foreach(GameFile gameFile in GameFiles.Data01)
+            if(!BackupManager.ExistsBackup(gameFile.Name))
+                return false;
+        if(game.ExistsTFHResourcesFolder())
+        foreach(GameFile gameFile in GameFiles.TFHResources)
+            if(!BackupManager.ExistsBackup(gameFile.Name))
+                return false;
+        return true;
+    }
     private bool SetupNotRequired()
     {
-        return Directory.Exists(BackupManager.Folder) &&
+        return HasBackups() &&
                Directory.Exists(ModDB.Folder) &&
                File.Exists(configPath) &&
                Directory.Exists(levelsPath) &&
@@ -83,7 +104,7 @@ public class ModLoaderTool
         }
         if(SetupNotRequired())
             return SetupResult.NotRequired;
-        Velvet.Info("setting up for first lanuch...");
+        Velvet.Info("setting up the environment...");
         if(!BackupGameFiles())
         {
             BackupManager.Clear();
@@ -106,6 +127,11 @@ public class ModLoaderTool
     }
     private void CreateLevelPack()
     {
+        if(!BackupManager.ExistsBackup("levels.gfs"))
+        {
+            Velvet.Error("couldn't create level pack from level.gfs because there's no backup of it");
+            return;
+        }
         string levelsgfs = BackupManager.GetBackupPath("levels.gfs");
         string levels = GFS.Utils.Extract(levelsgfs);
         LevelPack pack = LevelPack.Read(Path.Combine(levels,"temp","levels"));
@@ -113,7 +139,7 @@ public class ModLoaderTool
     }
     private bool BackupGameFiles()
     {
-        if(Directory.Exists(BackupManager.Folder)) return true;
+        if(HasBackups()) return true;
         bool noTampering = true;
         if(Client.Valid())
             noTampering = BackupGameFiles(Client);
@@ -151,7 +177,6 @@ public class ModLoaderTool
     }
     public void ApplyMods()
     {
-        ModDB.Refresh();
         Velvet.Info($"applying {ModDB.EnabledMods.Count} mods...");
         if(Client.Valid())
         {
@@ -213,9 +238,17 @@ public class ModLoaderTool
             modpacks.Add(modpack);
         }
         if(modpacks.Count == 0) return;
-        LevelPack.Combine(tempLevels,[GetLevelPack(),..modpacks]).Save();
+        int count = (from modpack in modpacks select modpack.Worlds.Entries.Count).Aggregate((a,b) => a + b);
+        Velvet.Info($"applying {count} levels...");
+        LevelPack vanilla = ReadVanillaLevelPack();
+        vanilla.Add([..modpacks]);
+        vanilla.Save(tempLevels);
         string levelsgfs = Path.Combine(game.GetData01Folder(),"levels.gfs");
         RevergePackage levels = RevergePackage.Create(temp);
+        RevergePackage modded = RevergePackage.Open(levelsgfs);
+        levels.Merge(modded);
+        if(File.Exists(levelsgfs))
+            File.Delete(levelsgfs);
         Writer writer = new(levelsgfs);
         writer.Write(levels);
     }
@@ -244,7 +277,6 @@ public class ModLoaderTool
         }
         if(game.ExistsData01Folder())
         {
-            ApplyLevels(game);
             string folder = game.GetData01Folder();
             foreach(GameFile gameFile in game.GetData01Files())
             {
@@ -273,6 +305,7 @@ public class ModLoaderTool
                 Writer writer = new(file);
                 writer.Write(modded);
             }
+            ApplyLevels(game);
         }
         if(game.ExistsTFHResourcesFolder())
         {
@@ -402,7 +435,6 @@ public class ModLoaderTool
     public void EnableMod(string? id)
     {
         if(id == null) return;
-        ModDB.Refresh();
         Mod? mod = ModDB.FindModById(id);
         if(mod == null)
         {
@@ -415,7 +447,6 @@ public class ModLoaderTool
     public void DisableMod(string? id)
     {
         if(id == null) return;
-        ModDB.Refresh();
         Mod? mod = ModDB.FindModById(id);
         if(mod == null)
         {
@@ -425,7 +456,7 @@ public class ModLoaderTool
         Velvet.Info($"disabling Mod id '{id}'...");
         mod.Disable();
     }
-    public LevelPack GetLevelPack()
+    public LevelPack ReadVanillaLevelPack()
     {
         return LevelPack.Read(levelsPath);
     }

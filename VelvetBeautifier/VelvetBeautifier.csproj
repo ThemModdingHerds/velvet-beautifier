@@ -51,7 +51,7 @@
   <ItemGroup>
     <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />
     <PackageReference Include="SharpCompress" Version="0.38.0" />
-    <PackageReference Include="ThemModdingHerds.Levels" Version="1.2.3" />
+    <PackageReference Include="ThemModdingHerds.Levels" Version="1.2.4" />
     <PackageReference Include="ThemModdingHerds.TFHRES" Version="1.4.0" />
     <PackageReference Include="ThemModdingHerds.GFS" Version="2.1.1" />
 

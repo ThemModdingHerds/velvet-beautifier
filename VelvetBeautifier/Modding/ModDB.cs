@@ -4,22 +4,20 @@ namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class ModDB
 {
     public string Folder {get;}
-    private readonly List<Mod> mods = [];
-    public List<Mod> Mods {get => mods;}
-    public List<Mod> EnabledMods {get => [..mods.Where((mod) => mod.Enabled)];}
-    public List<Mod> DisabledMods {get => [..mods.Where((mod) => !mod.Enabled)];}
-    static List<Mod> ReadFolder(string folder)
+    public List<Mod> Mods {get => ReadFolder();}
+    public List<Mod> EnabledMods {get => [..Mods.Where((mod) => mod.Enabled)];}
+    public List<Mod> DisabledMods {get => [..Mods.Where((mod) => !mod.Enabled)];}
+    private List<Mod> ReadFolder()
     {
         List<Mod> mods = [];
 
-        foreach(string modfolder in Directory.GetDirectories(folder))
+        foreach(string modfolder in Directory.GetDirectories(Folder))
         {
             if(Mod.IsMod(modfolder))
             {
                 mods.Add(new(modfolder));
                 continue;
             }
-            Velvet.Info($"{modfolder} is not a valid mod folder. skipping it");
         }
         return mods;
     }
@@ -27,30 +25,29 @@ public class ModDB
     {
         Folder = folder;
         Directory.CreateDirectory(folder);
-        Refresh();
-    }
-    public void Refresh()
-    {
-        mods.Clear();
-        mods.AddRange(ReadFolder(Folder));
     }
     public ModInstallResult InstallMod(Mod mod)
     {
-        if(mods.Contains(mod)) return ModInstallResult.AlreadyExists;
+        ModInstallResult result = ModInstallResult.Ok;
+        if(Mods.Contains(mod))
+        {
+            UninstallMod(mod);
+            result = ModInstallResult.AlreadyExists;
+        }
         string path = Path.Combine(Folder,mod.Info.Id);
         Directory.CreateDirectory(path);
         FileSystem.CopyFolder(mod.Folder,path);
-
-        return ModInstallResult.Ok;
+        return result;
     }
     public ModInstallResult InstallMod(string? folder)
     {
-        if(folder == null || !Mod.IsMod(folder)) return ModInstallResult.Invalid;
-        return InstallMod(new Mod(folder));
+        if(folder == null) return ModInstallResult.Invalid;
+        if(Mod.IsMod(folder))
+            return InstallMod(new Mod(folder));
+        return ModInstallResult.Invalid;
     }
     public bool UninstallMod(string id)
     {
-        Refresh();
         Mod? mod = FindModById(id);
         if(mod == null) return false;
         UninstallMod(mod);
@@ -58,20 +55,20 @@ public class ModDB
     }
     public void UninstallMod(Mod mod)
     {
-        if(!mods.Contains(mod)) return;
+        if(!Mods.Contains(mod)) return;
 
         Directory.Delete(mod.Folder,true);
     }
     public Mod? FindModByName(string name)
     {
-        foreach(Mod mod in mods)
+        foreach(Mod mod in Mods)
             if(mod.Info.Name == name)
                 return mod;
         return null;
     }
     public Mod? FindModById(string id)
     {
-        foreach(Mod mod in mods)
+        foreach(Mod mod in Mods)
             if(mod.Info.Id == id)
                 return mod;
         return null;

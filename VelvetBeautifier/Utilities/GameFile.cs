@@ -8,4 +8,8 @@ public class GameFile(string name,string sha256,bool canModify)
     {
         return Crypto.Checksum(file,Checksum);
     }
+    public override string ToString()
+    {
+        return Name;
+    }
 }

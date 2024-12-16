@@ -54,3 +54,15 @@ public class CreateTFHResouceCommand : Command
         }
     }
 }
+public class CreateModCommand : Command
+{
+    public CreateModCommand(IMainFormItem parent): base(parent)
+    {
+        SetText("Create new &mod","Create a new empty mod");
+    }
+    protected override void OnExecuted(EventArgs e)
+    {
+        base.OnExecuted(e);
+        new CreateModForm(MainForm).Show();
+    }
+}

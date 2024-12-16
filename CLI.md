@@ -28,14 +28,6 @@ should be a path to a file/folder for output
 --output <path-to-sth>
 ```
 
-### `--id`
-
-the id of any mod installed in `mods`
-
-```sh
---id <identifier>
-```
-
 ## Commands
 
 ### `--install <sth>`
@@ -86,14 +78,14 @@ example:
 VelvetBeautifier.CLI.exe --revert
 ```
 
-### `--create --id <identifier>`
+### `--create <identifier>`
 
 creates a empty mod template for you in the `mods` folder
 
 example:
 
 ```sh
-VelvetBeautifier.CLI.exe --create --id mycoolmod # creates a valid mod called "mycoolmod" in mods (mods/mycoolmod)
+VelvetBeautifier.CLI.exe --create mycoolmod # creates a valid mod called "mycoolmod" in mods (mods/mycoolmod)
 ```
 
 ### `--create-gfs --input <folder> --output <file>`
@@ -106,7 +98,7 @@ example:
 VelvetBeautifier.CLI.exe --create-gfs --input afolder --output afolder.gfs
 ```
 
-### `--create-tfhres --output <file>`
+### `--create-tfhres <file>`
 
 creates a empty valid `.tfhres` file and save it as `file`, it also adds the extension if it can't find it, useful for modding `.tfhres` files.
 
@@ -127,7 +119,7 @@ VelvetBeautifier.CLI.exe --extract --input levels.gfs --output levels # extracts
 VelvetBeautifier.CLI.exe --extract --input resources_prod.tfhres --output resources_prod # extracts a .tfhres file
 ```
 
-### `--enable --id <identifier>` and `--disable --id <identifier>`
+### `--enable <identifier>` and `--disable <identifier>`
 
 enables/disables a mod with the id `identifier`
 

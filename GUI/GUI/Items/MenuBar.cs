@@ -53,7 +53,9 @@ public class MenuBar : Eto.Forms.MenuBar, IMainFormItem
             new ExtractCommand(this),
             new SeparatorMenuItem(),
             new CreateRevergePackageCommand(this),
-            new CreateTFHResouceCommand(this)
+            new CreateTFHResouceCommand(this),
+            new SeparatorMenuItem(),
+            new CreateModCommand(this)
         ])
         {
             Text = "&Tools"

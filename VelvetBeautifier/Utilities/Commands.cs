@@ -75,8 +75,7 @@ public class CreateTFHResourceHandler : ICommandArgumentHandler
     public string Name => "create-tfhres";
     public void OnExecute(ModLoaderTool application,string? value)
     {
-        if(application.CommandLine.Arguments.TryGetValue("output",out string? output))
-            ModLoaderTool.CreateTFHResource(output);
+        ModLoaderTool.CreateTFHResource(value);
         Environment.Exit(0);
     }
 }
@@ -98,8 +97,7 @@ public class EnableModHandler : ICommandArgumentHandler
     public string Name => "enable";
     public void OnExecute(ModLoaderTool application,string? value)
     {
-        if(application.CommandLine.Arguments.TryGetValue("id",out string? id))
-            application.EnableMod(id);
+        application.EnableMod(value);
         Environment.Exit(0);
     }
 }
@@ -108,8 +106,7 @@ public class DisableModHandler : ICommandArgumentHandler
     public string Name => "disable";
     public void OnExecute(ModLoaderTool application,string? value)
     {
-        if(application.CommandLine.Arguments.TryGetValue("id",out string? id))
-            application.DisableMod(id);
+        application.DisableMod(value);
         Environment.Exit(0);
     }
 }
