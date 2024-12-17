@@ -92,7 +92,7 @@ To make this clear, some terms have a strict definition:
 - me (N1ghtTheF0x)
 - any contributer on this repository
 
-_We_ have **no relation** to Mane6/Modus/Them's Fightin' Herds, all assets used here are from the game and fall under their copyright.  
+_We_ have **no relation** to Mane6/Maximum Entertainment/Them's Fightin' Herds, all assets used here are from the game and fall under their copyright.  
 _We_ are **not responsible** for you getting banned from online play if you use any mods that might change online gameplay/features.  
 _We_ do **not support** piracy/cheating/hacking or any kind of harm to the online community
 
