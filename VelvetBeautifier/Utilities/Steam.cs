@@ -74,8 +74,6 @@ public static class Steam
         {
             if(gamepath.EndsWith(Game.CLIENT_NAME))
                 return gamepath;
-            if(gamepath.EndsWith(Game.SKULLGIRLS_NAME))
-                path = gamepath;
         }
         return path;
     }

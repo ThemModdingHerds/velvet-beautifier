@@ -7,7 +7,16 @@ using ThemModdingHerds.IO.Binary;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class FileSystem
 {
-    public static string ExecutableExtension {get => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : "";}
+    public static string ExecutableExtension {
+        get
+        {
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+                return ".exe";
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return ".Linux.x64";
+            return "";
+        }
+    }
     public static List<string> GetAllFiles(string folder,string filter = "*.*")
     {
         if(!Directory.Exists(folder))

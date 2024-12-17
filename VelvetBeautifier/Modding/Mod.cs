@@ -69,7 +69,8 @@ public class Mod
     public Dictionary<string,Database> GetTFHResources()
     {
         Dictionary<string,Database> databases = [];
-        foreach(GameFile gameFile in GameFiles.TFHResources)
+        List<Checksum> gameFiles = ChecksumsTFH.FetchSync()?.TFHResources ?? [];
+        foreach(Checksum gameFile in gameFiles)
         {
             Database? db = GetTFHResource(gameFile.Name);
             if(db == null) continue;
@@ -86,7 +87,8 @@ public class Mod
     public Dictionary<string,RevergePackage> GetRevergePackages()
     {
         Dictionary<string,RevergePackage> packages = [];
-        foreach(GameFile gameFile in GameFiles.Data01)
+        List<Checksum> gameFiles = ChecksumsTFH.FetchSync()?.Data01 ?? [];
+        foreach(Checksum gameFile in gameFiles)
         {
             RevergePackage? gfs = GetRevergePackage(gameFile.Name);
             if(gfs == null) continue;

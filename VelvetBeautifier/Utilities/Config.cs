@@ -10,6 +10,8 @@ public class Config
     public string ServerPath {get; set;} = "";
     [JsonPropertyName("version")]
     public Version Version {get; set;} = Dotnet.LibraryVersion;
+    [JsonPropertyName("ignoreChecks")]
+    public bool IgnoreChecks {get; set;} = false;
     public static Config Read(string path)
     {
         return JsonSerializer.Deserialize<Config>(File.ReadAllText(path)) ?? throw new SerializationException("couldn't read config file");
