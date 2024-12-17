@@ -5,7 +5,7 @@
 [![Build (Debug)](https://github.com/ThemModdingHerds/velvet-beautifier/actions/workflows/build.yml/badge.svg)](https://github.com/ThemModdingHerds/velvet-beautifier/actions/workflows/build.yml)
 ![GitHub License](https://img.shields.io/github/license/ThemModdingHerds/velvet-beautifier)
 
-Mod Loader/Tool for Z-Engine games
+Mod Loader/Tool for Them's Fightin' Herds games
 
 - [GameBanana link (Them's Fightin' Herds)][gamebanana-link]
 
@@ -95,6 +95,7 @@ To make this clear, some terms have a strict definition:
 _We_ have **no relation** to Mane6/Modus/Them's Fightin' Herds, all assets used here are from the game and fall under their copyright.  
 _We_ are **not responsible** for you getting banned from online play if you use any mods that might change online gameplay/features.  
 _We_ do **not support** piracy/cheating/hacking or any kind of harm to the online community
+_we_ will **not support** any kind of Skull Girls modding
 
 ## License
 

@@ -6,7 +6,8 @@
 
 1. Launch `VelvetBeautifier.GUI`, it should look something like this:
     ![Empty GUI](./assets/screenshots/gui-empty.png)
-2. Click on `Tools -> Create new mod` or just press `Ctrl + N` on your keyboard
+2. Click on `Tools -> Create new mod` or just press `Ctrl + N` on your keyboard, you should see this:
+    ![Create Mod GUI](./assets/screenshots/gui-create-mod.png)
 3. Fill out the information, click on `Create` and confirm the message box by clicking on `Ok`
 4. Your mod should be then on the modlist view
 5. You can right click on your mod and then `Open Folder` to open the location of the mod
