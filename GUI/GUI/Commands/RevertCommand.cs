@@ -12,6 +12,6 @@ public class RevertCommand : Command
     protected override void OnExecuted(EventArgs e)
     {
         base.OnExecuted(e);
-        MainForm.ModLoaderTool.Revert();
+        ModLoaderTool.Revert();
     }
 }

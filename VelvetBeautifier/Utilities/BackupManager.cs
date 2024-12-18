@@ -1,43 +1,52 @@
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
-public class BackupManager(string folder)
+public static class BackupManager
 {
-    public string Folder {get;} = folder;
+    public const string FOLDERNAME = "backup";
+    public const string FILE_EXT = ".bak";
+    public static string Folder => Path.Combine(Dotnet.ExecutableFolder,FOLDERNAME);
     public static string GetBackupName(string path)
     {
-        return Path.GetFileName(path) + ".bak";
+        return Path.GetFileName(path) + FILE_EXT;
     }
-    public string GetBackupPath(string path)
+    public static string GetBackupPath(string path)
     {
         return Path.Combine(Folder,GetBackupName(path));
     }
-    public string MakeBackup(string path)
+    public static string MakeBackup(string path)
     {
         string filepath = GetBackupPath(path);
         if(ExistsBackup(path))
             return filepath;
+        Velvet.Info($"creating backup of {Path.GetFileName(path)}");
         if(!Directory.Exists(Folder))
             Directory.CreateDirectory(Folder);
         File.Copy(path,filepath,true);
         return filepath;
     }
-    public bool ExistsBackup(string path)
+    public static string MakeBackup(string path,Checksum checksum)
+    {
+        if(!checksum.Verify(path))
+            Velvet.Warn($"{checksum.Name} has been tampered with! It might cause problems");
+        return MakeBackup(path);
+    }
+    public static bool ExistsBackup(string path)
     {
         return File.Exists(Path.Combine(Folder,GetBackupName(path)));
     }
-    public void Revert(string path)
+    public static void Revert(string path)
     {
         if(!ExistsBackup(path))
             return;
         string filepath = GetBackupPath(path);
         File.Copy(filepath,path,true);
     }
-    public void RevertFolder(string folder)
+    public static void RevertFolder(string folder)
     {
         string[] files = Directory.GetFiles(folder);
         foreach(string file in files)
             Revert(file);
     }
-    public void BackupFolder(string folder)
+    public static void BackupFolder(string folder)
     {
         if(ExistsBackupFolder(folder))
             return;
@@ -45,7 +54,7 @@ public class BackupManager(string folder)
         foreach(string file in files)
             MakeBackup(file);
     }
-    public bool ExistsBackupFolder(string folder)
+    public static bool ExistsBackupFolder(string folder)
     {
         string[] files = Directory.GetFiles(folder);
         foreach(string file in files)
@@ -53,7 +62,7 @@ public class BackupManager(string folder)
                 return false;
         return true;
     }
-    public void Clear()
+    public static void Clear()
     {
         if(Directory.Exists(Folder))
             Directory.Delete(Folder,true);

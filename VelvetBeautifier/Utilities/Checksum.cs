@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
@@ -26,16 +27,27 @@ public class ChecksumsZEngine : ChecksumsBase
 }
 public class ChecksumsTFH : ChecksumsZEngine
 {
-    private static ChecksumsTFH? cache = null;
+    public const string FILENAME = "checksums.json";
+    public static string FilePath => Path.Combine(Dotnet.ExecutableFolder,FILENAME);
     [JsonPropertyName("tfhres")]
     public List<Checksum> TFHResources {get;set;} = [];
     [JsonPropertyName("gamenews")]
     public Checksum GameNews {get;set;} = new();
+    private static bool HasCached()
+    {
+        return File.Exists(FilePath);
+    }
     public static async Task<ChecksumsTFH?> Fetch(bool force = false)
     {
-        if(force || cache == null)
-            cache = await DownloadManager.GetJSON<ChecksumsTFH>(Velvet.GITHUB_CHECKSUMS_TFH_FILE_URL);
-        return cache;
+        if(HasCached() && !force)
+        {
+            return JsonSerializer.Deserialize<ChecksumsTFH>(File.ReadAllText(FilePath));
+        }
+        ChecksumsTFH? checksums = await DownloadManager.GetJSON<ChecksumsTFH>(Velvet.GITHUB_CHECKSUMS_TFH_FILE_URL);
+        if(HasCached())
+            File.Delete(FilePath);
+        File.WriteAllText(FilePath,JsonSerializer.Serialize(checksums));
+        return checksums;
     }
     public static ChecksumsTFH? FetchSync(bool force = false)
     {

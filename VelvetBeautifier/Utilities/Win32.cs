@@ -27,7 +27,7 @@ public static class Win32
             Velvet.Info("created URI scheme for this executable");
             return true;
         }
-        Velvet.Info("not supported on this platform");
+        Velvet.Warn("not supported on this platform");
         return false;
     }
     public static bool DeleteURIScheme()
@@ -49,6 +49,7 @@ public static class Win32
                 return true;
             }
         }
+        Velvet.Warn("not supported on this platform");
         return false;
     }
 }

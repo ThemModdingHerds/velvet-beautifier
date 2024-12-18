@@ -30,6 +30,7 @@ public class Argument(string link,string? itemType,int? id) : IParsable<Argument
         int id = int.Parse(args[2]);
         return new(url,itemType,id);
     }
+    public static Argument Parse(string s) => Parse(s,null);
     public static bool TryParse([NotNullWhen(true)] string? s,IFormatProvider? provider,[MaybeNullWhen(false)] out Argument result)
     {
         result = null;

@@ -3,5 +3,6 @@ public enum ModInstallResult
 {
     Ok,
     AlreadyExists,
-    Invalid
+    Invalid,
+    Failed
 }

@@ -1,13 +1,12 @@
 using ThemModdingHerds.VelvetBeautifier.Modding;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
-public class CommandLine(ModLoaderTool mlt,string[] argv)
+public static class CommandLine
 {
-    public string[] Argv {get;} = argv;
-    public Dictionary<string,string?> Arguments {get;} = Create(argv);
+    public static string[] Args => Environment.GetCommandLineArgs();
+    public static Dictionary<string,string?> Arguments {get;} = Create(Args);
     public const string ARGUMENT_PREFIX = "--";
-    public ModLoaderTool ModLoaderTool {get;} = mlt;
-    public IReadOnlyList<ICommandArgumentHandler> Handlers {get;} = [
+    public static IReadOnlyList<ICommandArgumentHandler> Handlers {get;} = [
         new RegisterSchemeHandler(),
         new InstallModHandler(),
         new RemoveModHandler(),
@@ -23,34 +22,44 @@ public class CommandLine(ModLoaderTool mlt,string[] argv)
         new ListModsHandler(),
         new ResetHandler()
     ];
-    public void Process()
+    public static void Process()
     {
-        if(Argv.Length == 1)
+        if(Args.Length == 1)
         {
-            if(Argv[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(Argv[0],UriKind.Absolute,out Uri? uri))
+            if(Args[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(Args[0],UriKind.Absolute,out Uri? uri))
             {
                 string content = uri.AbsolutePath;
                 ModInstallResult result = ModInstallResult.Invalid;
                 if(Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
                 {
-                    var task = ModLoaderTool.InstallMod(content);
-                    task.Wait();
-                    result = task.Result;
+                    result = ModDB.InstallMod(content);
                 }
                 else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
                 {
-                    var task = ModLoaderTool.InstallMod(argument.Link);
-                    task.Wait();
-                    result = task.Result;
+                    result = ModDB.InstallMod(argument.Link);
                 }
-                Velvet.Info("you can close this window now...");
-                Console.ReadLine();
                 Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
             }
         }
+        bool handled = false;
         foreach(ICommandArgumentHandler handler in Handlers)
+        {
+            if(handled) break;
             if(Arguments.TryGetValue(handler.Name,out string? value))
-                handler.OnExecute(ModLoaderTool,value);
+            {
+                try
+                {
+                    handler.OnExecute(value);
+                    handled = true;
+                }
+                catch(Exception exception)
+                {
+                    Velvet.Error(exception);
+                }
+            }
+        }
+        if(handled) return;
+        Environment.Exit(1);
     }
     private static bool IsArg(string arg)
     {
@@ -86,5 +95,5 @@ public class CommandLine(ModLoaderTool mlt,string[] argv)
 public interface ICommandArgumentHandler
 {
     public string Name {get;}
-    public void OnExecute(ModLoaderTool application,string? value);
+    public void OnExecute(string? value);
 }

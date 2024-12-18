@@ -11,9 +11,8 @@ public static class Crypto
     public static byte[] Hash(string file)
     {
         if(!File.Exists(file)) return [];
-        FileStream stream = File.OpenRead(file);
+        using FileStream stream = File.OpenRead(file);
         byte[] result = HashSHA256(stream);
-        stream.Close();
         return result;
     }
     public static bool Checksum(string file,string hash) => Checksum(file) == hash;

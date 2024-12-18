@@ -9,7 +9,6 @@ public class ModListItemRow : TableRow
 {
     public MainForm MainForm {get;private set;}
     public Mod Mod {get;}
-    private ModDB ModDB => MainForm.ModLoaderTool.ModDB;
     private readonly CheckBox enabled;
     private readonly Label version;
     private readonly Label author;

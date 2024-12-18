@@ -28,7 +28,7 @@ public class CreateRevergePackageCommand : Command
             {
                 string folder = input.Directory;
                 string filepath = output.FileName;
-                ModLoaderTool.CreateRevergePackage(folder,filepath);
+                GFS.Utils.Create(folder,filepath);
             }
         }
     }
@@ -50,7 +50,7 @@ public class CreateTFHResouceCommand : Command
         if(output.ShowDialog(MainForm) == DialogResult.Ok)
         {
             string filepath = output.FileName;
-            ModLoaderTool.CreateTFHResource(filepath);
+            TFHResource.Utils.CreateEmpty(filepath);
         }
     }
 }

@@ -19,12 +19,20 @@ public static class Velvet
     public const string GITHUB_REPO_FEATURE_REQUEST_URL = $"{GITHUB_REPO_URL}/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=";
     public static void Info(string text)
     {
+        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine(Velvetify(text));
     }
     public static void Error(string text)
     {
+        Console.ForegroundColor = ConsoleColor.Red;
         Console.Error.WriteLine(Velvetify(text));
     }
+    public static void Warn(string text)
+    {
+        Console.ForegroundColor = ConsoleColor.DarkRed;
+        Console.Error.WriteLine(Velvetify(text));
+    }
+    public static void Error(Exception exception) => Error(exception.ToString());
     public static string Velvetify(string input)
     {
         return Special.IsAprilFools ? input

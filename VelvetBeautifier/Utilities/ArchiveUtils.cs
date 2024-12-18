@@ -16,9 +16,8 @@ public static class ArchiveUtils
     {
         try
         {
-            Reader reader = new(file);
+            using Reader reader = new(file);
             RevergePackageHeader header = reader.ReadRevergePackageHeader();
-            reader.Close();
             return header.Identifier == RevergePackageHeader.IDENTIFIER;
         }
         catch(Exception)
@@ -72,7 +71,7 @@ public static class ArchiveUtils
         }
         catch(Exception ex)
         {
-            Velvet.Error(ex.ToString());
+            Velvet.Error(ex);
             return false;
         }
         return true;

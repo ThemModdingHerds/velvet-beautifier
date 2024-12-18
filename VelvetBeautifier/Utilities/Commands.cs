@@ -4,7 +4,7 @@ namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class RegisterSchemeHandler : ICommandArgumentHandler
 {
     public string Name => "register-scheme";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
         bool result = Win32.CreateURIScheme();
         Environment.Exit(result ? 0 : 1);
@@ -13,112 +13,126 @@ public class RegisterSchemeHandler : ICommandArgumentHandler
 public class InstallModHandler : ICommandArgumentHandler
 {
     public string Name => "install";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        var task = application.InstallMod(value);
-        task.Wait();
-        ModInstallResult result = task.Result;
+        ModInstallResult result = ModDB.InstallMod(value);
         Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
     }
 }
 public class RemoveModHandler : ICommandArgumentHandler
 {
     public string Name => "remove";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        bool result = application.UninstallMod(value);
+        bool result = ModDB.UninstallMod(value);
         Environment.Exit(result ? 0 : 1);
     }
 }
 public class ApplyModsHandler : ICommandArgumentHandler
 {
     public string Name => "apply";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        application.ApplyMods();
+        ModLoaderTool.ApplyMods();
         Environment.Exit(0);
     }
 }
 public class RevertHandler : ICommandArgumentHandler
 {
     public string Name => "revert";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        application.Revert();
+        ModLoaderTool.Revert();
         Environment.Exit(0);
     }
 }
 public class CreateModHandler : ICommandArgumentHandler
 {
     public string Name => "create";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        application.CreateMod(value);
-        Environment.Exit(0);
+        ModInstallResult result = ModDB.Create(value);
+        Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
     }
 }
 public class CreateRevergePackageHandler : ICommandArgumentHandler
 {
     public string Name => "create-gfs";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
         if(
-            application.CommandLine.Arguments.TryGetValue("input",out string? input) &&
-            application.CommandLine.Arguments.TryGetValue("output",out string? output)
+            CommandLine.Arguments.TryGetValue("input",out string? input) &&
+            CommandLine.Arguments.TryGetValue("output",out string? output)
         )
-            ModLoaderTool.CreateRevergePackage(input,output);
+            GFS.Utils.Create(input,output);
         Environment.Exit(0);
     }
 }
 public class CreateTFHResourceHandler : ICommandArgumentHandler
 {
     public string Name => "create-tfhres";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        ModLoaderTool.CreateTFHResource(value);
+        TFHResource.Utils.CreateEmpty(value);
         Environment.Exit(0);
     }
 }
 public class ExtractHandler : ICommandArgumentHandler
 {
     public string Name => "extract";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
         if(
-            application.CommandLine.Arguments.TryGetValue("input",out string? input) &&
-            application.CommandLine.Arguments.TryGetValue("output",out string? output)
+            CommandLine.Arguments.TryGetValue("input",out string? input) &&
+            CommandLine.Arguments.TryGetValue("output",out string? output)
         )
-            ModLoaderTool.Extract(input,output);
-        Environment.Exit(0);
+        {
+            if(input == null || output == null) Environment.Exit(1);
+            string inputPath = Path.Combine(Environment.CurrentDirectory,input);
+            string outputPath = Path.Combine(Environment.CurrentDirectory,output);
+            if(inputPath.EndsWith(".gfs"))
+            {
+                Velvet.Info($"extracting GFS at {inputPath} to {outputPath}...");
+                GFS.Utils.Extract(inputPath,outputPath);
+                Environment.Exit(0);
+            }
+            if(inputPath.EndsWith(".tfhres"))
+            {
+                Velvet.Info($"extracting GFS at {inputPath} to {outputPath}...");
+                TFHResource.Utils.Extract(inputPath,outputPath);
+                Environment.Exit(0);
+            }
+        }
+        Environment.Exit(1);
     }
 }
 public class EnableModHandler : ICommandArgumentHandler
 {
     public string Name => "enable";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        application.EnableMod(value);
+        ModDB.FindModById(value)?.Enable();
         Environment.Exit(0);
     }
 }
 public class DisableModHandler : ICommandArgumentHandler
 {
     public string Name => "disable";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        application.DisableMod(value);
+        ModDB.FindModById(value)?.Disable();
         Environment.Exit(0);
     }
 }
 public class ListModsHandler : ICommandArgumentHandler
 {
     public string Name => "list";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        List<Mod> mods = application.ModDB.Mods;
+        List<Mod> mods = ModDB.Mods;
         if(mods.Count == 0)
         {
-            Velvet.Info("no mods are installed");
+            Velvet.Warn("no mods are installed");
             Environment.Exit(0);
         }
         Velvet.Info($"{mods.Count} mods installed:");
@@ -137,14 +151,14 @@ public class ListModsHandler : ICommandArgumentHandler
 public class ResetHandler : ICommandArgumentHandler
 {
     public string Name => "reset";
-    public void OnExecute(ModLoaderTool application,string? value)
+    public void OnExecute(string? value)
     {
-        bool forced = application.CommandLine.Arguments.ContainsKey("force");
+        bool forced = CommandLine.Arguments.ContainsKey("force");
         if(!forced)
         {
-            Velvet.Info("are you SURE you want to reset?");
+            Velvet.Warn("are you SURE you want to reset?");
             string confirm = Velvet.Velvetify($"Yes I want to Reset {Velvet.NAME}");
-            Velvet.Info($"type '{confirm}' to confirm this action: ");
+            Velvet.Warn($"type '{confirm}' to confirm this action: ");
             string? confirmed = Console.ReadLine();
             if(confirmed == null)
             {
@@ -157,8 +171,8 @@ public class ResetHandler : ICommandArgumentHandler
                 Environment.Exit(1);
             }
         }
-        Velvet.Info("I hope you know what you're doing...");
-        application.Reset();
+        Velvet.Error("I hope you know what you're doing...");
+        ModLoaderTool.Reset();
         Environment.Exit(0);
     }
 }

@@ -19,7 +19,6 @@ public partial class CreateModForm : Form, IMainFormItem
         mainForm = parent;
         TableLayout properties = new()
         {
-            
             Rows = {
                 id,
                 name,
@@ -38,7 +37,7 @@ public partial class CreateModForm : Form, IMainFormItem
     {
         ModInfo info = CreateModInfo();
         Mod mod = Mod.Create(info);
-        mainForm.ModLoaderTool.ModDB.InstallMod(mod);
+        ModDB.InstallMod(mod);
         VelvetEto.ShowMessageBox($"Created mod '{info.Name}'");
         mainForm.ModList.RefreshModList();
         Close();

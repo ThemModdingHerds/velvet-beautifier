@@ -15,7 +15,7 @@ public class ApplyCommand : Command
     {
         base.OnExecuted(e);
         MainForm.Enabled = false;
-        MainForm.ModLoaderTool.ApplyMods();
+        ModLoaderTool.ApplyMods();
         MainForm.Enabled = true;
         VelvetEto.ShowMessageBox("Mods applied","enabled mods have been applied, you can now start the game with mods");
     }

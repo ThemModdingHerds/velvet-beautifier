@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ThemModdingHerds.VelvetBeautifier.GameNews;
+using ThemModdingHerds.VelvetBeautifier.GFS;
+using ThemModdingHerds.VelvetBeautifier.TFHResource;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Game(string folder,string name)
@@ -26,7 +28,7 @@ public class Game(string folder,string name)
             return "ThemsFightinHerds.Linux.x64";
         if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             return "Them's Fighting Herds.app/Contents/MacOS/Them's Fighting Herds";
-        throw new Exception("not supported");
+        return string.Empty;
     }
     public static string GetServerName()
     {
@@ -34,15 +36,17 @@ public class Game(string folder,string name)
             return "LobbyExe.exe";
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             return "LobbyServer.Linux.x64";
-        throw new Exception("not supported");
+        return string.Empty;
     }
     public bool Valid()
     {
+        bool gfs = RevergePackageManager.HasData01(this);
+        bool tfhres = TFHResourceManager.HasResources(this);
         if(!ExistsExecutable())
             return false;
-        if(IsClient() && !(ExistsData01Folder() && ExistsTFHResourcesFolder()))
+        if(IsClient() && !(gfs && tfhres))
             return false;
-        if(IsServer() && !ExistsTFHResourcesFolder())
+        if(IsServer() && !tfhres)
             return false;
         return true;
     }
@@ -54,23 +58,12 @@ public class Game(string folder,string name)
     {
         return Name == GetServerName();
     }
-    // TFHResource
-    public string GetTFHResourcesFolder()
+    public string GetScripts()
     {
-        return Path.Combine(Folder,"Scripts","src","Farm","resources");
+        return Path.Combine(Folder,"Scripts");
     }
-    public bool ExistsTFHResourcesFolder() => Directory.Exists(GetTFHResourcesFolder());
-    public List<Checksum> GetTFHResourcesChecksums() => ExistsTFHResourcesFolder() ? ChecksumsTFH.FetchSync()?.TFHResources ?? [] : [];
-    // Data01
-    public string GetData01Folder()
-    {
-        return Path.Combine(Folder,"data01");
-    }
-    public bool ExistsData01Folder() => Directory.Exists(GetData01Folder());
-    public List<Checksum> GetData01Checksums() => ExistsData01Folder() ? ChecksumsTFH.FetchSync()?.Data01 ?? [] : [];
-    // Executable
-    public bool ExistsExecutable() => File.Exists(Executable);
-    public Checksum? GetExecutableChecksum() => ExistsExecutable() ? ChecksumsTFH.FetchSync()?.Game : null;
+    private bool ExistsExecutable() => File.Exists(Executable);
+    private Checksum? GetExecutableChecksum() => ExistsExecutable() ? ChecksumsTFH.FetchSync()?.Game : null;
     public void Launch()
     {
         if(!ExistsExecutable() && (!GetExecutableChecksum()?.Verify(Executable) ?? false)) return;
@@ -81,10 +74,4 @@ public class Game(string folder,string name)
             WorkingDirectory = Path.GetDirectoryName(Executable)
         });
     }
-    // GameNews
-    public string GetGameNewsFile() => Path.Combine(Folder,News.GAMENEWS_FILEPATH);
-    public Checksum? GetGameNewsChecksum() => ExistsGameNews() ? ChecksumsTFH.FetchSync()?.GameNews : null;
-    public string GetGameNewsImageFolder() => Path.Combine(Folder,News.GAMENEWS_IMAGE_FOLDER);
-    public bool ExistsGameNews() => File.Exists(GetGameNewsFile()) && Directory.Exists(GetGameNewsImageFolder());
-    public List<News> ReadGameNews() => News.ReadGameNews(GetGameNewsFile());
 }

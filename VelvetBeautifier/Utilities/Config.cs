@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Config
 {
+    public const string FILENAME = "config.json";
+    public static string FilePath => Path.Combine(Dotnet.ExecutableFolder,FILENAME);
     // Increase if changes made to this class
     public const int VERSION = 1;
     [JsonPropertyName("client_path")]
@@ -27,6 +29,7 @@ public class Config
         config.Write(path);
         return config;
     }
+    public static Config Init() => ReadOrCreate(FilePath);
     public void Write(string path)
     {
         StreamWriter file = File.CreateText(path);

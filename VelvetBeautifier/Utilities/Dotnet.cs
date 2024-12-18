@@ -30,7 +30,7 @@ public static class Dotnet
         {
             try
             {
-                Console.Title = value;
+                Console.Title = Velvet.Velvetify(value);
             }
             catch(Exception)
             {

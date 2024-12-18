@@ -39,7 +39,10 @@ public static class EpicGames
         foreach(string gamepath in gamepaths)
         {
             if(gamepath.EndsWith(Game.GetClientName()))
+            {
+                Velvet.Info($"found game at {gamepath}");
                 return gamepath;
+            }
         }
         return null;
     }

@@ -7,6 +7,7 @@ public static class Utils
 {
     public static void Extract(string db_path,string output)
     {
+        Velvet.Info($"extraing .tfhres at {db_path} to {output}...");
         static string fix_buckgit_path(string path) => path.Replace("c:\\buckgit\\","");
         static string fix_database_path(string path) => path.Replace("database:/","");
         static string find_path(CachedImage image, List<CacheRecord> records)
@@ -65,5 +66,22 @@ public static class Utils
             File.AppendAllText(filepath,text.Tag + " = " + text.Text+"\n");
         }
         db.Close();
+    }
+    public static bool CreateEmpty(string? output)
+    {
+        if(output == null) return false;
+        try
+        {
+            string outputPath = Path.Combine(Environment.CurrentDirectory,output.EndsWith(".tfhres") ? output : $"{output}.tfhres");
+            using Database database = new();
+            database.Save(outputPath);
+            Velvet.Info($"created empty .tfhres at {outputPath}");
+            return true;
+        }
+        catch(Exception exception)
+        {
+            Velvet.Error(exception);
+            return false;
+        }
     }
 }

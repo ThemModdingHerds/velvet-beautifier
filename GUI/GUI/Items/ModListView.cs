@@ -11,7 +11,6 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GUI.Items;
 public class ModListView : Panel, IMainFormItem
 {
-    public ModDB ModDB {get => MainForm.ModLoaderTool.ModDB;}
     public MainForm MainForm {get;private set;}
     public ModListView(MainForm parent)
     {
@@ -47,8 +46,7 @@ public class ModListView : Panel, IMainFormItem
         foreach(Uri uri in uris)
         {
             string path = uri.IsFile ? uri.LocalPath : uri.AbsoluteUri;
-            Task task = MainForm.ModLoaderTool.InstallMod(path);
-            task.Wait();
+            ModDB.InstallMod(path);
         }
         RefreshModList();
     }

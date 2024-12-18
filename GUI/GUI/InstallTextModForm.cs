@@ -30,9 +30,9 @@ public partial class InstallTextModForm : Form, IMainFormItem
             }
         };
     }
-    private async void OnInstallButton(object? sender, EventArgs e)
+    private void OnInstallButton(object? sender, EventArgs e)
     {
-        ModInstallResult result = await mainForm.ModLoaderTool.InstallMod(url.Text);
+        ModInstallResult result = ModDB.InstallMod(url.Text);
         mainForm.ModList.RefreshModList();
         Close();
     }

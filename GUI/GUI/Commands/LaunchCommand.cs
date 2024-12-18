@@ -13,7 +13,7 @@ public class LaunchCommand : Command
     protected override void OnExecuted(EventArgs e)
     {
         base.OnExecuted(e);
-        MainForm.ModLoaderTool.ApplyMods();
-        MainForm.ModLoaderTool.Client.Launch();
+        ModLoaderTool.ApplyMods();
+        ModLoaderTool.Client?.Launch();
     }
 }

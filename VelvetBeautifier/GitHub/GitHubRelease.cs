@@ -19,6 +19,12 @@ public class GitHubRelease
     {
         return await DownloadManager.GetJSON<GitHubRelease>(API_LATEST_URL);
     }
+    public static GitHubRelease? FetchSync()
+    {
+        Task<GitHubRelease?> task = Fetch();
+        task.Wait();
+        return task.Result;
+    }
     public bool IsDevBuild()
     {
         return BuildType == "dev";

@@ -12,11 +12,9 @@ using ThemModdingHerds.VelvetBeautifier.GUI.Commands.Help;
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public partial class MainForm : Form
 {
-	public ModLoaderTool ModLoaderTool {get;}
 	public ModListView ModList {get => (ModListView)Content;}
 	public MainForm()
 	{
-		ModLoaderTool = new(Environment.GetCommandLineArgs());
 		Title = Velvet.Velvetify(Velvet.NAME);
 		ClientSize = new(600,400);
 		Icon = Utils.WindowIcon;
