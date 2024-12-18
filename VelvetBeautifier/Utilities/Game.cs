@@ -1,14 +1,13 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using ThemModdingHerds.VelvetBeautifier.GameNews;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Game(string folder,string name)
 {
-    public const string CLIENT_NAME = "Them's Fightin' Herds";
-    public const string SERVER_NAME = "LobbyExe";
     public string Folder {get;} = folder;
     public string Name {get;} = name;
-    public string Executable {get;} = Path.Combine(folder,name + FileSystem.ExecutableExtension);
+    public string Executable {get;} = Path.Combine(folder,name);
     public static string? FindGamePath()
     {
         string? path = Steam.GetGamePath();
@@ -19,22 +18,41 @@ public class Game(string folder,string name)
             return path;
         return null;
     }
+    public static string GetClientName()
+    {
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return "Them's Fightin' Herds.exe";
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            return "ThemsFightinHerds.Linux.x64";
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            return "Them's Fighting Herds.app/Contents/MacOS/Them's Fighting Herds";
+        throw new Exception("not supported");
+    }
+    public static string GetServerName()
+    {
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return "LobbyExe.exe";
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            return "LobbyServer.Linux.x64";
+        throw new Exception("not supported");
+    }
     public bool Valid()
     {
-        bool flag = ExistsExecutable();
-        if(IsClient())
-            flag = ExistsData01Folder() && ExistsTFHResourcesFolder();
-        if(IsServer())
-            flag = ExistsTFHResourcesFolder();
-        return flag;
+        if(!ExistsExecutable())
+            return false;
+        if(IsClient() && !(ExistsData01Folder() && ExistsTFHResourcesFolder()))
+            return false;
+        if(IsServer() && !ExistsTFHResourcesFolder())
+            return false;
+        return true;
     }
     public bool IsClient()
     {
-        return Name == CLIENT_NAME;
+        return Name == GetClientName();
     }
     public bool IsServer()
     {
-        return Name == SERVER_NAME;
+        return Name == GetServerName();
     }
     // TFHResource
     public string GetTFHResourcesFolder()
@@ -42,7 +60,7 @@ public class Game(string folder,string name)
         return Path.Combine(Folder,"Scripts","src","Farm","resources");
     }
     public bool ExistsTFHResourcesFolder() => Directory.Exists(GetTFHResourcesFolder());
-    public List<Checksum> GetTFHResourcesChecksums() => ExistsTFHResourcesFolder() ? [] : ChecksumsTFH.FetchSync()?.TFHResources ?? [];
+    public List<Checksum> GetTFHResourcesChecksums() => ExistsTFHResourcesFolder() ? ChecksumsTFH.FetchSync()?.TFHResources ?? [] : [];
     // Data01
     public string GetData01Folder()
     {
@@ -63,6 +81,7 @@ public class Game(string folder,string name)
             WorkingDirectory = Path.GetDirectoryName(Executable)
         });
     }
+    // GameNews
     public string GetGameNewsFile() => Path.Combine(Folder,News.GAMENEWS_FILEPATH);
     public Checksum? GetGameNewsChecksum() => ExistsGameNews() ? ChecksumsTFH.FetchSync()?.GameNews : null;
     public string GetGameNewsImageFolder() => Path.Combine(Folder,News.GAMENEWS_IMAGE_FOLDER);

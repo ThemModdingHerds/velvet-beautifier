@@ -4,6 +4,7 @@ using ThemModdingHerds.Levels;
 using ThemModdingHerds.TFHResource;
 using ThemModdingHerds.TFHResource.Data;
 using ThemModdingHerds.VelvetBeautifier.GameNews;
+using ThemModdingHerds.VelvetBeautifier.GitHub;
 using ThemModdingHerds.VelvetBeautifier.Modding;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
@@ -21,8 +22,8 @@ public class ModLoaderTool
     private readonly string configPath;
     public ModDB ModDB {get;}
     public BackupManager BackupManager {get;}
-    public Game Client {get;}
-    public Game Server {get;}
+    public Game? Client {get;}
+    public Game? Server {get;}
     public ModLoaderTool(string[] argv)
     {
         CommandLine = new(this,argv);
@@ -41,39 +42,28 @@ public class ModLoaderTool
         BackupManager = new(backup);
         gamenewsPath = Path.Combine(Dotnet.ExecutableFolder,BACKUP_NAME,BackupManager.GetBackupName(News.GAMENEWS_FILEPATH));
 
-        Client = new Game(Config.ClientPath,Game.CLIENT_NAME);
-        Server = new Game(Config.ServerPath,Game.SERVER_NAME);
+        if(Config.ExistsGameFolder())
+            Client = new Game(Config.ClientPath,Game.GetServerName());
+        if(Config.ExistsServerFolder())
+            Server = new Game(Config.ServerPath,Game.GetServerName());
+        Setup();
+        CommandLine.Process();
     }
-    public async void HandleArguments(string[] argv)
+    public static bool IsOutdated()
     {
-        if(argv.Length == 1)
-        {
-            if(Uri.TryCreate(argv[0],UriKind.Absolute,out Uri? uri))
-            {
-                string content = uri.AbsolutePath;
-                ModInstallResult result = ModInstallResult.Invalid;
-                if(Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
-                {
-                    result = await InstallMod(content);
-                }
-                else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
-                {
-                    result = await InstallMod(argument.Link);
-                }
-                Velvet.Info("you can close this window now...");
-                Console.ReadLine();
-                Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
-            }
-        }
+        Task<GitHubRelease?> task = GitHubRelease.Fetch();
+        task.Wait();
+        GitHubRelease? release = task.Result;
+        if(release == null) return false;
+        return release.Version > Dotnet.LibraryVersion;
     }
     private bool HasBackups()
     {
-        bool flag = false;
-        if(Client.Valid())
-            flag = HasBackups(Client);
-        if(Server.Valid())
-            flag = HasBackups(Server);
-        return flag;
+        if(Client != null && Client.Valid() && !HasBackups(Client))
+            return false;
+        if(Server != null && Server.Valid() && !HasBackups(Server))
+            return false;
+        return true;
     }
     private bool HasBackups(Game game)
     {
@@ -98,26 +88,17 @@ public class ModLoaderTool
                Directory.Exists(levelsPath) &&
                File.Exists(gamenewsPath);
     }
-    public SetupResult Setup()
+    public void Setup()
     {
         if(Config.IsOld(CONFIG_NAME))
-        {
-            Velvet.Error("your config file is old! Delete it and let it create a new one");
-            return SetupResult.OldConfig;
-        }
+            Velvet.Error("your config file is old! It might not work correctly");
         if(SetupNotRequired())
-            return SetupResult.NotRequired;
+            return;
         Velvet.Info("setting up the environment...");
-        if(!BackupGameFiles())
-        {
-            BackupManager.Clear();
-            Velvet.Error("some of your game files have been tampered with! Make sure they're the original files!");
-            return SetupResult.BackupFail;
-        }
+        BackupGameFiles();
         Velvet.Info("creating level pack from game...");
         CreateLevelPack();
         Velvet.Info("finished setup!");
-        return SetupResult.Success;
     }
     public void Reset()
     {
@@ -130,93 +111,70 @@ public class ModLoaderTool
     }
     private void CreateLevelPack()
     {
-        if(!BackupManager.ExistsBackup("levels.gfs"))
+        string levelsgfs = BackupManager.GetBackupPath("levels.gfs");
+        if(!File.Exists(levelsgfs))
         {
             Velvet.Error("couldn't create level pack from level.gfs because there's no backup of it");
             return;
         }
-        string levelsgfs = BackupManager.GetBackupPath("levels.gfs");
         string levels = GFS.Utils.Extract(levelsgfs);
         LevelPack pack = LevelPack.Read(Path.Combine(levels,"temp","levels"));
         pack.Save(levelsPath);
     }
-    private bool BackupGameFiles()
+    private void BackupGameFiles()
     {
-        if(HasBackups()) return true;
-        bool noTampering = true;
-        if(Client.Valid())
-            noTampering = BackupGameFiles(Client);
-        if(Server.Valid())
-            noTampering = BackupGameFiles(Server);
-        return noTampering;
+        if(HasBackups()) return;
+        if(Client != null && Client.Valid())
+            BackupGameFiles(Client);
+        if(Server != null && Server.Valid())
+            BackupGameFiles(Server);
     }
-    private bool BackupGameFiles(Game game)
+    private void BackupGameFiles(Game game)
     {
-        bool BackupFile(string file,Checksum? gameFile)
+        void BackupFile(string file,Checksum? gameFile)
         {
-            if(gameFile == null || !Config.IgnoreChecks) return true;
+            if(gameFile == null) return;
             if(!gameFile.Verify(file))
-            {
-                Velvet.Error($"{gameFile.Name} has been tampered with! Make sure it's the original file");
-                return false;
-            }
+                Velvet.Error($"{gameFile.Name} has been tampered with! It might cause problems");
             if(!BackupManager.ExistsBackup(file))
                 Velvet.Info($"creating backup of {gameFile.Name}");
             BackupManager.MakeBackup(file);
-            return true;
         }
-        bool Backup(string folder,IEnumerable<Checksum> gameFiles)
+        void Backup(string folder,IEnumerable<Checksum> gameFiles)
         {
             foreach(Checksum gameFile in gameFiles)
             {
                 string file = Path.Combine(folder,gameFile.Name);
-                bool legit = BackupFile(file,gameFile);
-                if(!legit)
-                    return false;
-                continue;
+                BackupFile(file,gameFile);
             }
-            return true;
         }
-        bool noTampering = true;
         if(game.ExistsData01Folder())
-            noTampering = Backup(game.GetData01Folder(),game.GetData01Checksums());
+            Backup(game.GetData01Folder(),game.GetData01Checksums());
         if(game.ExistsTFHResourcesFolder())
-            noTampering = Backup(game.GetTFHResourcesFolder(),game.GetTFHResourcesChecksums());
+            Backup(game.GetTFHResourcesFolder(),game.GetTFHResourcesChecksums());
         if(game.ExistsGameNews())
-            noTampering = BackupFile(game.GetGameNewsFile(),game.GetGameNewsChecksum());
-        return noTampering;
+            BackupFile(game.GetGameNewsFile(),game.GetGameNewsChecksum());
     }
     public void ApplyMods()
     {
         Velvet.Info($"applying {ModDB.EnabledMods.Count} mods...");
-        if(Client.Valid())
-        {
-            Velvet.Info("applying mods to client...");
+        if(Client != null && Client.Valid())
             ApplyMods(Client);
-        }
-        if(Server.Valid())
-        {
-            Velvet.Info("applying mods to server...");
+        if(Server != null && Server.Valid())
             ApplyMods(Server);
-        }
         Velvet.Info("mods have been applied!");
     }
     public void Revert()
     {
         Velvet.Info("reverting files back to vanilla game...");
-        if(Client.Valid())
-        {
-            Velvet.Info("reverting files from client...");
+        if(Client != null && Client.Valid())
             Revert(Client);
-        }
-        if(Server.Valid())
-        {
-            Velvet.Info("reverting files from server...");
+        if(Server != null && Server.Valid())
             Revert(Server);
-        }
     }
     private void Revert(Game game)
     {
+        Velvet.Info($"reverting game files from {game.Name}");
         if(game.ExistsData01Folder())
         {
             string folder = game.GetData01Folder();
@@ -270,21 +228,22 @@ public class ModLoaderTool
     }
     private void ApplyMods(Game game)
     {
+        Velvet.Info($"applying mods to {game.Name}...");
         if(game.ExistsGameNews())
         {
             string file = game.GetGameNewsFile();
             BackupManager.Revert(file);
-            List<News> gamenews = [
-                new(
-                    1,
-                    Velvet.Velvetify($"{ModDB.EnabledMods.Count} mods loaded"),
-                    Velvet.GAMENEWS_MODLIST_FILENAME,
-                    Velvet.Velvetify(Velvet.NAME),
-                    Velvet.Velvetify("this game has been modified, you may experience unstable/broken sessions"),
-                    Velvet.GITHUB_PROJECT_URL
-                ),
-                ..GetGameNews()
-            ];
+            News modStats = new(
+                1,
+                Velvet.Velvetify($"{ModDB.EnabledMods.Count} mods loaded"),
+                Velvet.GAMENEWS_MODLIST_FILENAME,
+                Velvet.Velvetify(Velvet.NAME),
+                Velvet.Velvetify("this game has been modified, you may experience unstable/broken sessions"),
+                Velvet.GITHUB_PROJECT_URL
+            );
+            List<News> gamenews = [];
+            gamenews.Add(modStats);
+            gamenews.AddRange(GetGameNews());
             News.WriteGameNews(file,gamenews);
             string gamenews_modlist_path = Path.Combine(game.GetGameNewsImageFolder(),Velvet.GAMENEWS_MODLIST_FILENAME);
             if(File.Exists(gamenews_modlist_path))
@@ -299,7 +258,7 @@ public class ModLoaderTool
             foreach(Checksum gameFile in game.GetData01Checksums())
             {
                 if(!gameFile.CanModify)
-                    Velvet.Error($"WARN: {gameFile.Name} cannot be modified! Expect the game not lanuching!");
+                    Velvet.Error($"WARN: {gameFile.Name} cannot be modified! Expect issues launching!");
                 string file = Path.Combine(folder,gameFile.Name);
                 BackupManager.Revert(file);
                 Reader reader = new(file);

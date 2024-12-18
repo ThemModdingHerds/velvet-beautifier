@@ -1,41 +1,38 @@
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Config
 {
+    // Increase if changes made to this class
+    public const int VERSION = 1;
     [JsonPropertyName("client_path")]
     public string ClientPath {get; set;} = Game.FindGamePath() ?? "";
     [JsonPropertyName("server_path")]
     public string ServerPath {get; set;} = "";
     [JsonPropertyName("version")]
-    public Version Version {get; set;} = Dotnet.LibraryVersion;
-    [JsonPropertyName("ignoreChecks")]
-    public bool IgnoreChecks {get; set;} = false;
-    public static Config Read(string path)
+    public int Version {get; set;} = VERSION;
+    public static Config? Read(string path)
     {
-        return JsonSerializer.Deserialize<Config>(File.ReadAllText(path)) ?? throw new SerializationException("couldn't read config file");
+        return JsonSerializer.Deserialize<Config?>(File.ReadAllText(path));
     }
     public static Config ReadOrCreate(string path)
     {
         if(!File.Exists(path))
-            Create(path);
-        return Read(path);
+            return Create(path);
+        return Read(path) ?? throw new Exception("impossible");
     }
-    public static void Create(string path)
+    public static Config Create(string path)
     {
-        Write(path,new());
+        Config config = new();
+        config.Write(path);
+        return config;
     }
-    public static void Write(string path,Config config)
+    public void Write(string path)
     {
         StreamWriter file = File.CreateText(path);
-        string json = JsonSerializer.Serialize(config);
+        string json = JsonSerializer.Serialize(this);
         file.Write(json);
         file.Close();
-    }
-    public void Save(string path)
-    {
-        Write(path,this);
     }
     public bool ExistsGameFolder()
     {
@@ -51,13 +48,21 @@ public class Config
     }
     public static bool IsOld(string path)
     {
-        return GetVersion(path) < Dotnet.LibraryVersion;
+        return GetVersion(path) < VERSION;
     }
-    public static Version GetVersion(string path)
+    public static int GetVersion(string path)
     {
-        JsonDocument json = JsonDocument.Parse(File.ReadAllText(path));
-        JsonElement element = json.RootElement;
-        JsonElement versionProp = element.GetProperty("version");
-        return new(versionProp.GetString() ?? "0.0.0.0");
+        try
+        {
+            JsonDocument json = JsonDocument.Parse(File.ReadAllText(path));
+            JsonElement root = json.RootElement;
+            root.TryGetProperty("version",out JsonElement versionProp);
+            versionProp.TryGetInt32(out int version);
+            return version;
+        }
+        catch(Exception)
+        {
+            return -1;
+        }
     }
 }

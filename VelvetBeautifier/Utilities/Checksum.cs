@@ -5,8 +5,6 @@ public class Checksum
 {
     [JsonPropertyName("name")]
     public string Name {get;set;} = string.Empty;
-    [JsonPropertyName("path")]
-    public string? Path {get;set;}
     [JsonPropertyName("hash")]
     public string Hash {get;set;} = string.Empty;
     [JsonPropertyName("canModify")]

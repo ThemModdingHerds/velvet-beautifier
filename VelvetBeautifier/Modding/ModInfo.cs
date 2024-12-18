@@ -16,9 +16,9 @@ public class ModInfo
     public Version Version {get; set;} = new();
     [JsonPropertyName("url")]
     public string? Url {get; set;}
-    public static ModInfo Read(string filepath)
+    public static ModInfo? Read(string filepath)
     {
-        return JsonSerializer.Deserialize<ModInfo>(File.ReadAllText(filepath)) ?? throw new SerializationException($"couldn't read mod entry at {filepath}");
+        return JsonSerializer.Deserialize<ModInfo?>(File.ReadAllText(filepath));
     }
     public void Write(string filepath)
     {

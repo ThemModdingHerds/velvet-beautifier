@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Eto.Forms;
 using ThemModdingHerds.VelvetBeautifier.GUI.Interfaces;
 using ThemModdingHerds.VelvetBeautifier.Modding;

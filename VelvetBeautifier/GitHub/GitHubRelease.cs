@@ -10,12 +10,18 @@ public class GitHubRelease
     [JsonPropertyName("tag_name")]
     public string TagName {get;set;} = string.Empty;
     [JsonIgnore]
-    public Version Version {get => new(TagName);}
+    public string? BuildType => TagName[(TagName.IndexOf('-')+1)..];
+    [JsonIgnore]
+    public Version Version => new(TagName[..TagName.IndexOf('-')]);
     [JsonPropertyName("assets")]
     public List<GitHubReleaseAsset> Assets {get;set;} = [];
     public static async Task<GitHubRelease?> Fetch()
     {
         return await DownloadManager.GetJSON<GitHubRelease>(API_LATEST_URL);
+    }
+    public bool IsDevBuild()
+    {
+        return BuildType == "dev";
     }
     private GitHubReleaseAsset GetAsset(string type)
     {

@@ -7,7 +7,9 @@
 
 Mod Loader/Tool for Them's Fightin' Herds games
 
-- [GameBanana link (Them's Fightin' Herds)][gamebanana-link]
+- [GameBanana link][gamebanana-link]
+- [Latest Release](https://github.com/ThemModdingHerds/velvet-beautifier/releases/latest)
+- [Nightly Releases](https://github.com/ThemModdingHerds/velvet-beautifier/actions/workflows/build.yml)
 
 ## Features
 

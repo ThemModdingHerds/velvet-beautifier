@@ -64,5 +64,6 @@ public static class Utils
             Directory.CreateDirectory(dirpath);
             File.AppendAllText(filepath,text.Tag + " = " + text.Text+"\n");
         }
+        db.Close();
     }
 }
