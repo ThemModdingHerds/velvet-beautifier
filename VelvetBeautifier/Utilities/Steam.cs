@@ -72,7 +72,7 @@ public static class Steam
         string? path = null;
         foreach(string gamepath in gamepaths)
         {
-            if(gamepath.EndsWith(Game.GetClientName()))
+            if(gamepath.EndsWith(Game.NAME))
             {
                 Velvet.Info($"found game at {gamepath}");
                 return gamepath;

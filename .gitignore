@@ -398,7 +398,11 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Velvet Beautifier
+debug
 release
+
 mods
 config.json
 backup
+levels
+checksums.json

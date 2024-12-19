@@ -9,6 +9,11 @@ public static class ModDB
     public static List<Mod> Mods {get => ReadFolder();}
     public static List<Mod> EnabledMods {get => [..Mods.Where((mod) => mod.Enabled)];}
     public static List<Mod> DisabledMods {get => [..Mods.Where((mod) => !mod.Enabled)];}
+    public static void Init()
+    {
+        Velvet.Info($"creating mods folder at {Folder}...");
+        Directory.CreateDirectory(Folder);
+    }
     private static List<Mod> ReadFolder()
     {
         List<Mod> mods = [];
@@ -109,7 +114,6 @@ public static class ModDB
         foreach(Mod mod in Mods)
             if(mod.Info.Name == name)
                 return mod;
-        Velvet.Warn($"no mod with name '{name}' exists!");
         return null;
     }
     public static Mod? FindModById(string? id)
@@ -118,7 +122,6 @@ public static class ModDB
         foreach(Mod mod in Mods)
             if(mod.Info.Id == id)
                 return mod;
-        Velvet.Warn($"no mod with id '{id}' exists!");
         return null;
     }
     public static bool ContainsMod(string id)
@@ -126,7 +129,6 @@ public static class ModDB
         foreach(Mod mod in Mods)
             if(mod.Info.Id == id)
                 return true;
-        Velvet.Warn($"no mod with id '{id}' exists!");
         return false;
     }
     public static bool ContainsMod(Mod mod)
@@ -147,5 +149,26 @@ public static class ModDB
     {
         if(id == null) return ModInstallResult.Invalid;
         return Create(new ModInfo(){Id = id});
+    }
+    public static bool HasRevergePackageMods()
+    {
+        foreach(Mod mod in EnabledMods)
+            if(mod.HasRevergePackages)
+                return true;
+        return false;
+    }
+    public static bool HasTFHResourceMods()
+    {
+        foreach(Mod mod in EnabledMods)
+            if(mod.HasTFHResources)
+                return true;
+        return false;
+    }
+    public static bool HasLevelPackMods()
+    {
+        foreach(Mod mod in EnabledMods)
+            if(mod.HasLevels)
+                return true;
+        return false;
     }
 }

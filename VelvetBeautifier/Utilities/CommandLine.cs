@@ -4,7 +4,9 @@ namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public static class CommandLine
 {
     public static string[] Args => Environment.GetCommandLineArgs();
-    public static Dictionary<string,string?> Arguments {get;} = Create(Args);
+    public static string Executable => Args[0];
+    public static string[] Argv =>  Args[1..];
+    public static Dictionary<string,string?> Arguments {get;} = Create(Argv);
     public const string ARGUMENT_PREFIX = "--";
     public static IReadOnlyList<ICommandArgumentHandler> Handlers {get;} = [
         new RegisterSchemeHandler(),
@@ -24,9 +26,9 @@ public static class CommandLine
     ];
     public static void Process()
     {
-        if(Args.Length == 1)
+        if(Argv.Length == 1)
         {
-            if(Args[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(Args[0],UriKind.Absolute,out Uri? uri))
+            if(Argv[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(Argv[0],UriKind.Absolute,out Uri? uri))
             {
                 string content = uri.AbsolutePath;
                 ModInstallResult result = ModInstallResult.Invalid;

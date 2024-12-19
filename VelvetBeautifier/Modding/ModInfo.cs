@@ -24,4 +24,8 @@ public class ModInfo
     {
         File.WriteAllText(filepath,JsonSerializer.Serialize(this));
     }
+    public override string ToString()
+    {
+        return $"{Name} [{Id}] by {Author} v{Version}";
+    }
 }

@@ -1,12 +1,65 @@
 # Process
 
-## Process of refreshing mods
+This is how Velvet Beautifier works
 
-1. checks for folders in `mods` directory
-2. check if these folders have a `mod.json` file
+## When running executable
 
-## Process of modding
+- check if config is old
+- verify client/server paths
+- if first setup is required
+  - get game file information from external repo
+  - init Mod database
+  - [backup game files](#when-creating-backups)
+- handle command line process
+- if this is the GUI version, open the windows
 
-1. copy backup of game file to temp file
-2. merge items to temp file
-3. replace game file with temp file
+## when resetting
+
+- delete backups
+- delete mods
+- delete configuration
+- delete local vanilla levels
+
+## when creating backups
+
+- create backup of file
+- if file has been tampered with, warn user
+
+## when reverting
+
+- revert game file to its orignal state
+
+## when applying
+
+Mods are applied in this order:
+
+- [Reverge Packages](#general-gfstfhres) (`.gfs`)
+- [Levels](#levels) (requires Reverge Package `levels.gfs`)
+- [TFH Resources](#general-gfstfhres) (`.tfhres`)
+- [Game News](#news) (`GameNews.ini` and `news_images` in `Scripts` folder)
+
+### General (`.gfs`/`.tfhres`)
+
+- check if there are any mods with required files
+- [revert file](#when-reverting)
+- open orignal file
+- create copy of orignal file
+- go through each mod's file
+  - add the mod's file content to copy or replace
+- overwrite game file with copy
+
+### Levels
+
+- check if `levels.gfs` is valid and do any mods with levels exist
+- create level pack from `levels.gfs` [that was modified](#general-gfstfhres)
+- go through each mod's levels and add them to the level pack
+- override modded `levels.gfs` with new level pack
+
+### News
+
+- check if `GameNews.ini` exists
+- create outdated news page if Velvet Beautifier is outdated
+- create mods stats news page
+- add news pages from orginal file
+- override orignal file with modded one
+- copy news images to `news_images` folder

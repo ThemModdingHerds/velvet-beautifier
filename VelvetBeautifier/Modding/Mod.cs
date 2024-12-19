@@ -5,12 +5,18 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class Mod
 {
+    private const string ENABLED = "Enabled";
+    private const string DISABLED = "Disabled";
     public const string MOD_ENABLED_NAME = "enabled";
     public const string MODINFO_NAME = "mod.json";
     public const string LEVELS_NAME = "levels";
     public ModInfo Info {get;}
     public string Folder {get;}
     public bool Enabled {get => File.Exists(Path.Combine(Folder,MOD_ENABLED_NAME));}
+    public string LevelsFolder => Path.Combine(Folder,LEVELS_NAME);
+    public bool HasRevergePackages => Directory.GetDirectories(Folder,"*.gfs").Length > 0;
+    public bool HasTFHResources => Directory.GetFiles(Folder,"*.tfhres").Length > 0;
+    public bool HasLevels => Directory.Exists(LevelsFolder);
     public static bool IsMod(string folder)
     {
         string modinfo_path = Path.Combine(folder,MODINFO_NAME);
@@ -32,10 +38,14 @@ public class Mod
             throw new FileNotFoundException($"no mod entry in {folder}",filepath);
         Info = ModInfo.Read(filepath) ?? throw new Exception($"couldn't read info in {folder}");
     }
+    public override string ToString()
+    {
+        return $"{Info} ({(Enabled ? ENABLED : DISABLED)})";
+    }
     public void Enable()
     {
         if(Enabled) return;
-        File.Create(Path.Combine(Folder,MOD_ENABLED_NAME)).Close();
+        using FileStream stream = File.Create(Path.Combine(Folder,MOD_ENABLED_NAME));
     }
     public void Disable()
     {
@@ -98,8 +108,7 @@ public class Mod
     }
     public LevelPack? GetLevelPack()
     {
-        string folder = Path.Combine(Folder,LEVELS_NAME);
-        if(!Directory.Exists(folder)) return null;
-        return LevelPack.Read(folder);
+        if(!HasLevels) return null;
+        return LevelPack.Read(LevelsFolder);
     }
 }

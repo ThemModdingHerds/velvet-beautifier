@@ -8,13 +8,15 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "label": "Build (Debug)",
+            "problemMatcher": [],
+            "label": "dotnet: build",
+            "dependsOn": "dotnet: clean"
         },
         {
-            "type": "shell",
-            "label": "Build (Release)",
-            "group": "build",
-            "command": "dotnet publish"
+            "type": "dotnet",
+            "task": "clean",
+            "problemMatcher": [],
+            "label": "dotnet: clean"
         }
     ]
 }

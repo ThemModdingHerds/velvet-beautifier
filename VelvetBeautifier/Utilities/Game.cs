@@ -7,6 +7,7 @@ using ThemModdingHerds.VelvetBeautifier.TFHResource;
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 public class Game(string folder,string name)
 {
+    public const string NAME = "Them's Fightin' Herds";
     public string Folder {get;} = folder;
     public string Name {get;} = name;
     public string Executable {get;} = Path.Combine(folder,name);

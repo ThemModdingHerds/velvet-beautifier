@@ -10,14 +10,25 @@ public class GitHubRelease
     [JsonPropertyName("tag_name")]
     public string TagName {get;set;} = string.Empty;
     [JsonIgnore]
-    public string? BuildType => TagName[(TagName.IndexOf('-')+1)..];
+    public string? BuildType => TagName.Contains('-') ? TagName[(TagName.IndexOf('-')+1)..] : null;
     [JsonIgnore]
-    public Version Version => new(TagName[..TagName.IndexOf('-')]);
+    public Version Version {
+        get
+        {
+            if(TagName.Contains('-'))
+                return new(TagName[..TagName.IndexOf('-')]);
+            return new(TagName);
+        }
+    }
     [JsonPropertyName("assets")]
     public List<GitHubReleaseAsset> Assets {get;set;} = [];
     public static async Task<GitHubRelease?> Fetch()
     {
-        return await DownloadManager.GetJSON<GitHubRelease>(API_LATEST_URL);
+        return await DownloadManager.GetJSON<GitHubRelease>(API_LATEST_URL,new Dictionary<string, string>
+        {
+            {"Accept","application/vnd.github+json"},
+            {"X-GitHub-Api-Version","2022-11-28"}
+        });
     }
     public static GitHubRelease? FetchSync()
     {

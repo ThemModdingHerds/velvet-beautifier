@@ -41,30 +41,33 @@ public static class ModLoaderTool
                 return false;
         return true;
     }
-    private static bool SetupNotRequired()
+    private static bool SetupRequired()
     {
-        return HasBackups() &&
-               Directory.Exists(ModDB.Folder) &&
-               File.Exists(Config.FilePath) &&
-               Directory.Exists(LevelManager.Folder);
+        return !HasBackups() ||
+               !Directory.Exists(ModDB.Folder) ||
+               !File.Exists(Config.FilePath) ||
+               !Directory.Exists(LevelManager.Folder);
     }
     public static void Run()
     {
         Dotnet.ConsoleTitle = Velvet.NAME;
-        if(!IsOutdated()) Velvet.Warn($"You are using an old version of {Velvet.NAME}! Update to the latest release for better support!");
-        Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Z-Engine games");
+        if(IsOutdated()) Velvet.Warn($"You are using an old version of {Velvet.NAME}! Update to the latest release for better support!");
+        Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Them's Fightin' Herds");
 
-        if(Config.ExistsGameFolder())
-            Client = new Game(Config.ClientPath,Game.GetServerName());
-        if(Config.ExistsServerFolder())
-            Server = new Game(Config.ServerPath,Game.GetServerName());
         if(Config.IsOld(Config.FilePath))
             Velvet.Warn("your config file is old! It might not work correctly");
-        if(SetupNotRequired())
-            return;
-        Velvet.Info("setting up the environment...");
-        BackupGameFiles();
-        Velvet.Info("finished setup!");
+        if(Config.ClientPath != null && Config.ExistsGameFolder())
+            Client = new Game(Config.ClientPath,Game.GetClientName());
+        if(Config.ServerPath != null && Config.ExistsServerFolder())
+            Server = new Game(Config.ServerPath,Game.GetServerName());
+        if(SetupRequired())
+        {    
+            Velvet.Info("setting up the environment...");
+            ChecksumsTFH.Read(true);
+            ModDB.Init();
+            BackupGameFiles();
+            Velvet.Info("finished setup!");
+        }
         CommandLine.Process();
     }
     public static void Reset()
@@ -87,7 +90,7 @@ public static class ModLoaderTool
     private static void BackupGameFiles(Game game)
     {
         RevergePackageManager.CreateBackup(game);
-        LevelManager.CreateBackup();
+        LevelManager.Create();
         TFHResourceManager.CreateBackup(game);
         GameNewsManager.CreateBackup(game);
     }

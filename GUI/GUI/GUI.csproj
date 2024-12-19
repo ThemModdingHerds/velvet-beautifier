@@ -11,7 +11,7 @@
     <Authors>N1ghtTheF0x</Authors>
     <Company>Them's Modding Herds</Company>
     <Product>Velvet Beautifier Graphical User Interface</Product>
-    <Description>Mod Loader/Tool for Z-Engine games</Description>
+    <Description>Mod Loader/Tool for Them's Fightin' Herds</Description>
     <PackageProjectUrl>https://github.com/ThemModdingHerds/</PackageProjectUrl>
     <PackageIcon>icon_small.png</PackageIcon>
     <PackageReadmeFile>GUI.md</PackageReadmeFile>

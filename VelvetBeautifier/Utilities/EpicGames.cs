@@ -38,7 +38,7 @@ public static class EpicGames
         List<string> gamepaths = GetGames();
         foreach(string gamepath in gamepaths)
         {
-            if(gamepath.EndsWith(Game.GetClientName()))
+            if(gamepath.EndsWith(Game.NAME))
             {
                 Velvet.Info($"found game at {gamepath}");
                 return gamepath;

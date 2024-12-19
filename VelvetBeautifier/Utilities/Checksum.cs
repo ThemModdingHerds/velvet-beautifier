@@ -14,6 +14,10 @@ public class Checksum
     {
         return Crypto.Checksum(file,Hash);
     }
+    public override string ToString()
+    {
+        return Name;
+    }
 }
 public class ChecksumsBase
 {
@@ -37,21 +41,25 @@ public class ChecksumsTFH : ChecksumsZEngine
     {
         return File.Exists(FilePath);
     }
-    public static async Task<ChecksumsTFH?> Fetch(bool force = false)
+    public static async Task<ChecksumsTFH?> Fetch()
     {
-        if(HasCached() && !force)
-        {
-            return JsonSerializer.Deserialize<ChecksumsTFH>(File.ReadAllText(FilePath));
-        }
-        ChecksumsTFH? checksums = await DownloadManager.GetJSON<ChecksumsTFH>(Velvet.GITHUB_CHECKSUMS_TFH_FILE_URL);
-        if(HasCached())
-            File.Delete(FilePath);
-        File.WriteAllText(FilePath,JsonSerializer.Serialize(checksums));
-        return checksums;
+        return await DownloadManager.GetJSON<ChecksumsTFH>(Velvet.GITHUB_CHECKSUMS_TFH_FILE_URL);
     }
-    public static ChecksumsTFH? FetchSync(bool force = false)
+    public static ChecksumsTFH? Read(bool redownload = false)
     {
-        Task<ChecksumsTFH?> task = Fetch(force);
+        if(redownload || !HasCached())
+        {
+            ChecksumsTFH? checksums = FetchSync();
+            using FileStream stream = File.OpenWrite(FilePath);
+            JsonSerializer.Serialize(stream,checksums);
+            return checksums;
+        }
+        return JsonSerializer.Deserialize<ChecksumsTFH>(File.ReadAllText(FilePath));
+        
+    }
+    public static ChecksumsTFH? FetchSync()
+    {
+        Task<ChecksumsTFH?> task = Fetch();
         task.Wait();
         return task.Result;
     }

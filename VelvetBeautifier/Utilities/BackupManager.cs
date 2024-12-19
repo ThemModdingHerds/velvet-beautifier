@@ -23,11 +23,13 @@ public static class BackupManager
         File.Copy(path,filepath,true);
         return filepath;
     }
-    public static string MakeBackup(string path,Checksum checksum)
+    public static bool MakeBackup(string path,Checksum checksum)
     {
-        if(!checksum.Verify(path))
+        bool tampered = !checksum.Verify(path);
+        if(tampered)
             Velvet.Warn($"{checksum.Name} has been tampered with! It might cause problems");
-        return MakeBackup(path);
+        MakeBackup(path);
+        return tampered;
     }
     public static bool ExistsBackup(string path)
     {

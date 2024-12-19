@@ -6,11 +6,12 @@ public static class GameNewsManager
 {
     public const string FILENAME = "GameNews.ini";
     public const string FOLDERNAME = "news_images";
-    public static Checksum? Checksum => ChecksumsTFH.FetchSync()?.GameNews;
+    public static Checksum? Checksum => ChecksumsTFH.Read()?.GameNews;
     public static string GetFilePath(Game game) => Path.Combine(game.GetScripts(),FILENAME);
     public static string GetNewsImages(Game game) => Path.Combine(game.GetScripts(),FOLDERNAME);
     public static List<News> GetGameNews(Game game) => HasFile(game) ? News.ReadGameNews(GetFilePath(game)) : [];
     public static bool HasFile(Game game) => File.Exists(GetFilePath(game));
+    public static bool HasNewsImages(Game game) => Directory.Exists(GetNewsImages(game));
     public static void CreateBackup(Game game)
     {
         if(!HasFile(game)) return;
@@ -19,10 +20,12 @@ public static class GameNewsManager
     public static void Revert(Game game)
     {
         if(!HasFile(game)) return;
+        Velvet.Info($"restoring {FILENAME}...");
         BackupManager.Revert(GetFilePath(game));
     }
     public static void Apply(Game game)
     {
+        if(!HasFile(game)) return;
         Revert(game);
         News modStats = new(
             1,
@@ -47,11 +50,13 @@ public static class GameNewsManager
         }
         gamenews.Add(modStats);
         gamenews.AddRange(GetGameNews(game));
+        Velvet.Info($"updating {FILENAME}...");
         News.WriteGameNews(GetFilePath(game),gamenews);
         CopyImages(game);
     }
     public static void CopyImages(Game game)
     {
+        if(!HasNewsImages(game)) return;
         string filepath = Path.Combine(GetNewsImages(game),Velvet.GAMENEWS_MODLIST_FILENAME);
         if(File.Exists(filepath))
             File.Delete(filepath);

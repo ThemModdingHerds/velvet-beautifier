@@ -111,7 +111,10 @@ public class EnableModHandler : ICommandArgumentHandler
     public string Name => "enable";
     public void OnExecute(string? value)
     {
-        ModDB.FindModById(value)?.Enable();
+        Mod? mod = ModDB.FindModById(value);
+        if(mod == null)
+            Environment.Exit(1);
+        mod.Enable();
         Environment.Exit(0);
     }
 }
@@ -120,7 +123,10 @@ public class DisableModHandler : ICommandArgumentHandler
     public string Name => "disable";
     public void OnExecute(string? value)
     {
-        ModDB.FindModById(value)?.Disable();
+        Mod? mod = ModDB.FindModById(value);
+        if(mod == null)
+            Environment.Exit(1);
+        mod.Enable();
         Environment.Exit(0);
     }
 }
@@ -139,8 +145,7 @@ public class ListModsHandler : ICommandArgumentHandler
         foreach(Mod mod in mods)
         {
             Console.WriteLine();
-            string status = mod.Enabled ? "Enabled" : "Disabled";
-            Velvet.Info($"{mod.Info.Name} v{mod.Info.Version} by {mod.Info.Author} ({status})");
+            Velvet.Info(mod.ToString());
             if(mod.Info.Url != null) Console.WriteLine(mod.Info.Url);
             Console.WriteLine();
             Velvet.Info(mod.Info.Description);

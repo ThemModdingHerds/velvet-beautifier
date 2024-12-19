@@ -12,7 +12,7 @@
     <Authors>N1ghtTheF0x</Authors>
     <Company>Them's Modding Herds</Company>
     <Product>Velvet Beautifier Command Line Interface</Product>
-    <Description>Mod Loader/Tool for Z-Engine games</Description>
+    <Description>Mod Loader/Tool for Them's Fightin' Herds</Description>
     <PackageProjectUrl>https://github.com/ThemModdingHerds/</PackageProjectUrl>
     <PackageIcon>icon_small.png</PackageIcon>
     <PackageReadmeFile>CLI.md</PackageReadmeFile>
@@ -22,7 +22,6 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>

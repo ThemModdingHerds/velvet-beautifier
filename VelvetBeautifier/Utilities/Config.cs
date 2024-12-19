@@ -8,28 +8,25 @@ public class Config
     // Increase if changes made to this class
     public const int VERSION = 1;
     [JsonPropertyName("client_path")]
-    public string ClientPath {get; set;} = Game.FindGamePath() ?? "";
+    public string? ClientPath {get; set;}
     [JsonPropertyName("server_path")]
-    public string ServerPath {get; set;} = "";
+    public string? ServerPath {get; set;}
     [JsonPropertyName("version")]
     public int Version {get; set;} = VERSION;
-    public static Config? Read(string path)
+    public static Config Read(string path)
     {
-        return JsonSerializer.Deserialize<Config?>(File.ReadAllText(path));
+        return JsonSerializer.Deserialize<Config>(File.ReadAllText(path)) ?? throw new Exception($"couldn't parse config at {path}");
     }
-    public static Config ReadOrCreate(string path)
+    public static Config Init()
     {
-        if(!File.Exists(path))
-            return Create(path);
-        return Read(path) ?? throw new Exception("impossible");
-    }
-    public static Config Create(string path)
-    {
-        Config config = new();
-        config.Write(path);
+        if(File.Exists(FilePath)) return Read(FilePath);
+        Config config = new()
+        {
+            ClientPath = Game.FindGamePath()
+        };
+        config.Write(FilePath);
         return config;
     }
-    public static Config Init() => ReadOrCreate(FilePath);
     public void Write(string path)
     {
         StreamWriter file = File.CreateText(path);
