@@ -32,7 +32,7 @@ public class ChecksumsZEngine : ChecksumsBase
 public class ChecksumsTFH : ChecksumsZEngine
 {
     public const string FILENAME = "checksums.json";
-    public static string FilePath => Path.Combine(Dotnet.ExecutableFolder,FILENAME);
+    public static string FilePath => Path.Combine(Velvet.AppDataFolder,FILENAME);
     [JsonPropertyName("tfhres")]
     public List<Checksum> TFHResources {get;set;} = [];
     [JsonPropertyName("gamenews")]
@@ -45,22 +45,14 @@ public class ChecksumsTFH : ChecksumsZEngine
     {
         return await DownloadManager.GetJSON<ChecksumsTFH>(Velvet.GITHUB_CHECKSUMS_TFH_FILE_URL);
     }
-    public static ChecksumsTFH? Read(bool redownload = false)
+    public static async Task<ChecksumsTFH?> Read(bool redownload = false)
     {
         if(redownload || !HasCached())
         {
-            ChecksumsTFH? checksums = FetchSync();
-            using FileStream stream = File.OpenWrite(FilePath);
-            JsonSerializer.Serialize(stream,checksums);
+            ChecksumsTFH? checksums = await Fetch();
+            File.WriteAllText(FilePath,JsonSerializer.Serialize(checksums));
             return checksums;
         }
         return JsonSerializer.Deserialize<ChecksumsTFH>(File.ReadAllText(FilePath));
-        
-    }
-    public static ChecksumsTFH? FetchSync()
-    {
-        Task<ChecksumsTFH?> task = Fetch();
-        task.Wait();
-        return task.Result;
     }
 }

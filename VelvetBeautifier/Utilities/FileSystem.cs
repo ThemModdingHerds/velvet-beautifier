@@ -1,30 +1,39 @@
 using System.Diagnostics;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
+/// <summary>
+/// Contains various methods for files/folders
+/// </summary>
 public static class FileSystem
 {
+    /// <summary>
+    /// Safe method of getting all the files in <c>folder</c>
+    /// </summary>
+    /// <param name="folder">The folder to scan</param>
+    /// <param name="filter">A wildcard to get specific files, default is <c>"*.*"</c></param>
+    /// <returns>A list of full file paths</returns>
     public static List<string> GetAllFiles(string folder,string filter = "*.*")
     {
-        if(!Directory.Exists(folder))
-            return [];
+        if(!Directory.Exists(folder)) return [];
         return [..Directory.EnumerateFiles(folder,filter,SearchOption.AllDirectories)];
+    }
+    /// <summary>
+    /// Safe method of getting all the subfolders in <c>folder</c>
+    /// </summary>
+    /// <param name="folder">The folder to scan</param>
+    /// <param name="filter">A wildcard to get specific folders, default is <c>"*.*"</c></param>
+    /// <returns>A list of full folder paths</returns>
+    public static List<string> GetAllSubfolders(string folder,string filter = "*")
+    {
+        if(!Directory.Exists(folder)) return [];
+        return [..Directory.EnumerateDirectories(folder,filter,SearchOption.AllDirectories)];
     }
     public static void CopyFolder(string source,string dest)
     {
-        foreach(string dirpath in Directory.GetDirectories(source,"*",SearchOption.AllDirectories))
+        foreach(string dirpath in GetAllSubfolders(source,"*"))
             Directory.CreateDirectory(dirpath.Replace(source,dest));
-        foreach(string filepath in Directory.GetFiles(source,"*.*",SearchOption.AllDirectories))
+        foreach(string filepath in GetAllFiles(source,"*.*"))
             File.Copy(filepath,filepath.Replace(source,dest),true);
-    }
-    public static string CreateTempFile(string path)
-    {
-        if(!File.Exists(path))
-            throw new FileNotFoundException($"{path} does not exist",path);
-        string folder = Directory.CreateTempSubdirectory().FullName;
-        string filename = Path.GetFileName(path);
-        string tempfile = Path.Combine(folder,filename);
-        File.Copy(path,tempfile,true);
-        return tempfile;
     }
     public static string CreateTempFile()
     {

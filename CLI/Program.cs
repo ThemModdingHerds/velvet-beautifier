@@ -1,3 +1,3 @@
 ﻿using ThemModdingHerds.VelvetBeautifier;
 
-ModLoaderTool.Run();
+Environment.Exit(await ModLoaderTool.Run() ? 0 : 1);

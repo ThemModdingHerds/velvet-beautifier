@@ -6,14 +6,15 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GFS;
 public static class RevergePackageManager
 {
-    public const string FOLDERNAME = "data01";
-    public static List<Checksum> Checksums => ChecksumsTFH.Read()?.Data01 ?? [];
-    public static string GetData01(Game game) => Path.Combine(game.Folder,FOLDERNAME);
-    public static string GetData01File(Game game,Checksum checksum) => Path.Combine(GetData01(game),checksum.Name);
-    public static bool HasData01(Game game) => Directory.Exists(GetData01(game));
+    public static List<Checksum> Checksums {get;private set;} = [];
+    public static string GetData01File(Game game,Checksum checksum) => Path.Combine(game.Data01Folder,checksum.Name);
+    public static async Task Init()
+    {
+        Checksums = (await ChecksumsTFH.Read())?.Data01 ?? [];
+    }
     public static void CreateBackup(Game game)
     {
-        if(!HasData01(game)) return;
+        if(!game.HasData01) return;
         foreach(Checksum checksum in Checksums)
         {
             string filepath = GetData01File(game,checksum);
@@ -22,7 +23,7 @@ public static class RevergePackageManager
     }
     public static void Revert(Game game)
     {
-        if(!HasData01(game)) return;
+        if(!game.HasData01) return;
         foreach(Checksum checksum in Checksums)
         {
             Velvet.Info($"restoring {checksum.Name}...");
@@ -32,7 +33,7 @@ public static class RevergePackageManager
     }
     public static void Apply(Game game)
     {
-        if(!HasData01(game)) return;
+        if(!game.HasData01) return;
         Revert(game);
         if(!ModDB.HasRevergePackageMods()) return;
         Velvet.Info("modifying .gfs files...");

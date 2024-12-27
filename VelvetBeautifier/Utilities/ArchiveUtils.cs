@@ -1,11 +1,9 @@
-using System.Net.NetworkInformation;
 using SharpCompress.Archives;
 using SharpCompress.Archives.GZip;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.SevenZip;
 using SharpCompress.Archives.Tar;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Compressors.BZip2;
 using ThemModdingHerds.GFS;
 using ThemModdingHerds.IO.Binary;
 
@@ -43,10 +41,8 @@ public static class ArchiveUtils
     }
     public static bool ExtractArchive(string file,string output)
     {
-        FileStream stream = File.OpenRead(file);
-        bool result = ExtractArchive(stream,output);
-        stream.Close();
-        return result;
+        using FileStream stream = File.OpenRead(file);
+        return ExtractArchive(stream,output);
     }
     public static bool ExtractArchive(Stream file,string output)
     {
@@ -59,7 +55,7 @@ public static class ArchiveUtils
                 {
                     ArchiveType.Zip => ZipArchive.Open(file),
                     ArchiveType.Rar => RarArchive.Open(file),
-                    ArchiveType.SevenZip => RarArchive.Open(file),
+                    ArchiveType.SevenZip => SevenZipArchive.Open(file),
                     ArchiveType.Tar => TarArchive.Open(file),
                     ArchiveType.GZip => GZipArchive.Open(file),
                     _ => null,
@@ -68,6 +64,9 @@ public static class ArchiveUtils
                 archive.ExtractToDirectory(output);
                 return true;
             }
+            using Reader reader = new(file);
+            RevergePackage gfs = reader.ReadRevergePackage();
+            GFS.Utils.Extract(gfs,output);
         }
         catch(Exception ex)
         {

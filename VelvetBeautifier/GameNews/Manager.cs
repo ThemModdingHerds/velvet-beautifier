@@ -6,16 +6,21 @@ public static class GameNewsManager
 {
     public const string FILENAME = "GameNews.ini";
     public const string FOLDERNAME = "news_images";
-    public static Checksum? Checksum => ChecksumsTFH.Read()?.GameNews;
-    public static string GetFilePath(Game game) => Path.Combine(game.GetScripts(),FILENAME);
-    public static string GetNewsImages(Game game) => Path.Combine(game.GetScripts(),FOLDERNAME);
+    public static Checksum? Checksum {get;private set;}
+    public static string GetFilePath(Game game) => Path.Combine(game.ScriptsFolder,FILENAME);
+    public static string GetNewsImages(Game game) => Path.Combine(game.ScriptsFolder,FOLDERNAME);
     public static List<News> GetGameNews(Game game) => HasFile(game) ? News.ReadGameNews(GetFilePath(game)) : [];
     public static bool HasFile(Game game) => File.Exists(GetFilePath(game));
     public static bool HasNewsImages(Game game) => Directory.Exists(GetNewsImages(game));
+    public static async Task Init()
+    {
+        Checksum = (await ChecksumsTFH.Read())?.GameNews;
+    }
     public static void CreateBackup(Game game)
     {
         if(!HasFile(game)) return;
-        BackupManager.MakeBackup(GetFilePath(game));
+        string filepath = GetFilePath(game);
+        BackupManager.MakeBackup(filepath,Checksum);
     }
     public static void Revert(Game game)
     {
@@ -36,7 +41,7 @@ public static class GameNewsManager
             Velvet.GITHUB_PROJECT_URL
         );
         List<News> gamenews = [];
-        if(ModLoaderTool.IsOutdated())
+        if(ModLoaderTool.Outdated)
         {
             News outdatedNews = new(
                 1,

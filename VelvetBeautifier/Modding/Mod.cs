@@ -1,6 +1,10 @@
+using System.Text.Json;
 using ThemModdingHerds.GFS;
 using ThemModdingHerds.Levels;
 using ThemModdingHerds.TFHResource;
+using ThemModdingHerds.VelvetBeautifier.GFS;
+using ThemModdingHerds.VelvetBeautifier.Patches;
+using ThemModdingHerds.VelvetBeautifier.TFHResource;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class Mod
@@ -10,13 +14,16 @@ public class Mod
     public const string MOD_ENABLED_NAME = "enabled";
     public const string MODINFO_NAME = "mod.json";
     public const string LEVELS_NAME = "levels";
+    public const string PATCHES_NAME = "patches";
     public ModInfo Info {get;}
     public string Folder {get;}
     public bool Enabled {get => File.Exists(Path.Combine(Folder,MOD_ENABLED_NAME));}
     public string LevelsFolder => Path.Combine(Folder,LEVELS_NAME);
+    public string PatchesFolder => Path.Combine(Folder,PATCHES_NAME);
     public bool HasRevergePackages => Directory.GetDirectories(Folder,"*.gfs").Length > 0;
     public bool HasTFHResources => Directory.GetFiles(Folder,"*.tfhres").Length > 0;
     public bool HasLevels => Directory.Exists(LevelsFolder);
+    public bool HasPatches => Directory.Exists(PatchesFolder) && Directory.GetFiles(PatchesFolder,"*.json",SearchOption.AllDirectories).Length > 0;
     public static bool IsMod(string folder)
     {
         string modinfo_path = Path.Combine(folder,MODINFO_NAME);
@@ -79,7 +86,7 @@ public class Mod
     public Dictionary<string,Database> GetTFHResources()
     {
         Dictionary<string,Database> databases = [];
-        List<Checksum> gameFiles = ChecksumsTFH.FetchSync()?.TFHResources ?? [];
+        List<Checksum> gameFiles = TFHResourceManager.Checksums;
         foreach(Checksum gameFile in gameFiles)
         {
             Database? db = GetTFHResource(gameFile.Name);
@@ -97,7 +104,7 @@ public class Mod
     public Dictionary<string,RevergePackage> GetRevergePackages()
     {
         Dictionary<string,RevergePackage> packages = [];
-        List<Checksum> gameFiles = ChecksumsTFH.FetchSync()?.Data01 ?? [];
+        List<Checksum> gameFiles = RevergePackageManager.Checksums;
         foreach(Checksum gameFile in gameFiles)
         {
             RevergePackage? gfs = GetRevergePackage(gameFile.Name);
@@ -110,5 +117,17 @@ public class Mod
     {
         if(!HasLevels) return null;
         return LevelPack.Read(LevelsFolder);
+    }
+    public List<Patch> GetPatches()
+    {
+        if(!HasPatches) return [];
+        string[] files = Directory.GetFiles(PatchesFolder,"*.json",SearchOption.AllDirectories);
+        List<Patch> patches = [];
+        foreach(string file in files)
+        {
+            List<Patch> patch = JsonSerializer.Deserialize<List<Patch>>(File.ReadAllText(file)) ?? [];
+            patches.AddRange(patch);
+        }
+        return patches;
     }
 }

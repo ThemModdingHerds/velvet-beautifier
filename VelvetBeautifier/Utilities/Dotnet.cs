@@ -2,42 +2,55 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
+/// <summary>
+/// Contains various fields that have something to do with .NET
+/// </summary>
 public static class Dotnet
 {
-    public static Assembly Calling {get => Assembly.GetCallingAssembly();}
-    public static Assembly? Entry {get => Assembly.GetEntryAssembly();}
-    public static Assembly Executing {get => Assembly.GetExecutingAssembly();}
-    public static Assembly Library {get => Executing;}
-    public static AssemblyName LibraryName {get => Library.GetName();}
-    public static Version LibraryVersion {get => LibraryName.Version ?? new();}
-    public static Assembly? ExecutableDll {get => Entry;}
-    public static string? ExecutableDllPath {get => ExecutableDll?.Location;}
-    public static string? ExecutablePath {get => Path.ChangeExtension(ExecutableDllPath,".exe");}
-    public static string ExecutableFolder {get => Path.GetDirectoryName(ExecutableDllPath) ?? Environment.CurrentDirectory;}
-    public static string ConsoleTitle {
-        get
-        {
-            try
-            {
-                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Console.Title : "";
-            }
-            catch(Exception)
-            {
-                return "";
-            }
-        }
-        set
-        {
-            try
-            {
-                Console.Title = Velvet.Velvetify(value);
-            }
-            catch(Exception)
-            {
-
-            }
-        }
-    }
+    /// <summary>
+    /// Returns the Assembly of the method that invoked the currently executing method.
+    /// </summary>
+    public static Assembly Calling => Assembly.GetCallingAssembly();
+    /// <summary>
+    /// Gets the process executable in the default application domain. In other application domains, this is the first executable that was executed by AppDomain.ExecuteAssembly(string).
+    /// </summary>
+    public static Assembly? Entry => Assembly.GetEntryAssembly();
+    /// <summary>
+    /// Gets the assembly that contains the code that is currently executing.
+    /// </summary>
+    public static Assembly Executing => Assembly.GetExecutingAssembly();
+    /// <summary>
+    /// Alias of <c>Executing</c>
+    /// </summary>
+    public static Assembly Library => Executing;
+    /// <summary>
+    /// Gets the AssemblyName of the library
+    /// </summary>
+    public static AssemblyName LibraryName => Library.GetName();
+    /// <summary>
+    /// Gets the Version of the library
+    /// </summary>
+    public static Version LibraryVersion => LibraryName.Version ?? new();
+    /// <summary>
+    /// Alias of <c>Entry</c>
+    /// </summary>
+    public static Assembly? ExecutableDll => Entry;
+    /// <summary>
+    /// Gets the filepath of the .dll file of the executable
+    /// </summary>
+    public static string? ExecutableDllPath => ExecutableDll?.Location;
+    /// <summary>
+    /// Gets the filepath of the executable
+    /// </summary>
+    public static string? ExecutablePath => Path.ChangeExtension(ExecutableDllPath, ".exe");
+    /// <summary>
+    /// Gets the folder of the executable
+    /// </summary>
+    public static string ExecutableFolder => Path.GetDirectoryName(ExecutableDllPath) ?? Environment.CurrentDirectory;
+    /// <summary>
+    /// Get the GameNews-ModList.png as a Resource Stream
+    /// </summary>
+    /// <returns>The Stream of the resouce, should be always valid</returns>
     public static Stream GetGameNewsModsListResource()
     {
         return Library.GetManifestResourceStream(Velvet.GAMENEWS_MODLIST_RESOURCE_PATH) ?? throw new Exception("impossible");

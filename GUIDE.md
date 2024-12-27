@@ -50,7 +50,7 @@ You can modify the following Reverge Packages:
 - `ai-libs.gfs` - contains lua code for AI, wouldn't touch it for now
 - `characters-*.gfs` - contains character data, wouldn't touch it for now
 - `dev.gfs` - contains some various stuff, don't have a reason to modify this
-- `levels.gfs` - contains all the stage data during a fight and some story mode sections, I wouldn't modify this because it's better to create a [Level Pack](#level-packs) instead
+- `levels.gfs` - contains all the stage data during a fight and some story mode sections, I wouldn't modify this because it's better to create a [Level Pack](#level-packs) instead (that is you want to create new levels)
 - `nidra-baihe-texas-art-pt.gfs` - I don't know why this is a seperate thing but the same thing applies to `characters-*.gfs`
 - `sprites.gfs` - contains sprite data of some effect used during a fight
 - `trials.gfs` - contains scripted cutscenes used in Training and Story Mode (like with the snake boss)
@@ -76,3 +76,68 @@ TFH Resource files are just SQL databases so you can use any SQL client to make 
 ### Level Packs
 
 To not cause issues with `levels.gfs` mods, I've created something called **Level Packs**, a level pack contains entries to your stages and their data, when mods are applied, all level packs get merged into one and written to `levels.gfs`. A valid level pack rests inside `<root>/levels/`, more information can be found [here](https://github.com/ThemModdingHerds/levels/blob/main/Levels/README.md#level-packs)
+
+### Any other file (ONLY USE THIS IF NEEDED)
+
+**WARNING: THIS SECTION TALKS ABOUT MODIFYING OTHER FILES, USING IT
+WRONG MIGHT LEAD TO VERY BAD THINGS!!!**
+
+To modify files that are not listed above, you can create something called a patch. A patch can:
+
+- replace a string (word) in a text file
+- replace a whole file
+- replace parts of a file
+
+Patches are located under `<root>/patches` as `*.json` files and can be nested inside that folder (`<root>/patches/a/folder/patch.json` is a valid patch). One JSON file contains a array of patches
+
+#### General Patch Structure
+
+A patch is a `*.json` file with the base structure:
+
+```json
+{
+    "$type": "<type-of-patch>", // can be either "text" or "binary"
+    "target": "<game-relative-filepath>"
+}
+```
+
+`target` is a relative path to a game file you want to modify (for example to modify `<game-folder>/Scripts/names/baihe.palette.names` you set `target` to `Scripts/names/baihe.palette.names`)
+
+#### Text File Patch
+
+To replace a value in a text file you create the following patch format:
+
+```json
+{
+    "$type": "text",
+    "target": "<game-relative-filepath>",
+    "match": "<regex>",
+    "value": "<value-to-use>"
+}
+```
+
+- `$type` must be `text`
+- `match` is a regular expression, if you don't know what it is [then you'll have to do your own research](https://regexr.com/) (keep in mind that you remove the `/` from the start and beginning which means `/([A-Z])\w+/g` should be `([A-Z])\w+`)
+- `value` is the value you want to replace with
+
+keep in mind that you have to respect the file format/structure of the text file
+
+#### Binary File Patch
+
+To replace files that can't be read by a text editor you'll have to use this patch format:
+
+```json
+{
+    "$type": "binary",
+    "target": "<game-relative-filepath>",
+    "filepath": "<relative-filepath-of-patches-folder>",
+    "offset": "<offset-in-bytes>" // optional
+}
+```
+
+- `$type` must be `binary`
+- `filepath` is a file relative to `<root>/patches` so for example to use `<root>/patches/oh/coolfile.bin` you set `filepath` to `oh/coolfile.bin`, this can be anything (image, text file, binary file, audio)
+- when `offset` is not specified, `target` will be replaced by `filepath` (literally just copy and replace)
+- when `offset` is specified it will open `target`, go to `offset` in bytes and write the bytes from `filepath` there, replacing bytes from `offset` to `offset` + size of `filepath`
+
+Binary patching  should only be done **IF** required, it also requires advanced knowledge of how binary files works if you use `offset`

@@ -16,7 +16,7 @@ public class ModListView : Panel, IMainFormItem
     {
         MainForm = parent;
         AllowDrop = true;
-        RefreshModList();
+        DragDrop += OnDragDropURI;
     }
     public void RefreshModList()
     {
@@ -39,14 +39,14 @@ public class ModListView : Panel, IMainFormItem
         table.Rows.Add(null);
         Content = table;
     }
-    protected override void OnDragDrop(DragEventArgs e)
+    protected async void OnDragDropURI(object? sender,DragEventArgs e)
     {
         if(!e.Data.ContainsUris) return;
         Uri[] uris = e.Data?.Uris ?? [];
         foreach(Uri uri in uris)
         {
             string path = uri.IsFile ? uri.LocalPath : uri.AbsoluteUri;
-            ModDB.InstallMod(path);
+            await ModDB.InstallMod(path);
         }
         RefreshModList();
     }

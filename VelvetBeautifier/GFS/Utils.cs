@@ -10,11 +10,8 @@ public static class Utils
         foreach(string gfs_path in gfs_paths)
             Extract(gfs_path,output);
     }
-    public static void Extract(string gfs_path,string output)
+    public static void Extract(RevergePackage file,string output)
     {
-        Velvet.Info($"extracting .gfs at {gfs_path} to {output}...");
-        Reader reader = new(gfs_path);
-        RevergePackage file = reader.ReadRevergePackage();
         foreach(KeyValuePair<string,RevergePackageEntry> pair in file)
         {
             RevergePackageEntry entry = pair.Value;
@@ -22,11 +19,17 @@ public static class Utils
             string? dirpath = Path.GetDirectoryName(fullpath);
             if(dirpath == null) continue;
             Directory.CreateDirectory(dirpath);
-            FileStream stream = File.Create(fullpath);
+            using FileStream stream = File.Create(fullpath);
             if(entry.Data.Length > 0)
                 stream.Write(entry.Data);
-            stream.Close();
         }
+    }
+    public static void Extract(string gfs_path,string output)
+    {
+        Velvet.Info($"extracting .gfs at {gfs_path} to {output}...");
+        using Reader reader = new(gfs_path);
+        RevergePackage file = reader.ReadRevergePackage();
+        Extract(file,output);
     }
     public static string Extract(string gfs_path)
     {

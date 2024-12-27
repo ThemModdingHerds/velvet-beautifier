@@ -5,8 +5,8 @@ public static class CommandLine
 {
     public static string[] Args => Environment.GetCommandLineArgs();
     public static string Executable => Args[0];
-    public static string[] Argv =>  Args[1..];
-    public static Dictionary<string,string?> Arguments {get;} = Create(Argv);
+    public static string[] Argv => Args[1..];
+    public static Dictionary<string,string?> Arguments {get;private set;} = [];
     public const string ARGUMENT_PREFIX = "--";
     public static IReadOnlyList<ICommandArgumentHandler> Handlers {get;} = [
         new RegisterSchemeHandler(),
@@ -24,21 +24,24 @@ public static class CommandLine
         new ListModsHandler(),
         new ResetHandler()
     ];
-    public static void Process()
+    public static async Task<bool> Process()
     {
-        if(Argv.Length == 1)
+        string[] args = Argv;
+        args = ["--apply"];
+        Arguments = Create(args);
+        if(args.Length == 1)
         {
-            if(Argv[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(Argv[0],UriKind.Absolute,out Uri? uri))
+            if(args[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(args[0],UriKind.Absolute,out Uri? uri))
             {
                 string content = uri.AbsolutePath;
                 ModInstallResult result = ModInstallResult.Invalid;
                 if(Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
                 {
-                    result = ModDB.InstallMod(content);
+                    result = await ModDB.InstallMod(content);
                 }
                 else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
                 {
-                    result = ModDB.InstallMod(argument.Link);
+                    result = await ModDB.InstallMod(argument.Link);
                 }
                 Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
             }
@@ -60,8 +63,7 @@ public static class CommandLine
                 }
             }
         }
-        if(handled) return;
-        Environment.Exit(1);
+        return handled;
     }
     private static bool IsArg(string arg)
     {

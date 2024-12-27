@@ -15,8 +15,9 @@ public class InstallModHandler : ICommandArgumentHandler
     public string Name => "install";
     public void OnExecute(string? value)
     {
-        ModInstallResult result = ModDB.InstallMod(value);
-        Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
+        Task<ModInstallResult> task = ModDB.InstallMod(value);
+        task.Wait();
+        Environment.Exit(task.Result == ModInstallResult.Ok ? 0 : 1);
     }
 }
 public class RemoveModHandler : ICommandArgumentHandler

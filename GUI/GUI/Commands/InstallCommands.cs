@@ -25,8 +25,9 @@ public class InstallFileCommand : Command
             int count = 0;
             foreach(string file in dialog.Filenames)
             {
-                ModInstallResult result = ModDB.InstallMod(file);
-                if(result == ModInstallResult.Ok)
+                Task<ModInstallResult> task = ModDB.InstallMod(file);
+                task.Wait();
+                if(task.Result == ModInstallResult.Ok)
                     count++;
             }
             VelvetEto.ShowMessageBox($"Installed {count} mod/s");
@@ -50,8 +51,9 @@ public class InstallFolderCommand : Command
         if(dialog.ShowDialog(MainForm) == DialogResult.Ok)
         {
             string file = dialog.Directory;
-            ModInstallResult result = ModDB.InstallMod(file);
-            if(result == ModInstallResult.Ok)
+            Task<ModInstallResult> task = ModDB.InstallMod(file);
+            task.Wait();
+            if(task.Result == ModInstallResult.Ok)
                 VelvetEto.ShowMessageBox($"Installed mods");
             MainForm.ModList.RefreshModList();
         }

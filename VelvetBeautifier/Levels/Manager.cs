@@ -9,9 +9,9 @@ namespace ThemModdingHerds.VelvetBeautifier.Levels;
 public static class LevelManager
 {
     public const string FILENAME = "levels.gfs";
-    public static string GetFilePath(Game game) => Path.Combine(RevergePackageManager.GetData01(game),FILENAME);
+    public static string GetFilePath(Game game) => Path.Combine(game.Data01Folder,FILENAME);
     public const string FOLDERNAME = "levels";
-    public static string Folder => Path.Combine(Dotnet.ExecutableFolder,FOLDERNAME);
+    public static string Folder => Path.Combine(Velvet.AppDataFolder,FOLDERNAME);
     public static void Create()
     {
         if(!BackupManager.ExistsBackup(FILENAME)) return;
@@ -37,22 +37,25 @@ public static class LevelManager
         Velvet.Info("create level pack from game files...");
         Create();
         LevelPack pack = LevelPack.Read(Folder);
-        string temp = Path.Combine(FileSystem.CreateTempFolder(),"temp","levels");
-        Directory.CreateDirectory(temp);
+        string temp = FileSystem.CreateTempFolder();
+        string tempLevels = Path.Combine(temp,"temp","levels");
+        Directory.CreateDirectory(tempLevels);
         foreach(Mod mod in ModDB.EnabledMods)
         {
             LevelPack? modpack = mod.GetLevelPack();
             if(modpack == null) continue;
             pack.Add(modpack);
         }
-        pack.Save(temp);
+        pack.Save(tempLevels);
         Velvet.Info($"applying levels modifications with {pack.Levels.Count} levels and {pack.Worlds.Entries.Count} to {FILENAME}");
         string gfs = GetFilePath(game);
         RevergePackage levels = RevergePackage.Open(gfs);
-        levels.Merge(RevergePackage.Create(temp));
+        levels.Merge(RevergePackage.Create(tempLevels));
         if(File.Exists(gfs))
             File.Delete(gfs);
         using Writer writer = new(gfs);
         writer.Write(levels);
+        if(Directory.Exists(temp))
+            Directory.Delete(temp);
     }
 }

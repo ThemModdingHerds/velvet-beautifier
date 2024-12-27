@@ -30,12 +30,6 @@ public class GitHubRelease
             {"X-GitHub-Api-Version","2022-11-28"}
         });
     }
-    public static GitHubRelease? FetchSync()
-    {
-        Task<GitHubRelease?> task = Fetch();
-        task.Wait();
-        return task.Result;
-    }
     public bool IsDevBuild()
     {
         return BuildType == "dev";

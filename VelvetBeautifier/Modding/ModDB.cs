@@ -5,7 +5,7 @@ namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public static class ModDB
 {
     public const string FOLDERNAME = "mods";
-    public static string Folder => Path.Combine(Dotnet.ExecutableFolder,FOLDERNAME);
+    public static string Folder => Path.Combine(Velvet.AppDataFolder,FOLDERNAME);
     public static List<Mod> Mods {get => ReadFolder();}
     public static List<Mod> EnabledMods {get => [..Mods.Where((mod) => mod.Enabled)];}
     public static List<Mod> DisabledMods {get => [..Mods.Where((mod) => !mod.Enabled)];}
@@ -18,6 +18,7 @@ public static class ModDB
     {
         List<Mod> mods = [];
 
+        if(Directory.Exists(Folder))
         foreach(string modfolder in Directory.GetDirectories(Folder))
         {
             if(Mod.IsMod(modfolder))
@@ -28,24 +29,21 @@ public static class ModDB
         }
         return mods;
     }
-    public static ModInstallResult InstallMod(GameBanana.Argument argument)
+    public static async Task<ModInstallResult> InstallMod(GameBanana.Argument argument)
     {
-        return InstallGameBananaMod(argument.GetId());
+        return await InstallGameBananaMod(argument.GetId());
     }
-    public static ModInstallResult InstallMod(GameBananaMod mod)
+    public static async Task<ModInstallResult> InstallMod(GameBananaMod mod)
     {
         Velvet.Info($"installing GameBanana Mod {mod.ModName}...");
-        Task<string> task = mod.DownloadLatestUpdate();
-        task.Wait();
-        return InstallMod(task.Result);
+        string update = await mod.DownloadLatestUpdate();
+        return await InstallMod(update);
     }
-    public static ModInstallResult InstallGameBananaMod(int id)
+    public static async Task<ModInstallResult> InstallGameBananaMod(int id)
     {
-        Task<GameBananaMod?> task = GameBananaMod.Fetch(id);
-        task.Wait();
-        GameBananaMod? mod = task.Result;
+        GameBananaMod? mod = await GameBananaMod.Fetch(id);
         if(mod == null) return ModInstallResult.Failed;
-        return InstallMod(mod);
+        return await InstallMod(mod);
     }
     public static ModInstallResult InstallMod(Mod mod)
     {
@@ -62,26 +60,27 @@ public static class ModDB
         FileSystem.CopyFolder(mod.Folder,path);
         return result;
     }
-    public static ModInstallResult InstallMod(Stream stream)
+    public static async Task<ModInstallResult> InstallMod(Stream stream)
     {
-        return InstallMod(ArchiveUtils.ExtractArchive(stream));
+        return await InstallMod(ArchiveUtils.ExtractArchive(stream));
     }
-    public static ModInstallResult InstallMod(string? str)
+    public static async Task<ModInstallResult> InstallMod(string? str)
     {
         if(str == null) return ModInstallResult.Invalid;
         if(int.TryParse(str,out int id))
-            return InstallGameBananaMod(id);
+            return await InstallGameBananaMod(id);
         if(GameBanana.Utils.ValidUrl(str))
         {
             Velvet.Info($"installing GameBanana 1-Click installer: {str}");
-            return InstallMod(GameBanana.Argument.Parse(str));
+            return await InstallMod(GameBanana.Argument.Parse(str));
         }
         if(Url.IsUrl(str))
         {
             Velvet.Info($"installing remote file at {str}...");
-            Task<string> task = DownloadManager.GetTemp(str);
-            task.Wait();
-            return InstallMod(task.Result);
+            string file = await DownloadManager.GetTemp(str);
+            ModInstallResult result = await InstallMod(file);
+            if(File.Exists(file)) File.Delete(file);
+            return result;
         }
         if(Mod.IsMod(str))
         {
@@ -91,7 +90,11 @@ public static class ModDB
         if(File.Exists(str))
         {
             Velvet.Info($"installing file at {str}...");
-            return InstallMod(ArchiveUtils.ExtractArchive(str));
+            string? temp = ArchiveUtils.ExtractArchive(str);
+            ModInstallResult result = await InstallMod(temp);
+            if(temp != null && File.Exists(temp))
+                File.Delete(temp);
+            return result;
         }
         return ModInstallResult.Invalid;
     }

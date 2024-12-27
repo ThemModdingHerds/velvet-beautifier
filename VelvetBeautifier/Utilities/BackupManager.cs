@@ -3,7 +3,7 @@ public static class BackupManager
 {
     public const string FOLDERNAME = "backup";
     public const string FILE_EXT = ".bak";
-    public static string Folder => Path.Combine(Dotnet.ExecutableFolder,FOLDERNAME);
+    public static string Folder => Path.Combine(Velvet.AppDataFolder,FOLDERNAME);
     public static string GetBackupName(string path)
     {
         return Path.GetFileName(path) + FILE_EXT;
@@ -23,10 +23,10 @@ public static class BackupManager
         File.Copy(path,filepath,true);
         return filepath;
     }
-    public static bool MakeBackup(string path,Checksum checksum)
+    public static bool MakeBackup(string path,Checksum? checksum)
     {
-        bool tampered = !checksum.Verify(path);
-        if(tampered)
+        bool tampered = !checksum?.Verify(path) ?? false;
+        if(tampered && checksum != null)
             Velvet.Warn($"{checksum.Name} has been tampered with! It might cause problems");
         MakeBackup(path);
         return tampered;

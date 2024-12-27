@@ -1,73 +1,47 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using ThemModdingHerds.VelvetBeautifier.GameNews;
-using ThemModdingHerds.VelvetBeautifier.GFS;
-using ThemModdingHerds.VelvetBeautifier.TFHResource;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
-public class Game(string folder,string name)
+/// <summary>
+/// This class contains methods and fields of the game, this can be the Client (actual game) or the Server
+/// </summary>
+/// <param name="folder">The folder of the game</param>
+public abstract class Game(string folder)
 {
+    /// <summary>
+    /// Name of the game
+    /// </summary>
     public const string NAME = "Them's Fightin' Herds";
-    public string Folder {get;} = folder;
-    public string Name {get;} = name;
-    public string Executable {get;} = Path.Combine(folder,name);
-    public static string? FindGamePath()
+    /// <summary>
+    /// The game installation folder
+    /// </summary>
+    public string Folder => folder;
+    /// <summary>
+    /// The filename of the executable
+    /// </summary>
+    public abstract string ExecutableName {get;}
+    /// <summary>
+    /// The full path of the executable
+    /// </summary>
+    public string Executable => Path.Combine(folder,ExecutableName);
+    /// <summary>
+    /// The full path of the <c>Scripts</c> folder
+    /// </summary>
+    public string ScriptsFolder => Path.Combine(Folder,"Scripts");
+    public string Data01Folder => Path.Combine(Folder,"data01");
+    public string ResourcesFolder => Path.Combine(Folder,"Scripts","src","Farm","resources");
+    public bool HasData01 => Directory.Exists(Data01Folder);
+    public bool HasResources => Directory.Exists(ResourcesFolder);
+    /// <summary>
+    /// Check if this is a valid installation
+    /// </summary>
+    /// <returns></returns>
+    public abstract bool Valid();
+    /// <summary>
+    /// Launch the executable
+    /// </summary>
+    public virtual void Launch()
     {
-        string? path = Steam.GetGamePath();
-        if(path != null)
-            return path;
-        path = EpicGames.GetGamePath();
-        if(path != null)
-            return path;
-        return null;
-    }
-    public static string GetClientName()
-    {
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            return "Them's Fightin' Herds.exe";
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            return "ThemsFightinHerds.Linux.x64";
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            return "Them's Fighting Herds.app/Contents/MacOS/Them's Fighting Herds";
-        return string.Empty;
-    }
-    public static string GetServerName()
-    {
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            return "LobbyExe.exe";
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            return "LobbyServer.Linux.x64";
-        return string.Empty;
-    }
-    public bool Valid()
-    {
-        bool gfs = RevergePackageManager.HasData01(this);
-        bool tfhres = TFHResourceManager.HasResources(this);
-        if(!ExistsExecutable())
-            return false;
-        if(IsClient() && !(gfs && tfhres))
-            return false;
-        if(IsServer() && !tfhres)
-            return false;
-        return true;
-    }
-    public bool IsClient()
-    {
-        return Name == GetClientName();
-    }
-    public bool IsServer()
-    {
-        return Name == GetServerName();
-    }
-    public string GetScripts()
-    {
-        return Path.Combine(Folder,"Scripts");
-    }
-    private bool ExistsExecutable() => File.Exists(Executable);
-    private Checksum? GetExecutableChecksum() => ExistsExecutable() ? ChecksumsTFH.FetchSync()?.Game : null;
-    public void Launch()
-    {
-        if(!ExistsExecutable() && (!GetExecutableChecksum()?.Verify(Executable) ?? false)) return;
         Process.Start(new ProcessStartInfo()
         {
             FileName = Executable,
@@ -75,4 +49,56 @@ public class Game(string folder,string name)
             WorkingDirectory = Path.GetDirectoryName(Executable)
         });
     }
+}
+/// <summary>
+/// This class contains methods and fields for the client (the game you play)
+/// </summary>
+/// <param name="folder">The folder of the client installation</param>
+public class Client(string folder) : Game(folder)
+{
+    public override string ExecutableName {
+        get
+        {
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return "Them's Fightin' Herds.exe";
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return "ThemsFightinHerds.Linux.x64";
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                return "Them's Fighting Herds.app/Contents/MacOS/Them's Fighting Herds";
+            return string.Empty;
+        }
+    }
+    /// <summary>
+    /// The path to the game if found
+    /// </summary>
+    public static string? FoundPath => Steam.GetGamePath() ?? EpicGames.GetGamePath() ?? null;
+    public override bool Valid()
+    {
+        return File.Exists(Executable) && HasResources && HasData01;
+    }
+}
+/// <summary>
+/// This class contains methods and fields for the server
+/// </summary>
+/// <param name="folder">The folder of the server</param>
+public class Server(string folder) : Game(folder)
+{
+    public override string ExecutableName {
+        get
+        {
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return "LobbyExe.exe";
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return "LobbyServer.Linux.x64";
+            return string.Empty;
+        }
+    }
+    public override bool Valid()
+    {
+        return File.Exists(Executable) && HasResources;
+    }
+}
+public class GameEventArgs(Game game) : EventArgs
+{
+    public Game Game => game;
 }

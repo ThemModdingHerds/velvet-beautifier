@@ -6,13 +6,17 @@ namespace ThemModdingHerds.VelvetBeautifier.TFHResource;
 public static class TFHResourceManager
 {
     public static bool Tampering {get;private set;} = false;
-    public static List<Checksum> Checksums => ChecksumsTFH.Read()?.TFHResources ?? [];
+    public static List<Checksum> Checksums {get;private set;} = [];
     public static string GetResources(Game game) => Path.Combine(game.Folder,"Scripts","src","Farm","resources");
     public static bool HasResources(Game game) => Directory.Exists(GetResources(game));
     public static string GetResource(Game game,Checksum checksum) => Path.Combine(GetResources(game),checksum.Name);
+    public static async Task Init()
+    {
+        Checksums = (await ChecksumsTFH.Fetch())?.TFHResources ?? [];
+    }
     public static void CreateBackup(Game game)
     {
-        if(!HasResources(game)) return;
+        if(!game.HasResources) return;
         foreach(Checksum checksum in Checksums)
         {
             string filepath = GetResource(game,checksum);
@@ -23,7 +27,7 @@ public static class TFHResourceManager
     }
     public static void Revert(Game game)
     {
-        if(!HasResources(game)) return;
+        if(!game.HasResources) return;
         foreach(Checksum checksum in Checksums)
         {
             Velvet.Info($"restoring {checksum.Name}...");
@@ -33,7 +37,7 @@ public static class TFHResourceManager
     }
     public static void Apply(Game game)
     {
-        if(!HasResources(game)) return;
+        if(!game.HasResources) return;
         Revert(game);
         if(!ModDB.HasTFHResourceMods()) return;
         Velvet.Info("modifying .tfhres files...");
