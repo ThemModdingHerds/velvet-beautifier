@@ -13,9 +13,9 @@ public static class ModLoaderTool
     public static Client? Client {get;private set;}
     public static Server? Server {get;private set;}
     public static bool Outdated {get;private set;} = false;
-    public static async Task<bool> IsOutdated()
+    public static bool IsOutdated()
     {
-        GitHubRelease? release = await GitHubRelease.Fetch();
+        GitHubRelease? release = GitHubRelease.Fetch();
         if(release == null) return false;
         return release.Version > Dotnet.LibraryVersion;
     }
@@ -49,13 +49,13 @@ public static class ModLoaderTool
                !File.Exists(Config.FilePath) ||
                !Directory.Exists(LevelManager.Folder);
     }
-    public static async Task<bool> Run()
+    public static void Run()
     {
         // create main directory for storing things
         Directory.CreateDirectory(Velvet.AppDataFolder);
         Migrate();
         // Check if the user is using an old version of VB
-        if(Outdated = await IsOutdated())
+        if(Outdated = IsOutdated())
             Velvet.Warn($"You are using an old version of {Velvet.NAME}! Update to the latest release for better support!");
         // some branding things, version output etc :)
         Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Them's Fightin' Herds");
@@ -74,18 +74,18 @@ public static class ModLoaderTool
         {
             Velvet.Info("setting up the environment...");
             // get file information of the client/server
-            await ChecksumsTFH.Read(true);
+            ChecksumsTFH.Read(true);
             // make the managers use those file information
-            await InitManagers();
+            InitManagers();
             // create the mods folder
             ModDB.Init();
             // create backup of important files (*.gfs, *.tfhres files)
             BackupGameFiles();
             Velvet.Info("finished setup!");
-            return true;
+            return;
         }
         // Process command line
-        return await CommandLine.Process();
+        CommandLine.Process();
     }
     public static void Reset()
     {
@@ -106,11 +106,11 @@ public static class ModLoaderTool
         if(File.Exists(config))
             File.Move(config,Config.FilePath);
     }
-    private static async Task InitManagers()
+    private static void InitManagers()
     {
-        await RevergePackageManager.Init();
-        await TFHResourceManager.Init();
-        await GameNewsManager.Init();
+        RevergePackageManager.Init();
+        TFHResourceManager.Init();
+        GameNewsManager.Init();
     }
     private static void BackupGameFiles()
     {

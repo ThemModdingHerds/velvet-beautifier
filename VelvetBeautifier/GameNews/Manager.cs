@@ -12,9 +12,9 @@ public static class GameNewsManager
     public static List<News> GetGameNews(Game game) => HasFile(game) ? News.ReadGameNews(GetFilePath(game)) : [];
     public static bool HasFile(Game game) => File.Exists(GetFilePath(game));
     public static bool HasNewsImages(Game game) => Directory.Exists(GetNewsImages(game));
-    public static async Task Init()
+    public static void Init()
     {
-        Checksum = (await ChecksumsTFH.Read())?.GameNews;
+        Checksum = ChecksumsTFH.Read()?.GameNews;
     }
     public static void CreateBackup(Game game)
     {

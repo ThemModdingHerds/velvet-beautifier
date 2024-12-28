@@ -5,6 +5,7 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 using ThemModdingHerds.VelvetBeautifier.GUI.Items;
 using MenuBar = ThemModdingHerds.VelvetBeautifier.GUI.Items.MenuBar;
 using ToolBar = ThemModdingHerds.VelvetBeautifier.GUI.Items.ToolBar;
+using System.Threading;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public partial class MainForm : Form
@@ -20,9 +21,21 @@ public partial class MainForm : Form
 		Content = new ModListView(this);
 		Load += OnLoadWindow;
 	}
-    protected async void OnLoadWindow(object? sender,EventArgs e)
+    protected void OnLoadWindow(object? sender,EventArgs e)
     {
-		await ModLoaderTool.Run();
+		JoinThread(ModLoaderTool.Run);
 		ModList.RefreshModList();
     }
+	public void JoinThread(ThreadStart start)
+	{
+		Enabled = false;
+		Utils.JoinThread(start);
+		Enabled = true;
+	}
+	public void JoinThread(ParameterizedThreadStart start)
+	{
+		Enabled = false;
+		Utils.JoinThread(start);
+		Enabled = true;
+	}
 }

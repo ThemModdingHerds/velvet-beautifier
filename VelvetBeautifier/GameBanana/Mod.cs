@@ -15,9 +15,9 @@ public class Mod
     public string Body {get;set;} = "";
     [JsonPropertyName("Files().aFiles()")]
     public Dictionary<string,ModFile> Files {get;set;} = [];
-    public static async Task<Mod?> Fetch(Argument argument) => await Fetch(argument.GetId());
-    public static async Task<Mod?> Fetch(string url) => await Fetch(Utils.GetModId(url));
-    public static async Task<Mod?> Fetch(int id)
+    public static Mod? Fetch(Argument argument) => Fetch(argument.GetId());
+    public static Mod? Fetch(string url) => Fetch(Utils.GetModId(url));
+    public static Mod? Fetch(int id)
     {
         string url = Utils.CreateCoreItemDataRequestUrl("Mod",id,[
             "name",
@@ -26,7 +26,7 @@ public class Mod
             "text",
             "Files().aFiles()"
         ]);
-        return await DownloadManager.GetJSON<Mod>(url);
+        return DownloadManager.GetJSON<Mod>(url);
     }
     public ModFile GetLatestUpdate()
     {
@@ -38,8 +38,8 @@ public class Mod
         }
         return newest;
     }
-    public async Task<string> DownloadLatestUpdate()
+    public string DownloadLatestUpdate()
     {
-        return await DownloadManager.GetTemp(GetLatestUpdate().DownloadUrl);
+        return DownloadManager.GetTemp(GetLatestUpdate().DownloadUrl);
     }
 }

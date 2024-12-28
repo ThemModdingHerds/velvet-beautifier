@@ -10,9 +10,9 @@ public static class TFHResourceManager
     public static string GetResources(Game game) => Path.Combine(game.Folder,"Scripts","src","Farm","resources");
     public static bool HasResources(Game game) => Directory.Exists(GetResources(game));
     public static string GetResource(Game game,Checksum checksum) => Path.Combine(GetResources(game),checksum.Name);
-    public static async Task Init()
+    public static void Init()
     {
-        Checksums = (await ChecksumsTFH.Fetch())?.TFHResources ?? [];
+        Checksums = ChecksumsTFH.Fetch()?.TFHResources ?? [];
     }
     public static void CreateBackup(Game game)
     {

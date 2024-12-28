@@ -15,9 +15,7 @@ public class ApplyCommand : Command
     protected override void OnExecuted(EventArgs e)
     {
         base.OnExecuted(e);
-        MainForm.Enabled = false;
-        ModLoaderTool.ApplyMods();
-        MainForm.Enabled = true;
+        MainForm.JoinThread(ModLoaderTool.ApplyMods);
         VelvetEto.ShowMessageBox("Mods applied","enabled mods have been applied, you can now start the game with mods");
     }
 }

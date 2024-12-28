@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Linq;
 using Eto.Forms;
 using ThemModdingHerds.VelvetBeautifier.GUI.Interfaces;
 using ThemModdingHerds.VelvetBeautifier.Modding;
@@ -25,12 +25,11 @@ public class InstallFileCommand : Command
             int count = 0;
             foreach(string file in dialog.Filenames)
             {
-                Task<ModInstallResult> task = ModDB.InstallMod(file);
-                task.Wait();
-                if(task.Result == ModInstallResult.Ok)
+                ModInstallResult result = ModDB.InstallMod(file);
+                if(result == ModInstallResult.Ok)
                     count++;
             }
-            VelvetEto.ShowMessageBox($"Installed {count} mod/s");
+            VelvetEto.ShowMessageBox($"Installed {count}/{dialog.Filenames.Count()} mods");
             MainForm.ModList.RefreshModList();
         }
     }
@@ -51,9 +50,8 @@ public class InstallFolderCommand : Command
         if(dialog.ShowDialog(MainForm) == DialogResult.Ok)
         {
             string file = dialog.Directory;
-            Task<ModInstallResult> task = ModDB.InstallMod(file);
-            task.Wait();
-            if(task.Result == ModInstallResult.Ok)
+            ModInstallResult result = ModDB.InstallMod(file);
+            if(result == ModInstallResult.Ok)
                 VelvetEto.ShowMessageBox($"Installed mods");
             MainForm.ModList.RefreshModList();
         }

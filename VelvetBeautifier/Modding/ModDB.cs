@@ -29,21 +29,21 @@ public static class ModDB
         }
         return mods;
     }
-    public static async Task<ModInstallResult> InstallMod(GameBanana.Argument argument)
+    public static ModInstallResult InstallMod(GameBanana.Argument argument)
     {
-        return await InstallGameBananaMod(argument.GetId());
+        return InstallGameBananaMod(argument.GetId());
     }
-    public static async Task<ModInstallResult> InstallMod(GameBananaMod mod)
+    public static ModInstallResult InstallMod(GameBananaMod mod)
     {
         Velvet.Info($"installing GameBanana Mod {mod.ModName}...");
-        string update = await mod.DownloadLatestUpdate();
-        return await InstallMod(update);
+        string update = mod.DownloadLatestUpdate();
+        return InstallMod(update);
     }
-    public static async Task<ModInstallResult> InstallGameBananaMod(int id)
+    public static ModInstallResult InstallGameBananaMod(int id)
     {
-        GameBananaMod? mod = await GameBananaMod.Fetch(id);
+        GameBananaMod? mod = GameBananaMod.Fetch(id);
         if(mod == null) return ModInstallResult.Failed;
-        return await InstallMod(mod);
+        return InstallMod(mod);
     }
     public static ModInstallResult InstallMod(Mod mod)
     {
@@ -60,25 +60,25 @@ public static class ModDB
         FileSystem.CopyFolder(mod.Folder,path);
         return result;
     }
-    public static async Task<ModInstallResult> InstallMod(Stream stream)
+    public static ModInstallResult InstallMod(Stream stream)
     {
-        return await InstallMod(ArchiveUtils.ExtractArchive(stream));
+        return InstallMod(ArchiveUtils.ExtractArchive(stream));
     }
-    public static async Task<ModInstallResult> InstallMod(string? str)
+    public static ModInstallResult InstallMod(string? str)
     {
         if(str == null) return ModInstallResult.Invalid;
         if(int.TryParse(str,out int id))
-            return await InstallGameBananaMod(id);
+            return InstallGameBananaMod(id);
         if(GameBanana.Utils.ValidUrl(str))
         {
             Velvet.Info($"installing GameBanana 1-Click installer: {str}");
-            return await InstallMod(GameBanana.Argument.Parse(str));
+            return InstallMod(GameBanana.Argument.Parse(str));
         }
         if(Url.IsUrl(str))
         {
             Velvet.Info($"installing remote file at {str}...");
-            string file = await DownloadManager.GetTemp(str);
-            ModInstallResult result = await InstallMod(file);
+            string file = DownloadManager.GetTemp(str);
+            ModInstallResult result = InstallMod(file);
             if(File.Exists(file)) File.Delete(file);
             return result;
         }
@@ -91,7 +91,7 @@ public static class ModDB
         {
             Velvet.Info($"installing file at {str}...");
             string? temp = ArchiveUtils.ExtractArchive(str);
-            ModInstallResult result = await InstallMod(temp);
+            ModInstallResult result = InstallMod(temp);
             if(temp != null && File.Exists(temp))
                 File.Delete(temp);
             return result;

@@ -8,9 +8,9 @@ public static class RevergePackageManager
 {
     public static List<Checksum> Checksums {get;private set;} = [];
     public static string GetData01File(Game game,Checksum checksum) => Path.Combine(game.Data01Folder,checksum.Name);
-    public static async Task Init()
+    public static void Init()
     {
-        Checksums = (await ChecksumsTFH.Read())?.Data01 ?? [];
+        Checksums = ChecksumsTFH.Read()?.Data01 ?? [];
     }
     public static void CreateBackup(Game game)
     {

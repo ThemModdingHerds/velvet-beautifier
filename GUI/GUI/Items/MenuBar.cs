@@ -15,6 +15,7 @@ public class MenuBar : Eto.Forms.MenuBar, IMainFormItem
         Parent = parent;
         AboutItem = new AboutCommand(this);
         HelpItems.AddRange([
+            new ResetCommand(this),
             new OpenURLCommand(this,Velvet.GITHUB_REPO_GUI_GUIDE_URL,"&How to use this?","Learn how to use Velvet Beautifier"),
             new OpenURLCommand(this,Velvet.GITHUB_REPO_BUG_REPORT_URL,"Report &issue","Report an issue to GitHub"),
             new OpenURLCommand(this,Velvet.GITHUB_REPO_FEATURE_REQUEST_URL,"Request &feature","Suggest an idea for this project")

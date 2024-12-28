@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Resources;
 using System.Text;
+using System.Threading;
 using Eto.Drawing;
 using Eto.Forms;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
@@ -66,5 +66,17 @@ public static class Utils
             ]);
             File.WriteAllText(filepath,content);
         }
+    }
+    public static void JoinThread(ParameterizedThreadStart start)
+    {
+        Thread thread = new(start);
+        thread.Start();
+        thread.Join();
+    }
+    public static void JoinThread(ThreadStart start)
+    {
+        Thread thread = new(start);
+        thread.Start();
+        thread.Join();
     }
 }

@@ -41,15 +41,15 @@ public class ChecksumsTFH : ChecksumsZEngine
     {
         return File.Exists(FilePath);
     }
-    public static async Task<ChecksumsTFH?> Fetch()
+    public static ChecksumsTFH? Fetch()
     {
-        return await DownloadManager.GetJSON<ChecksumsTFH>(Velvet.GITHUB_CHECKSUMS_TFH_FILE_URL);
+        return DownloadManager.GetJSON<ChecksumsTFH>(Velvet.GITHUB_CHECKSUMS_TFH_FILE_URL);
     }
-    public static async Task<ChecksumsTFH?> Read(bool redownload = false)
+    public static ChecksumsTFH? Read(bool redownload = false)
     {
         if(redownload || !HasCached())
         {
-            ChecksumsTFH? checksums = await Fetch();
+            ChecksumsTFH? checksums = Fetch();
             File.WriteAllText(FilePath,JsonSerializer.Serialize(checksums));
             return checksums;
         }

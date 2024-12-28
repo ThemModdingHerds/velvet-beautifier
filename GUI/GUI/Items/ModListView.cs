@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Eto.Drawing;
 using Eto.Forms;
 using ThemModdingHerds.VelvetBeautifier.GUI.Interfaces;
@@ -39,14 +38,14 @@ public class ModListView : Panel, IMainFormItem
         table.Rows.Add(null);
         Content = table;
     }
-    protected async void OnDragDropURI(object? sender,DragEventArgs e)
+    protected void OnDragDropURI(object? sender,DragEventArgs e)
     {
         if(!e.Data.ContainsUris) return;
         Uri[] uris = e.Data?.Uris ?? [];
         foreach(Uri uri in uris)
         {
             string path = uri.IsFile ? uri.LocalPath : uri.AbsoluteUri;
-            await ModDB.InstallMod(path);
+            ModDB.InstallMod(path);
         }
         RefreshModList();
     }

@@ -24,10 +24,9 @@ public static class CommandLine
         new ListModsHandler(),
         new ResetHandler()
     ];
-    public static async Task<bool> Process()
+    public static void Process()
     {
         string[] args = Argv;
-        args = ["--apply"];
         Arguments = Create(args);
         if(args.Length == 1)
         {
@@ -37,11 +36,11 @@ public static class CommandLine
                 ModInstallResult result = ModInstallResult.Invalid;
                 if(Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
                 {
-                    result = await ModDB.InstallMod(content);
+                    result = ModDB.InstallMod(content);
                 }
                 else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
                 {
-                    result = await ModDB.InstallMod(argument.Link);
+                    result = ModDB.InstallMod(argument.Link);
                 }
                 Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
             }
@@ -54,7 +53,9 @@ public static class CommandLine
             {
                 try
                 {
-                    handler.OnExecute(value);
+                    int result = handler.OnExecute(value);
+                    if(result != 0)
+                        Environment.Exit(result);
                     handled = true;
                 }
                 catch(Exception exception)
@@ -63,7 +64,8 @@ public static class CommandLine
                 }
             }
         }
-        return handled;
+        if(handled)
+            Environment.Exit(0);
     }
     private static bool IsArg(string arg)
     {
@@ -99,5 +101,5 @@ public static class CommandLine
 public interface ICommandArgumentHandler
 {
     public string Name {get;}
-    public void OnExecute(string? value);
+    public int OnExecute(string? value);
 }

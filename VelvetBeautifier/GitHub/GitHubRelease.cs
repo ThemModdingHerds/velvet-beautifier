@@ -22,9 +22,9 @@ public class GitHubRelease
     }
     [JsonPropertyName("assets")]
     public List<GitHubReleaseAsset> Assets {get;set;} = [];
-    public static async Task<GitHubRelease?> Fetch()
+    public static GitHubRelease? Fetch()
     {
-        return await DownloadManager.GetJSON<GitHubRelease>(API_LATEST_URL,new Dictionary<string, string>
+        return DownloadManager.GetJSON<GitHubRelease>(API_LATEST_URL,new Dictionary<string, string>
         {
             {"Accept","application/vnd.github+json"},
             {"X-GitHub-Api-Version","2022-11-28"}
