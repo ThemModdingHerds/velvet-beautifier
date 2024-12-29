@@ -1,4 +1,5 @@
 using Gtk;
+using ThemModdingHerds.VelvetBeautifier.Modding;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI.Items;
@@ -35,6 +36,50 @@ public static class MenuBarItems
         MenuItem file = (MenuItem)menu.Children[0];
         MenuItem folders = (MenuItem)menu.Children[1];
         MenuItem text = (MenuItem)menu.Children[2];
+
+        file.Activated += delegate
+        {
+            string[] files = window.OpenFileDialog("Select files to install",[Utils.GFSFilter,Utils.ZipFilter,Utils.RarFilter,Utils.SevenZipFilter,Utils.TarFilter,Utils.GZipFilter],true);
+            if(files.Length == 0) return;
+            int count = 0;
+            foreach(string file in files)
+            {
+                ModInstallResult result = ModDB.InstallMod(file);
+                switch(result)
+                {
+                    case ModInstallResult.AlreadyExists:
+                    case ModInstallResult.Ok:
+                        count++;
+                        break;
+                }
+            }
+            window.ShowMessageBox($"Installed {count}/{files.Length} mods");
+            window.RefreshModList();
+        };
+        folders.Activated += delegate
+        {
+            string[] folders = window.OpenFolderDialog("Select folders to install",true);
+            if(folders.Length == 0) return;
+            int count = 0;
+            foreach(string folder in folders)
+            {
+                ModInstallResult result = ModDB.InstallMod(folder);
+                switch(result)
+                {
+                    case ModInstallResult.AlreadyExists:
+                    case ModInstallResult.Ok:
+                        count++;
+                        break;
+                }
+            }
+            window.ShowMessageBox($"Installed {count}/{folders.Length} mods");
+            window.RefreshModList();
+        };
+        text.Activated += delegate
+        {
+            InstallModTextWindow installModTextWindow = [];
+            installModTextWindow.Show();
+        };
     }
     private static void InitTools(Menu menu,MainWindow window)
     {

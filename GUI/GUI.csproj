@@ -54,6 +54,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="icon.ico" />
+    <EmbeddedResource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="..\LICENSE" />
     <EmbeddedResource Include="..\LICENSE" />
   </ItemGroup>

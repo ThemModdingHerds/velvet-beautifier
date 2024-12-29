@@ -8,7 +8,7 @@ class Program
     {
         Application.Init();
 
-        var app = new Application("org.GUI.GUI", GLib.ApplicationFlags.None);
+        var app = new Application("org.tmh.velvetbeautifier", GLib.ApplicationFlags.None);
         app.Register(GLib.Cancellable.Current);
 
         var win = new MainWindow();

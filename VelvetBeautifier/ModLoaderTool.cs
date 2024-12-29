@@ -75,8 +75,6 @@ public static class ModLoaderTool
             Velvet.Info("setting up the environment...");
             // get file information of the client/server
             ChecksumsTFH.Read(true);
-            // make the managers use those file information
-            InitManagers();
             // create the mods folder
             ModDB.Init();
             // create backup of important files (*.gfs, *.tfhres files)
@@ -84,6 +82,8 @@ public static class ModLoaderTool
             Velvet.Info("finished setup!");
             return;
         }
+        // make the managers use those file information
+        InitManagers();
         // Process command line
         CommandLine.Process();
     }

@@ -61,13 +61,14 @@ public static class VelvetGtk
     {
         AboutDialog about = new()
         {
+            Icon = Utils.VelvetIcon,
             Version = Dotnet.LibraryVersion.ToString(),
             ProgramName = Velvet.Velvetify(Velvet.NAME),
             Authors = [Velvet.AUTHOR],
             License = Velvet.Velvetify(Utils.License),
             Website = Velvet.GITHUB_REPO,
             WebsiteLabel = Velvet.Velvetify("Source Code"),
-            Logo = Utils.VelvetImage.Pixbuf,
+            Logo = Utils.VelvetImage,
             Comments = Velvet.Velvetify(Velvet.DESCRIPTION)
         };
         about.Title = Velvet.Velvetify(about.Title);

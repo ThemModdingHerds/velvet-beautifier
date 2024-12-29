@@ -13,12 +13,15 @@ public class MainWindow : Window
     public MainWindow(): this(new Builder("MainWindow.glade")) { }
     private MainWindow(Builder builder): base(builder.GetRawOwnedObject("MainWindow"))
     {
+        Icon = Utils.VelvetIcon;
         builder.Autoconnect(this);
         Utils.JoinThread(ModLoaderTool.Run);
         DeleteEvent += delegate {Application.Quit();};
         MenuBarItems.Init(MenuBar,this);
         ToolbarItems.Init(Toolbar,this);
         RefreshModList();
+        Drag.DestSet(this,DestDefaults.All,[new("text/uri-list",TargetFlags.OtherApp,0)],Gdk.DragAction.Copy);
+        DragDataReceived += OnWindowDragDataReceived;
     }
     private void ResetModList()
     {
@@ -31,6 +34,16 @@ public class MainWindow : Window
         ModList.Attach(version,1,0,1,1);
         ModList.Attach(author,2,0,1,1);
         ModList.ShowAll();
+    }
+    private void OnWindowDragDataReceived(object o,DragDataReceivedArgs args)
+    {
+        IEnumerable<Uri> uris = from uri in args.SelectionData.Uris select new Uri(uri);
+        foreach(Uri uri in uris)
+        {
+            string path = uri.IsFile ? uri.LocalPath : uri.AbsoluteUri;
+            ModDB.InstallMod(path);
+        }
+        RefreshModList();
     }
     public void RefreshModList()
     {
@@ -47,7 +60,12 @@ public class MainWindow : Window
             {
                 mod.SetEnabled(name.Active);
             };
-            name.TooltipText = version.TooltipText = author.TooltipText = Velvet.Velvetify(mod.Info.Description);
+            name.TooltipText = Velvet.Velvetify(mod.Info.Description);
+            name.ButtonPressEvent += (o,args) =>
+            {
+                if(args.Event.Button == 3)
+                    CreateContextMenu(mod).Popup();
+            };
 
             ModList.Attach(name,0,row,1,1);
             ModList.Attach(version,1,row,1,1);
@@ -56,17 +74,38 @@ public class MainWindow : Window
         }
         ModList.ShowAll();
     }
+    private Menu CreateContextMenu(Mod mod)
+    {
+        Menu contextmenu = [];
+
+        MenuItem uninstall = new("_Uninstall");
+        uninstall.Activated += delegate
+        {
+            ModDB.UninstallMod(mod);
+            RefreshModList();
+        };
+        contextmenu.Append(uninstall);
+        
+        contextmenu.Append(new SeparatorMenuItem());
+
+        MenuItem showFolder = new("_Show folder");
+        showFolder.Activated += delegate {FileSystem.OpenFolder(mod.Folder);};
+        contextmenu.Append(showFolder);
+
+        contextmenu.ShowAll();
+        return contextmenu;
+    }
     public void ApplyMods()
     {
         Sensitive = false;
-        ModLoaderTool.ApplyMods();
+        Utils.JoinThread(ModLoaderTool.ApplyMods);
         this.ShowMessageBox("Enabled mods have been applied, you can now start the game with mods!");
         Sensitive = true;
     }
     public void Revert()
     {
         Sensitive = false;
-        ModLoaderTool.Revert();
+        Utils.JoinThread(ModLoaderTool.Revert);
         this.ShowMessageBox("Reverted all the game files back to their orignal!");
         Sensitive = true;
     }

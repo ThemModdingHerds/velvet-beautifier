@@ -13,6 +13,7 @@ public class CreateModWindow : Window
     public CreateModWindow(): this(new Builder("MainWindow.glade")) {}
     private CreateModWindow(Builder builder): base(builder.GetRawOwnedObject("CreateModWindow"))
     {
+        Icon = Utils.VelvetIcon;
         builder.Autoconnect(this);
         IdentifierEntry.Changed += OnTextChange;
         NameEntry.Changed += OnTextChange;
