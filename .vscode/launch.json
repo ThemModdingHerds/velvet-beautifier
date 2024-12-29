@@ -9,9 +9,9 @@
         },
         {
             "type": "dotnet",
-            "name": "Launch Velvet Beautifier (GUI-Windows)",
+            "name": "Launch Velvet Beautifier (GUI)",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/GUI/GUI.Wpf/GUI.Wpf.csproj"
+            "projectPath": "${workspaceFolder}/GUI/GUI.csproj"
         }
     ]
 }

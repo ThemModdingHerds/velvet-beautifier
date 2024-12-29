@@ -36,8 +36,6 @@ $operatingsystem.GetEnumerator() | ForEach-Object{
 $operatingsystem.GetEnumerator() | ForEach-Object{
     $rid = $_.Value;
     $name = $_.Key;
-    $gui = $guiframework[$name]
-    $net = $guinet[$name]
-    dotnet publish .\GUI\GUI.$gui\GUI.$gui.csproj --runtime $rid --configuration Release
-    Compress-Archive -Path .\GUI\GUI.$gui\bin\Release\$net\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.GUI.$Version.$name.zip
+    dotnet publish .\GUI\GUI.csproj --runtime $rid --configuration Release --self-contained=true
+    Compress-Archive -Path .\GUI\bin\Release\net8.0\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.GUI.$Version.$name.zip
 }

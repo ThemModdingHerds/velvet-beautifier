@@ -9,6 +9,10 @@ public static class Velvet
     /// </summary>
     public const string NAME = "Velvet Beautifier";
     /// <summary>
+    /// The short description of the software
+    /// </summary>
+    public const string DESCRIPTION = "Mod Loader/Tool for Them's Fightin' Herds games";
+    /// <summary>
     /// The alternative name of the software
     /// </summary>
     public const string ALTNAME = "velvetbeautifier";

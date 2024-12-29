@@ -2,9 +2,9 @@ name: Build (Debug)
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "gtk" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "gtk" ]
 
 jobs:
   cli:
@@ -33,17 +33,7 @@ jobs:
     strategy:
       matrix:
         os: [linux, win, osx]
-        include:
-          - os: linux
-            framework: Gtk
-            builder: ubuntu-latest
-          - os: win
-            framework: Wpf
-            builder: windows-latest
-          - os: osx
-            framework: Mac
-            builder: ubuntu-latest
-    runs-on: ${{matrix.builder}}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -53,7 +43,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./GUI/GUI.${{matrix.framework}}/GUI.${{matrix.framework}}.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build-gui/${{matrix.os}} --configuration Debug
+      run: dotnet build ./GUI/GUI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build-gui/${{matrix.os}} --configuration Debug
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
