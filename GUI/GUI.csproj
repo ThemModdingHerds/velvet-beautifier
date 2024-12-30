@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <Title>Velvet Beautifier Graphical User Interface</Title>
+    <Authors>N1ghtTheF0x</Authors>
+    <Company>Them's Modding Herds</Company>
+    <Product>Velvet Beautifier Graphical User Interface</Product>
+    <Description>Mod Loader/Tool for Them's Fightin' Herds</Description>
+    <PackageProjectUrl>https://github.com/ThemModdingHerds/</PackageProjectUrl>
+    <PackageIcon>icon_small.png</PackageIcon>
+    <PackageReadmeFile>GUI.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ThemModdingHerds/velvet-beautifier</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="**\*.glade" />
+    <EmbeddedResource Include="**\*.glade">
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\assets\icon_small.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\GUI.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GtkSharp" Version="3.24.24.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VelvetBeautifier\VelvetBeautifier.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="icon.ico" />
+    <EmbeddedResource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="..\LICENSE" />
+    <EmbeddedResource Include="..\LICENSE" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="..\..\assets\velvet.png" />
+    <EmbeddedResource Include="..\assets\velvet.png" />
+  </ItemGroup>
+
+</Project>

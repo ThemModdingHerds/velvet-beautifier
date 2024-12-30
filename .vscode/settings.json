@@ -6,9 +6,6 @@
         "**/CVS": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
-        "GUI/GUI.Gtk": true,
-        "GUI/GUI.Mac": true,
-        "GUI/GUI.Wpf": true,
         "release": true
     }
 }
