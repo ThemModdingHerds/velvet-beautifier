@@ -20,6 +20,8 @@ public static class Steam
     /// The default path of Steam on Windows
     /// </summary>
     public const string WINDOWS_DEFAULT_FOLDERPATH = "C:\\Program Files (x86)\\Steam";
+    public const string LINUX_FOLDERNAME = "Steam";
+    public const string LINUX_BETA_POSTFIX = "Beta";
     /// <summary>
     /// Get the path of the steam folder. On Windows it uses Registry Keys and falls back to the default path
     /// </summary>
@@ -31,12 +33,30 @@ public static class Steam
         {
             // get the correct Registry path depending on architecture
             string regPath = Environment.Is64BitOperatingSystem ? REGISTRY_KEYPATH64 : REGISTRY_KEYPATH32;
-            string path = (string?)Microsoft.Win32.Registry.GetValue(regPath,"InstallPath",WINDOWS_DEFAULT_FOLDERPATH) ?? WINDOWS_DEFAULT_FOLDERPATH;
+            string installPath = (string?)Microsoft.Win32.Registry.GetValue(regPath,"InstallPath",WINDOWS_DEFAULT_FOLDERPATH) ?? WINDOWS_DEFAULT_FOLDERPATH;
             // must be a folder
-            if(!Directory.Exists(path)) return null;
-            return path;
+            if(!Directory.Exists(installPath)) return null;
+            return installPath;
         }
-        // TODO: how to find on Linux and MacOS?
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            // literally from bin_steam.sh
+            string home = Environment.GetEnvironmentVariable("HOME") ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string steamDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME") ?? home;
+            string defaultPath = Path.Combine(steamDataHome,"Steam");
+            string defaultBetaPath = defaultPath + LINUX_BETA_POSTFIX;
+            string classic = Path.Combine(home,"Steam");
+            string betaClassic = classic + LINUX_BETA_POSTFIX;
+            if(Directory.Exists(defaultPath))
+                return defaultPath;
+            if(Directory.Exists(defaultBetaPath))
+                return defaultBetaPath;
+            if(Directory.Exists(classic))
+                return classic;
+            if(Directory.Exists(betaClassic))
+                return betaClassic;
+        }
+        // TODO: how to find on MacOS?
         // return nothing if found
         return null;
     }
@@ -48,9 +68,9 @@ public static class Steam
     {
         string? install = GetInstallPath();
         if(install == null) return null;
-        string path = Path.Combine(install,"config","libraryfolders.vdf");
-        if(!File.Exists(path)) return null;
-        return path;
+        string libraryfolders = Path.Combine(install,"config","libraryfolders.vdf");
+        if(!File.Exists(libraryfolders)) return null;
+        return libraryfolders;
     }
     /// <summary>
     /// Get all the library folders of Steam
@@ -69,9 +89,9 @@ public static class Steam
         foreach(VProperty property in libraryfolders.Cast<VProperty>())
         {
             VToken entry = property.Value;
-            string path = entry.Value<string>("path");
-            if(Directory.Exists(path)) 
-                folders.Add(path);
+            string libraryfolder = entry.Value<string>("path");
+            if(Directory.Exists(libraryfolder)) 
+                folders.Add(libraryfolder);
         }
         return folders;
     }
@@ -85,10 +105,10 @@ public static class Steam
         // must be a folder
         if(!Directory.Exists(folderpath)) return null;
         // here are the games located
-        string path = Path.Combine(folderpath,"steamapps","common");
+        string commonSteamApps = Path.Combine(folderpath,"steamapps","common");
         // must be valid of course
-        if(!Directory.Exists(path)) return null;
-        return path;
+        if(!Directory.Exists(commonSteamApps)) return null;
+        return commonSteamApps;
     }
     /// <summary>
     /// Get the paths of all Steam games in <c>folderpath</c>

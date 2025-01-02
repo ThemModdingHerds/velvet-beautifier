@@ -28,25 +28,47 @@ public static class FileSystem
         if(!Directory.Exists(folder)) return [];
         return [..Directory.EnumerateDirectories(folder,filter,SearchOption.AllDirectories)];
     }
+    /// <summary>
+    /// Copy the content of <c>soure</c> to <c>dest</c>
+    /// </summary>
+    /// <param name="source">A folder to copy from</param>
+    /// <param name="dest">A folder to copy to</param>
     public static void CopyFolder(string source,string dest)
     {
+        // Create folders for the files
         foreach(string dirpath in GetAllSubfolders(source,"*"))
             Directory.CreateDirectory(dirpath.Replace(source,dest));
+        // Copy the files
         foreach(string filepath in GetAllFiles(source,"*.*"))
             File.Copy(filepath,filepath.Replace(source,dest),true);
     }
+    /// <summary>
+    /// Create a empty file at <c>path</c>
+    /// </summary>
+    /// <param name="filepath">A filepath</param>
+    public static void CreateFile(string filepath) => File.Create(filepath).Close();
+    /// <summary>
+    /// Create a empty file in the temporal folder of the Operating System
+    /// </summary>
+    /// <returns>A valid filepath in the temporal folder</returns>
     public static string CreateTempFile()
     {
-        string folder = Directory.CreateTempSubdirectory().FullName;
-        string path = Guid.NewGuid().ToString();
-        string tempfile = Path.Combine(folder,path);
-        File.Create(tempfile).Close();
+        string folder = CreateTempFolder();
+        string filename = Guid.NewGuid().ToString();
+        string tempfile = Path.Combine(folder,filename);
+        CreateFile(tempfile);
         return tempfile;
     }
-    public static string CreateTempFolder()
-    {
-        return Directory.CreateTempSubdirectory().FullName;
-    }
+    /// <summary>
+    /// Create a empty folder in the temporal folder of the Operating System
+    /// </summary>
+    /// <returns>A valid folderpath in the temporal folder</returns>
+    public static string CreateTempFolder() => Directory.CreateTempSubdirectory($"{Velvet.ALTNAME}-").FullName; // very easy as you can see
+    /// <summary>
+    /// Remove invalid characters from <c>path</c>
+    /// </summary>
+    /// <param name="path">A path with perhaps invalid characters</param>
+    /// <returns>A path without invalid characters</returns>
     public static string SafePath(string path)
     {
         char[] notAllowed = [.. Path.GetInvalidFileNameChars(),.. Path.GetInvalidPathChars()];
@@ -54,14 +76,19 @@ public static class FileSystem
             path = path.Replace(new string([no]),"");
         return path;
     }
-    public static void OpenFolder(string path)
+    /// <summary>
+    /// Open up a folder at <c>path</c> in a file explorer
+    /// </summary>
+    /// <param name="folderpath">A folder path</param>
+    /// <returns>true if the folder exists and the folder was opened (?), otherwise false</returns>
+    public static bool OpenFolder(string folderpath)
     {
-        if(!Directory.Exists(path)) return;
-        Process.Start(new ProcessStartInfo()
+        if(!Directory.Exists(folderpath)) return false;
+        return Process.Start(new ProcessStartInfo()
         {
-            FileName = path.EndsWith(Path.DirectorySeparatorChar) ? path : path + Path.DirectorySeparatorChar,
+            FileName = Path.EndsInDirectorySeparator(folderpath) ? folderpath : folderpath + Path.DirectorySeparatorChar,
             UseShellExecute = true,
             Verb = "open"
-        });
+        }) != null;
     }
 }

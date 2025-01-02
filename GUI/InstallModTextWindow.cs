@@ -5,14 +5,18 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public class InstallModTextWindow : Window
 {
-    public Grid Root => (Grid)Children[0];
-    public Button InstallButton => (Button)Root.Children[0];
-    public Entry InputEntry => (Entry)Root.Children[1];
-    public InstallModTextWindow(): this(new Builder("MainWindow.glade")) {}
-    private InstallModTextWindow(Builder builder): base(builder.GetRawOwnedObject("InstallModTextWindow"))
+    public const string ID = "InstallModTextWindow";
+    public Button InstallButton {get;}
+    public Entry InputEntry {get;}
+    public InstallModTextWindow(): this(new Builder(VelvetGtk.GLADEFILE)) {}
+    private InstallModTextWindow(Builder builder): base(builder.GetRawOwnedObject(ID))
     {
         Icon = Utils.VelvetIcon;
         builder.Autoconnect(this);
+
+        InstallButton = new(builder.GetRawOwnedObject("InstallTextButton"));
+        InputEntry = new(builder.GetRawOwnedObject("InstallTextEntry"));
+
         InputEntry.Changed += delegate
         {
             InstallButton.Sensitive = Url.IsUrl(InputEntry.Text) || int.TryParse(InputEntry.Text,out int _);

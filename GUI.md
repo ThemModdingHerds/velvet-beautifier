@@ -6,10 +6,9 @@ the executable is called `VelvetBeautifier.GUI.<Operating-System>` (for example 
 
 ## First time usage
 
-When you launch the executable for the first time, it will take some time to setup some. In some cases you might get a error message and there two of them:
+Before you launch, make sure you have the game installed without any modifications!
 
-- `OldConfig`: your `config.json` cannot be used because it was used by a older version of the tool, make a backup (or not), delete it and let the program run again
-- `BackupFailed`: you've already modified your game files without this tool, redownload the game files should fix it
+When you launch the executable for the first time, it will take some time to setup the environment. It will copy files to a secure place so make sure you have roughly 3 Gb of space available (because it will copy big files!)
 
 After the setup you should be greeted by something like this:
 

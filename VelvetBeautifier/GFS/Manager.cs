@@ -6,28 +6,27 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GFS;
 public static class RevergePackageManager
 {
-    public static List<Checksum> Checksums {get;private set;} = [];
-    public static string GetData01File(Game game,Checksum checksum) => Path.Combine(game.Data01Folder,checksum.Name);
-    public static void Init()
-    {
-        Checksums = ChecksumsTFH.Read()?.Data01 ?? [];
-    }
+    public static bool Tampered {get;private set;} = false;
+    public static List<GameFile> Files => Utilities.GameFiles.Read()?.Data01 ?? [];
+    public static string GetData01File(Game game,GameFile gamefile) => Path.Combine(game.Data01Folder,gamefile.Name);
     public static void CreateBackup(Game game)
     {
         if(!game.HasData01) return;
-        foreach(Checksum checksum in Checksums)
+        foreach(GameFile gamefile in Files)
         {
-            string filepath = GetData01File(game,checksum);
-            BackupManager.MakeBackup(filepath,checksum);
+            string filepath = GetData01File(game,gamefile);
+            bool tampered = BackupManager.MakeBackup(filepath,gamefile);
+            if(tampered)
+                Tampered = true;
         }
     }
     public static void Revert(Game game)
     {
         if(!game.HasData01) return;
-        foreach(Checksum checksum in Checksums)
+        foreach(GameFile gamefile in Files)
         {
-            Velvet.Info($"restoring {checksum.Name}...");
-            string filepath = GetData01File(game,checksum);
+            Velvet.Info($"restoring {gamefile.Name}...");
+            string filepath = GetData01File(game,gamefile);
             BackupManager.Revert(filepath);
         }
     }
@@ -37,21 +36,21 @@ public static class RevergePackageManager
         Revert(game);
         if(!ModDB.HasRevergePackageMods()) return;
         Velvet.Info("modifying .gfs files...");
-        foreach(Checksum checksum in Checksums)
+        foreach(GameFile gamefile in Files)
         {
-            string filepath = GetData01File(game,checksum);
+            string filepath = GetData01File(game,gamefile);
             RevergePackage target = RevergePackage.Open(filepath);
             RevergePackage modded = new(target.Header,target);
             bool any = false;
             foreach(Mod mod in ModDB.EnabledMods)
             {
-                RevergePackage? gfsmod = mod.GetRevergePackage(checksum.Name);
+                RevergePackage? gfsmod = mod.GetRevergePackage(gamefile.Name);
                 if(gfsmod == null) continue;
                 modded.AddRange(gfsmod);
                 any = true;
             }
             if(!any) continue;
-            Velvet.Info($"applying .gfs modifications to {checksum.Name}");
+            Velvet.Info($"applying .gfs modifications to {gamefile.Name}");
             if(File.Exists(filepath))
                 File.Delete(filepath);
             Writer writer = new(filepath);

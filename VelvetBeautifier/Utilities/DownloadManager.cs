@@ -54,14 +54,14 @@ public static class DownloadManager
     /// Fetch <c>url</c> with <c>headers</c> and save it to <c>path</c>
     /// </summary>
     /// <param name="url">The URL endpoint</param>
-    /// <param name="path">The filepath to save</param>
+    /// <param name="filepath">The filepath to save</param>
     /// <param name="headers">A dictionary of headers</param>
     /// <returns>return true if request was successful, otherwise false</returns>
-    public static bool Get(string url,string path,Dictionary<string,string> headers)
+    public static bool Get(string url,string filepath,Dictionary<string,string> headers)
     {
         Stream? data = Get(url,headers);
         if(data == null) return false;
-        FileStream file = File.OpenWrite(path);
+        FileStream file = File.OpenWrite(filepath);
         data.CopyToAsync(file);
         file.Close();
         return true;
@@ -70,9 +70,9 @@ public static class DownloadManager
     /// Fetch <c>url</c> and save it to <c>path</c>
     /// </summary>
     /// <param name="url">The URL endpoint</param>
-    /// <param name="path">The filepath to save</param>
+    /// <param name="filepath">The filepath to save</param>
     /// <returns>return true if request was successful, otherwise false</returns>
-    public static bool Get(string url,string path) => Get(url,path,[]);
+    public static bool Get(string url,string filepath) => Get(url,filepath,[]);
     /// <summary>
     /// Fetch <c>url</c> with <c>headers</c> and save it to a temporal file
     /// </summary>
@@ -95,21 +95,21 @@ public static class DownloadManager
     /// Fetch <c>url</c> with <c>headers</c> and extract it to <c>path</c>
     /// </summary>
     /// <param name="url">The URL endpoint</param>
-    /// <param name="path">The filepath to extract to</param>
+    /// <param name="filepath">The filepath to extract to</param>
     /// <param name="headers">A dictionary of headers</param>
     /// <returns>return true if extraction was successful, otherwise false</returns>
-    public static bool GetAndUnzip(string url,string path,Dictionary<string,string> headers)
+    public static bool GetAndUnzip(string url,string filepath,Dictionary<string,string> headers)
     {
         string temp = GetTemp(url,headers);
-        return ArchiveUtils.ExtractArchive(temp,path);
+        return ArchiveUtils.ExtractArchive(temp,filepath);
     }
     /// <summary>
     /// Fetch <c>url</c> and extract it to <c>path</c>
     /// </summary>
     /// <param name="url">The URL endpoint</param>
-    /// <param name="path">The filepath to extract to</param>
+    /// <param name="filepath">The filepath to extract to</param>
     /// <returns>return true if extraction was successful, otherwise false</returns>
-    public static bool GetAndUnzip(string url,string path) => GetAndUnzip(url,path,[]);
+    public static bool GetAndUnzip(string url,string filepath) => GetAndUnzip(url,filepath,[]);
     
     /// <summary>
     /// Fetch <c>url</c> with <c>headers</c> and extract it to a temporal folder

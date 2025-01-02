@@ -1,3 +1,8 @@
+using ThemModdingHerds.VelvetBeautifier.GameNews;
+using ThemModdingHerds.VelvetBeautifier.GFS;
+using ThemModdingHerds.VelvetBeautifier.Levels;
+using ThemModdingHerds.VelvetBeautifier.Patches;
+using ThemModdingHerds.VelvetBeautifier.TFHResource;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 using GameBananaMod = ThemModdingHerds.VelvetBeautifier.GameBanana.Mod;
 
@@ -55,9 +60,9 @@ public static class ModDB
             UninstallMod(mod);
             result = ModInstallResult.AlreadyExists;
         }
-        string path = Path.Combine(Folder,mod.Info.Id);
-        Directory.CreateDirectory(path);
-        FileSystem.CopyFolder(mod.Folder,path);
+        string folderpath = Path.Combine(Folder,mod.Info.Id);
+        Directory.CreateDirectory(folderpath);
+        FileSystem.CopyFolder(mod.Folder,folderpath);
         return result;
     }
     public static ModInstallResult InstallMod(Stream stream)
@@ -138,11 +143,6 @@ public static class ModDB
     {
         return ContainsMod(mod.Info.Id);
     }
-    public static void Clear()
-    {
-        if(Directory.Exists(Folder))
-            Directory.Delete(Folder,true);
-    }
     public static ModInstallResult Create(ModInfo info)
     {
         Mod mod = Mod.Create(info);
@@ -173,5 +173,29 @@ public static class ModDB
             if(mod.HasLevels)
                 return true;
         return false;
+    }
+    public static void Apply(Game? game)
+    {
+        if(game == null || !game.Valid()) return;
+        Velvet.Info($"applying mods to {game.ExecutableName}...");
+        RevergePackageManager.Apply(game);
+        LevelManager.Apply(game);
+        TFHResourceManager.Apply(game);
+        GameNewsManager.Apply(game);
+        PatchManager.Apply(game);   
+    }
+    public static void Apply()
+    {
+        Velvet.Info($"applying {EnabledMods.Count} mods...");
+        Apply(ModLoaderTool.Client);
+        Apply(ModLoaderTool.Server);
+        Velvet.Info("mods have been applied!");
+    }
+    public static bool Exists() => Directory.Exists(Folder);
+    public static void Clear()
+    {
+        if(Directory.Exists(Folder))
+            Directory.Delete(Folder,true);
+        Directory.CreateDirectory(Folder);
     }
 }

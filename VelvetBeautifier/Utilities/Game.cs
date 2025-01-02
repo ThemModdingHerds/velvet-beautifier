@@ -35,7 +35,7 @@ public abstract class Game(string folder)
     /// <summary>
     /// Check if this is a valid installation
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true if this is a valid installation, otherwise false</returns>
     public abstract bool Valid();
     /// <summary>
     /// Launch the executable
@@ -72,10 +72,13 @@ public class Client(string folder) : Game(folder)
     /// The path to the game if found
     /// </summary>
     public static string? FoundPath => Steam.GetGamePath() ?? EpicGames.GetGamePath() ?? null;
-    public override bool Valid()
-    {
-        return File.Exists(Executable) && HasResources && HasData01;
-    }
+    /// <summary>
+    /// Check if <c>folder</c> is a valid installation
+    /// </summary>
+    /// <param name="folder">A folder with a possible installation</param>
+    /// <returns>true if this is a valid installation, otherwise false</returns>
+    public static bool Valid(string? folder) => folder != null && new Client(folder).Valid();
+    public override bool Valid() => File.Exists(Executable) && HasResources && HasData01;
 }
 /// <summary>
 /// This class contains methods and fields for the server
@@ -93,12 +96,11 @@ public class Server(string folder) : Game(folder)
             return string.Empty;
         }
     }
-    public override bool Valid()
-    {
-        return File.Exists(Executable) && HasResources;
-    }
-}
-public class GameEventArgs(Game game) : EventArgs
-{
-    public Game Game => game;
+    /// <summary>
+    /// Check if <c>folder</c> is a valid installation
+    /// </summary>
+    /// <param name="folder">A folder with a possible installation</param>
+    /// <returns>true if this is a valid installation, otherwise false</returns>
+    public static bool Valid(string? folder) => folder != null && new Server(folder).Valid();
+    public override bool Valid() => File.Exists(Executable) && HasResources;
 }

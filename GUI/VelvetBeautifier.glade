@@ -13,7 +13,7 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="ModIdentifierEntry">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
           </object>
@@ -23,7 +23,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="ModNameEntry">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
           </object>
@@ -33,7 +33,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="ModAuthorEntry">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
           </object>
@@ -43,7 +43,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="ModDescEntry">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
           </object>
@@ -105,7 +105,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="ModCreateButton">
             <property name="label" translatable="yes">Create</property>
             <property name="visible">True</property>
             <property name="sensitive">False</property>
@@ -117,26 +117,118 @@
             <property name="margin-bottom">5</property>
           </object>
           <packing>
-            <property name="left-attach">1</property>
+            <property name="left-attach">0</property>
             <property name="top-attach">4</property>
+            <property name="width">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="EditConfigurationWindow">
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Edit Configuration</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <child>
+      <!-- n-columns=3 n-rows=3 -->
+      <object class="GtkGrid">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkEntry" id="ConfigClientPathEntry">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkEntry" id="ConfigServerPathEntry">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="ConfigApplyButton">
+            <property name="label" translatable="yes">Apply</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">2</property>
+            <property name="width">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Client Path</property>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Server Path</property>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="ConfigClientPickButton">
+            <property name="label" translatable="yes">...</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">2</property>
+            <property name="top-attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="ConfigServerPickButton">
+            <property name="label" translatable="yes">...</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">2</property>
+            <property name="top-attach">1</property>
+          </packing>
         </child>
       </object>
     </child>
   </object>
   <object class="GtkWindow" id="InstallModTextWindow">
     <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Install Mod from text</property>
     <property name="resizable">False</property>
+    <property name="modal">True</property>
     <child>
       <!-- n-columns=1 n-rows=2 -->
       <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="InstallTextEntry">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="placeholder-text" translatable="yes">URL/GameBanana ID</property>
@@ -147,7 +239,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="InstallTextButton">
             <property name="label" translatable="yes">Install</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
@@ -186,7 +278,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_refresh">
+                      <object class="GtkMenuItem" id="MenuFileRefresh">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Refresh Mod List</property>
@@ -195,7 +287,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_apply">
+                      <object class="GtkMenuItem" id="MenuFileApply">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Apply enabled mods</property>
@@ -204,7 +296,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_revert">
+                      <object class="GtkMenuItem" id="MenuFileRevert">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Remove all modifications from the game</property>
@@ -213,7 +305,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_launch">
+                      <object class="GtkMenuItem" id="MenuFileLaunch">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Launch the game with modifications</property>
@@ -232,7 +324,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkMenuItem" id="_menu_install_file">
+                              <object class="GtkMenuItem" id="MenuFileInstallFile">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="tooltip-text" translatable="yes">Install mods from files</property>
@@ -241,7 +333,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="_menu_install_folders">
+                              <object class="GtkMenuItem" id="MenuFileInstallFolders">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="tooltip-text" translatable="yes">Install mods from folders</property>
@@ -250,11 +342,11 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="_menu_install_text">
+                              <object class="GtkMenuItem" id="MenuFileInstallText">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="tooltip-text" translatable="yes">Install mods from Text Input (URL, GameBanana URL/ID)</property>
-                                <property name="label" translatable="yes">From _url</property>
+                                <property name="label" translatable="yes">From _text</property>
                                 <property name="use-underline">True</property>
                               </object>
                             </child>
@@ -269,7 +361,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_exit">
+                      <object class="GtkMenuItem" id="MenuFileExit">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">E_xit</property>
@@ -291,7 +383,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_extract">
+                      <object class="GtkMenuItem" id="MenuToolsExtract">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Extract .gfs/.tfhres files</property>
@@ -300,7 +392,13 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_create_gfs">
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="MenuToolsCreateGFS">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Create a Reverge Package file from a folder</property>
@@ -309,7 +407,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_create_tfhres">
+                      <object class="GtkMenuItem" id="MenuToolsCreateTFHRES">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Create a empty TFHResource</property>
@@ -318,11 +416,89 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_create_mod">
+                      <object class="GtkMenuItem" id="MenuToolsCreateMod">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Create a new empty mod</property>
                         <property name="label" translatable="yes">Create _Mod</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="MenuToolsEditConfig">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Edit the configuration file to add/change game paths</property>
+                        <property name="label" translatable="yes">Edit _Configuration</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Delete</property>
+                        <property name="use-underline">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkMenuItem" id="MenuToolsDeleteBackups">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Backups</property>
+                                <property name="use-underline">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="MenuToolsDeleteMods">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Mods</property>
+                                <property name="use-underline">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkMenuItem" id="MenuToolsDeleteEverything">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Everything</property>
+                                <property name="use-underline">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparatorMenuItem">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="MenuToolsDesktopShortcut">
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Create a desktop shortcut for easy access</property>
+                        <property name="label" translatable="yes">Create Desktop Shortcut</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="MenuToolsMenuShortcut">
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Create Menu Shortcut</property>
                         <property name="use-underline">True</property>
                       </object>
                     </child>
@@ -341,7 +517,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_guide">
+                      <object class="GtkMenuItem" id="MenuHelpGuide">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Opens a link to a guide on how to use Velvet Beautifier</property>
@@ -356,7 +532,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_report_issue">
+                      <object class="GtkMenuItem" id="MenuHelpReportIssue">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Report bugs/issues to GitHub</property>
@@ -365,7 +541,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_request_feature">
+                      <object class="GtkMenuItem" id="MenuHelpRequestFeature">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Suggest a new feature for Velve Beautifier</property>
@@ -380,7 +556,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="_menu_about">
+                      <object class="GtkMenuItem" id="MenuHelpAbout">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">_About</property>
@@ -403,7 +579,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkToolButton" id="_tool_refresh">
+              <object class="GtkToolButton" id="ToolbarRefresh">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Refresh</property>
@@ -415,7 +591,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="_tool_apply">
+              <object class="GtkToolButton" id="ToolbarApply">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Apply</property>
@@ -427,7 +603,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="_tool_revert">
+              <object class="GtkToolButton" id="ToolbarRevert">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Revert</property>
@@ -439,7 +615,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="_tool_launch">
+              <object class="GtkToolButton" id="ToolbarLaunch">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_Launch Game</property>
@@ -459,7 +635,7 @@
         </child>
         <child>
           <!-- n-columns=3 n-rows=1 -->
-          <object class="GtkGrid" id="_modlist">
+          <object class="GtkGrid" id="ModList">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="column-homogeneous">True</property>

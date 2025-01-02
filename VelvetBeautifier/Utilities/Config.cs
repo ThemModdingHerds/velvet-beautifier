@@ -19,7 +19,7 @@ public static class Config
     /// </summary>
     public const string FILENAME = "config.json";
     /// <summary>
-    /// The full filepath of the configuration file, should be next to the executable
+    /// The full filepath of the configuration file
     /// </summary>
     public static string FilePath => Path.Combine(Velvet.AppDataFolder,FILENAME);
     /// <summary>
@@ -35,12 +35,16 @@ public static class Config
     /// </summary>
     public static int Version {get; set;} = VERSION;
     /// <summary>
+    /// Is the current config file a old config file?
+    /// </summary>
+    public static bool IsOld => GetVersion() < VERSION;
+    /// <summary>
     /// Read the configuration file at <c>path</c>
     /// </summary>
-    /// <param name="path">A filepath to a configuration file</param>
-    public static void Read(string path)
+    /// <param name="filepath">A filepath to a configuration file</param>
+    public static void Read(string filepath)
     {
-        JSON? config = JSON.Read(path);
+        JSON? config = JSON.Read(filepath);
         ClientPath = config?.ClientPath;
         ServerPath = config?.ServerPath;
         Version = config?.Version ?? INVALID_VERSION;
@@ -59,7 +63,10 @@ public static class Config
         config.Write(FilePath);
         Read(FilePath);
     }
-    public static void Write(string path)
+    /// <summary>
+    /// Save changes to the config file
+    /// </summary>
+    public static void Write()
     {
         JSON config = new()
         {
@@ -67,17 +74,17 @@ public static class Config
             ServerPath = ServerPath,
             Version = Version
         };
-        config.Write(path);
+        config.Write(FilePath);
     }
-    public static bool IsOld(string path)
-    {
-        return GetVersion(path) < VERSION;
-    }
-    public static int GetVersion(string path)
+    /// <summary>
+    /// Get the version of the current config file
+    /// </summary>
+    /// <returns>A number as the version of the config file</returns>
+    public static int GetVersion()
     {
         try
         {
-            JsonDocument json = JsonDocument.Parse(File.ReadAllText(path));
+            JsonDocument json = JsonDocument.Parse(File.ReadAllText(FilePath));
             JsonElement root = json.RootElement;
             root.TryGetProperty("version",out JsonElement versionProp);
             versionProp.TryGetInt32(out int version);
@@ -88,18 +95,45 @@ public static class Config
             return INVALID_VERSION;
         }
     }
+    /// <summary>
+    /// Check if the config file exists
+    /// </summary>
+    /// <returns>true if the config file exists, otherwise false</returns>
+    public static bool Exists() => File.Exists(FilePath);
+    /// <summary>
+    /// The JSON structure of the config file
+    /// </summary>
     public class JSON
     {
+        /// <summary>
+        /// The full path of the client's installation folder
+        /// </summary>
         [JsonPropertyName("client_path")]
         public string? ClientPath {get; set;}
+        /// <summary>
+        /// The full path of the server's installation folder
+        /// </summary>
         [JsonPropertyName("server_path")]
         public string? ServerPath {get; set;}
+        /// <summary>
+        /// The version of the config file
+        /// </summary>
         [JsonPropertyName("version")]
         public int Version {get; set;} = INVALID_VERSION;
+        /// <summary>
+        /// Read the config file at <c>filepath</c>
+        /// </summary>
+        /// <param name="filepath">A valid filepath</param>
+        /// <returns>The config file, can be null</returns>
         public static JSON? Read(string filepath)
         {
             return JsonSerializer.Deserialize<JSON>(File.ReadAllText(filepath));
         }
+        /// <summary>
+        /// Create a config file at <c>filepath</c>
+        /// </summary>
+        /// <param name="filepath">A valid filepath</param>
+        /// <returns>The newly created config file</returns>
         public static JSON Create(string filepath)
         {
             JSON config = new()
@@ -110,6 +144,10 @@ public static class Config
             config.Write(filepath);
             return config;
         }
+        /// <summary>
+        /// Write the config file at <c>filepath</c>
+        /// </summary>
+        /// <param name="filepath">A valid filepath</param>
         public void Write(string filepath) => File.WriteAllText(filepath,JsonSerializer.Serialize(this));
     }
 }

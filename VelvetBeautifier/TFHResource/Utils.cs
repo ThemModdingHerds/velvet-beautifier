@@ -8,8 +8,8 @@ public static class Utils
     public static void Extract(string db_path,string output)
     {
         Velvet.Info($"extraing .tfhres at {db_path} to {output}...");
-        static string fix_buckgit_path(string path) => path.Replace("c:\\buckgit\\","");
-        static string fix_database_path(string path) => path.Replace("database:/","");
+        static string fix_buckgit_path(string filepath) => filepath.Replace("c:\\buckgit\\","");
+        static string fix_database_path(string filepath) => filepath.Replace("database:/","");
         static string find_path(CachedImage image, List<CacheRecord> records)
         {
             foreach (CacheRecord record in records)

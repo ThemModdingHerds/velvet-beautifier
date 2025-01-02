@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 /// <summary>
@@ -51,8 +50,5 @@ public static class Dotnet
     /// Get the GameNews-ModList.png as a Resource Stream
     /// </summary>
     /// <returns>The Stream of the resouce, should be always valid</returns>
-    public static Stream GetGameNewsModsListResource()
-    {
-        return Library.GetManifestResourceStream(Velvet.GAMENEWS_MODLIST_RESOURCE_PATH) ?? throw new Exception("impossible");
-    }
+    public static Stream GetGameNewsModsListResource() => Library.GetManifestResourceStream(Velvet.GAMENEWS_MODLIST_RESOURCE_PATH) ?? throw new Exception("impossible");
 }

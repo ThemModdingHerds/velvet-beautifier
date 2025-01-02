@@ -21,20 +21,20 @@ public class Mod
     public string LevelsFolder => Path.Combine(Folder,LEVELS_NAME);
     public string PatchesFolder => Path.Combine(Folder,PATCHES_NAME);
     public bool HasRevergePackages => Directory.GetDirectories(Folder,"*.gfs").Length > 0;
-    public bool HasTFHResources => Directory.GetFiles(Folder,"*.tfhres").Length > 0;
+    public bool HasTFHResources => FileSystem.GetAllFiles(Folder,"*.tfhres").Count > 0;
     public bool HasLevels => Directory.Exists(LevelsFolder);
-    public bool HasPatches => Directory.Exists(PatchesFolder) && Directory.GetFiles(PatchesFolder,"*.json",SearchOption.AllDirectories).Length > 0;
+    public bool HasPatches => Directory.Exists(PatchesFolder) && FileSystem.GetAllFiles(PatchesFolder,"*.json").Count > 0;
     public static bool IsMod(string folder)
     {
         string modinfo_path = Path.Combine(folder,MODINFO_NAME);
         return File.Exists(modinfo_path);
     }
-    public static Mod Create(string path,ModInfo info)
+    public static Mod Create(string folderpath,ModInfo info)
     {
-        string modinfoPath = Path.Combine(path,MODINFO_NAME);
-        Directory.CreateDirectory(path);
+        string modinfoPath = Path.Combine(folderpath,MODINFO_NAME);
+        Directory.CreateDirectory(folderpath);
         info.Write(modinfoPath);
-        return new(path);
+        return new(folderpath);
     }
     public static Mod Create(ModInfo info) => Create(FileSystem.CreateTempFolder(),info);
     public Mod(string folder)
@@ -52,7 +52,7 @@ public class Mod
     public void Enable()
     {
         if(Enabled) return;
-        using FileStream stream = File.Create(Path.Combine(Folder,MOD_ENABLED_NAME));
+        FileSystem.CreateFile(Path.Combine(Folder,MOD_ENABLED_NAME));
     }
     public void Disable()
     {
@@ -86,8 +86,8 @@ public class Mod
     public Dictionary<string,Database> GetTFHResources()
     {
         Dictionary<string,Database> databases = [];
-        List<Checksum> gameFiles = TFHResourceManager.Checksums;
-        foreach(Checksum gameFile in gameFiles)
+        List<GameFile> gameFiles = TFHResourceManager.Files;
+        foreach(GameFile gameFile in gameFiles)
         {
             Database? db = GetTFHResource(gameFile.Name);
             if(db == null) continue;
@@ -104,8 +104,8 @@ public class Mod
     public Dictionary<string,RevergePackage> GetRevergePackages()
     {
         Dictionary<string,RevergePackage> packages = [];
-        List<Checksum> gameFiles = RevergePackageManager.Checksums;
-        foreach(Checksum gameFile in gameFiles)
+        List<GameFile> gameFiles = RevergePackageManager.Files;
+        foreach(GameFile gameFile in gameFiles)
         {
             RevergePackage? gfs = GetRevergePackage(gameFile.Name);
             if(gfs == null) continue;
@@ -121,7 +121,7 @@ public class Mod
     public List<Patch> GetPatches()
     {
         if(!HasPatches) return [];
-        string[] files = Directory.GetFiles(PatchesFolder,"*.json",SearchOption.AllDirectories);
+        List<string> files = FileSystem.GetAllFiles(PatchesFolder,"*.json");
         List<Patch> patches = [];
         foreach(string file in files)
         {

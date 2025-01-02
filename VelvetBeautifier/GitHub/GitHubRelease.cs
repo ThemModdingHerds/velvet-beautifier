@@ -5,7 +5,7 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GitHub;
 public class GitHubRelease
 {
-    public const string API_URL = $"https://api.github.com/repos/{Velvet.GITHUB_OWNER}/{Velvet.GITHUB_REPO}/releases";
+    public const string API_URL = $"https://api.github.com/repos/{GitHub.OWNER}/{GitHub.REPO}/releases";
     public const string API_LATEST_URL = $"{API_URL}/latest";
     [JsonPropertyName("tag_name")]
     public string TagName {get;set;} = string.Empty;
@@ -22,6 +22,14 @@ public class GitHubRelease
     }
     [JsonPropertyName("assets")]
     public List<GitHubReleaseAsset> Assets {get;set;} = [];
+    public static bool Outdated {
+        get
+        {
+            GitHubRelease? release = Fetch();
+            if(release == null) return false;
+            return release.Version > Dotnet.LibraryVersion;
+        }
+    }
     public static GitHubRelease? Fetch()
     {
         return DownloadManager.GetJSON<GitHubRelease>(API_LATEST_URL,new Dictionary<string, string>

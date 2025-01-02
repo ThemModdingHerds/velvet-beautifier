@@ -1,3 +1,4 @@
+using ThemModdingHerds.VelvetBeautifier.GitHub;
 using ThemModdingHerds.VelvetBeautifier.Modding;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
@@ -6,21 +7,19 @@ public static class GameNewsManager
 {
     public const string FILENAME = "GameNews.ini";
     public const string FOLDERNAME = "news_images";
-    public static Checksum? Checksum {get;private set;}
+    public static bool Tampering {get;private set;} = false;
+    public static GameFile? File => GameFiles.Read()?.GameNews;
+    public static bool Verify(Game game) => File?.Verify(GetFilePath(game)) ?? true;
     public static string GetFilePath(Game game) => Path.Combine(game.ScriptsFolder,FILENAME);
     public static string GetNewsImages(Game game) => Path.Combine(game.ScriptsFolder,FOLDERNAME);
     public static List<News> GetGameNews(Game game) => HasFile(game) ? News.ReadGameNews(GetFilePath(game)) : [];
-    public static bool HasFile(Game game) => File.Exists(GetFilePath(game));
+    public static bool HasFile(Game game) => System.IO.File.Exists(GetFilePath(game));
     public static bool HasNewsImages(Game game) => Directory.Exists(GetNewsImages(game));
-    public static void Init()
-    {
-        Checksum = ChecksumsTFH.Read()?.GameNews;
-    }
     public static void CreateBackup(Game game)
     {
         if(!HasFile(game)) return;
         string filepath = GetFilePath(game);
-        BackupManager.MakeBackup(filepath,Checksum);
+        Tampering = !BackupManager.MakeBackup(filepath,File);
     }
     public static void Revert(Game game)
     {
@@ -38,10 +37,10 @@ public static class GameNewsManager
             Velvet.GAMENEWS_MODLIST_FILENAME,
             Velvet.Velvetify(Velvet.NAME),
             Velvet.Velvetify("this game has been modified, you may experience unstable/broken sessions"),
-            Velvet.GITHUB_PROJECT_URL
+            GitHub.GitHub.OWNER_URL
         );
         List<News> gamenews = [];
-        if(ModLoaderTool.Outdated)
+        if(GitHubRelease.Outdated)
         {
             News outdatedNews = new(
                 1,
@@ -49,7 +48,7 @@ public static class GameNewsManager
                 Velvet.GAMENEWS_MODLIST_FILENAME,
                 Velvet.Velvetify(Velvet.NAME),
                 Velvet.Velvetify($"you are using an old version of {Velvet.NAME}, update to have better support"),
-                Velvet.GITHUB_REPO_LATEST_RELEASE_URL
+                GitHub.GitHub.LATEST_RELEASE_URL
             );
             gamenews.Add(outdatedNews);
         }
@@ -63,9 +62,9 @@ public static class GameNewsManager
     {
         if(!HasNewsImages(game)) return;
         string filepath = Path.Combine(GetNewsImages(game),Velvet.GAMENEWS_MODLIST_FILENAME);
-        if(File.Exists(filepath))
-            File.Delete(filepath);
-        using FileStream stream = File.OpenWrite(filepath);
+        if(System.IO.File.Exists(filepath))
+            System.IO.File.Delete(filepath);
+        using FileStream stream = System.IO.File.OpenWrite(filepath);
         Dotnet.GetGameNewsModsListResource()
         .CopyTo(stream);
     }

@@ -4,17 +4,24 @@ using ThemModdingHerds.VelvetBeautifier.Modding;
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public class CreateModWindow : Window
 {
-    public Grid Root => (Grid)Children[0];
-    public Button CreateButton => (Button)Root.Children[0];
-    public Entry IdentifierEntry => (Entry)Root.Children[8];
-    public Entry NameEntry => (Entry)Root.Children[7];
-    public Entry AuthorEntry => (Entry)Root.Children[6];
-    public Entry DescriptionEntry => (Entry)Root.Children[5];
-    public CreateModWindow(): this(new Builder("MainWindow.glade")) {}
-    private CreateModWindow(Builder builder): base(builder.GetRawOwnedObject("CreateModWindow"))
+    public const string ID = "CreateModWindow";
+    public Button CreateButton {get;}
+    public Entry IdentifierEntry {get;}
+    public Entry NameEntry {get;}
+    public Entry AuthorEntry {get;}
+    public Entry DescriptionEntry {get;}
+    public CreateModWindow(): this(new Builder(VelvetGtk.GLADEFILE)) {}
+    private CreateModWindow(Builder builder): base(builder.GetRawOwnedObject(ID))
     {
         Icon = Utils.VelvetIcon;
         builder.Autoconnect(this);
+
+        CreateButton = new(builder.GetRawOwnedObject("ModCreateButton"));
+        IdentifierEntry = new(builder.GetRawOwnedObject("ModIdentifierEntry"));
+        NameEntry = new(builder.GetRawOwnedObject("ModNameEntry"));
+        AuthorEntry = new(builder.GetRawOwnedObject("ModAuthorEntry"));
+        DescriptionEntry = new(builder.GetRawOwnedObject("ModDescEntry"));
+
         IdentifierEntry.Changed += OnTextChange;
         NameEntry.Changed += OnTextChange;
         AuthorEntry.Changed += OnTextChange;

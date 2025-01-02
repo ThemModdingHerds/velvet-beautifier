@@ -24,8 +24,5 @@ public static class Url
     /// </summary>
     /// <param name="url">The string to verify</param>
     /// <returns></returns>
-    public static bool IsUrl(string url)
-    {
-        return url.StartsWith("http") && Uri.TryCreate(url,UriKind.RelativeOrAbsolute,out Uri? _);
-    }
+    public static bool IsUrl(string url) => url.StartsWith("http") && Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri? _);
 }

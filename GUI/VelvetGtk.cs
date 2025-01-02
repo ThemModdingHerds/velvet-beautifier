@@ -1,9 +1,12 @@
 using Gtk;
+using ThemModdingHerds.VelvetBeautifier.GitHub;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public static class VelvetGtk
 {
+    public const string APP_ID = "org.tmh.velvetbeautifier";
+    public const string GLADEFILE = "VelvetBeautifier.glade";
     public static void ShowMessageBox(this Window parent,string content,MessageType type = MessageType.Info)
     {
         MessageDialog message = new(parent,DialogFlags.DestroyWithParent,type,ButtonsType.Ok,Velvet.Velvetify(content));
@@ -46,7 +49,7 @@ public static class VelvetGtk
     }
     public static string[] OpenFolderDialog(this Window parent,string title,bool multi = false)
     {
-        FileChooserDialog dialog = new(title,parent,FileChooserAction.CreateFolder,"Cancel",ResponseType.Cancel,"Accept",ResponseType.Accept)
+        FileChooserDialog dialog = new(title,parent,FileChooserAction.SelectFolder,"Cancel",ResponseType.Cancel,"Accept",ResponseType.Accept)
         {
             SelectMultiple = multi
         };
@@ -66,7 +69,7 @@ public static class VelvetGtk
             ProgramName = Velvet.Velvetify(Velvet.NAME),
             Authors = [Velvet.AUTHOR],
             License = Velvet.Velvetify(Utils.License),
-            Website = Velvet.GITHUB_REPO,
+            Website = GitHub.GitHub.REPO_URL,
             WebsiteLabel = Velvet.Velvetify("Source Code"),
             Logo = Utils.VelvetImage,
             Comments = Velvet.Velvetify(Velvet.DESCRIPTION)

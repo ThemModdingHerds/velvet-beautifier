@@ -1,6 +1,8 @@
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using Gtk;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public static class Utils
@@ -58,5 +60,13 @@ public static class Utils
         Thread thread = new(start);
         thread.Start();
         thread.Join();
+    }
+    public static void CreateDesktopShortcut()
+    {
+        
+    }
+    public static void CreateMenuShortcut()
+    {
+        
     }
 }

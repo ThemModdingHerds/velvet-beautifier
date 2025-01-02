@@ -33,7 +33,7 @@ public class ApplyModsHandler : ICommandArgumentHandler
     public string Name => "apply";
     public int OnExecute(string? value)
     {
-        ModLoaderTool.ApplyMods();
+        ModDB.Apply();
         return 0;
     }
 }
@@ -42,7 +42,7 @@ public class RevertHandler : ICommandArgumentHandler
     public string Name => "revert";
     public int OnExecute(string? value)
     {
-        ModLoaderTool.Revert();
+        BackupManager.Revert();
         return 0;
     }
 }
@@ -137,7 +137,7 @@ public class DisableModHandler : ICommandArgumentHandler
         Mod? mod = ModDB.FindModById(value);
         if(mod == null)
             return 1;
-        mod.Enable();
+        mod.Disable();
         return 0;
     }
 }
@@ -188,7 +188,40 @@ public class ResetHandler : ICommandArgumentHandler
             }
         }
         Velvet.Error("I hope you know what you're doing...");
-        ModLoaderTool.Reset();
+        ModLoaderTool.DeleteEverything();
         return 0;
+    }
+}
+public class SetConfigHandler : ICommandArgumentHandler
+{
+    public string Name => "config";
+    public int OnExecute(string? value)
+    {
+        bool updated = false;
+        if(CommandLine.Arguments.TryGetValue("client-path",out string? clientPath))
+        {
+            if(!Client.Valid(clientPath))
+            {
+                Velvet.Warn($"{clientPath} is not a valid client path!");
+                return 1;
+            }
+            Velvet.Info("updated client path");
+            Config.ClientPath = clientPath;
+            updated = true;
+        }
+        if(CommandLine.Arguments.TryGetValue("server-path",out string? serverPath))
+        {
+            if(!Server.Valid(serverPath))
+            {
+                Velvet.Warn($"{serverPath} is not a valid server path!");
+                return 1;
+            }
+            Velvet.Info("updated server path");
+            Config.ServerPath = serverPath;
+            updated = true;
+        }
+        if(updated)
+            Config.Write();
+        return updated ? 0 : 1;
     }
 }

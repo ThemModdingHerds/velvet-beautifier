@@ -16,21 +16,13 @@ Mod Loader/Tool for Them's Fightin' Herds games
 - extract/create `.tfhres`/`.gfs` files
 - easy way of modifying `.tfhres`/`.gfs` files
 - install mods via:
-  - files and links (`.zip`/`.7z`,/`.rar`/`.gfs`)
+  - files and links (`.zip`/`.7z`,/`.rar`/`.tar.gz`/`.gfs`)
   - folders
   - GameBanana links/ids
   - URI Scheme
     - for GameBanana: `velvetbeautifier:https://gamebanana.com/mmdl/<id>,Mod,<mod-id>` [Example](velvetbeautifier:https://gamebanana.com/mmdl/1108068,Mod,485712)
     - for anything else: `velvetbeautifier:<url/file/folder>`
-
-### Possible Features
-
-- custom Stages (levels)
-- custom Pixel Lobbies
-
-### Planned features
-
-- modding `.tfhres` a little bit easier
+- easy way of adding new stages
 
 ## Usage
 
@@ -76,6 +68,7 @@ A: these are backups of games files, required for modding the game, if there's o
 
 ## 3rd-Party Libraries
 
+- [GtkSharp][gtksharp-library-link] (GPL-2) for GUI
 - [Gameloop.Vdf][gameloop-vdf-library-link] (MIT License) for reading Steam related files
 - [SharpCompress][sharpcompress-library-link] (MIT License) for extracting compressed files
 - [ThemModdingHerds.GFS][gfs-library-link] (MIT License) for creating/modifying `.gfs` files
@@ -97,7 +90,7 @@ To make this clear, some terms have a strict definition:
 _We_ have **no relation** to Mane6/Maximum Entertainment/Them's Fightin' Herds, all assets used here are from the game and fall under their copyright.  
 _We_ are **not responsible** for you getting banned from online play if you use any mods that might change online gameplay/features.  
 _We_ do **not support** piracy/cheating/hacking or any kind of harm to the online community.  
-_We_ will **not support** any kind of Skull Girls modding.  
+_We_ will **not support** the other Z-Engine games.  
 
 ## License
 
@@ -111,3 +104,4 @@ This tool is licensed under the [GPL-3.0 license][license-path]
 [sharpcompress-library-link]: https://github.com/adamhathcock/sharpcompress
 [tfhres-library-link]: https://github.com/ThemModdingHerds/tfhres
 [gfs-library-link]: https://github.com/ThemModdingHerds/gfs
+[gtksharp-library-link]: https://github.com/GtkSharp/GtkSharp

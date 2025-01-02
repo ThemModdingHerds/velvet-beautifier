@@ -159,3 +159,16 @@ example:
 ```sh
 VelvetBeautifier.CLI.exe --register-scheme
 ```
+
+### `--config`
+
+Configure various properties in the config file:
+
+- `--client-path <path>`
+- `--server-path <path>`
+
+example:
+
+```sh
+VelvetBeautifier.CLI.exe --config --client-path path/to/client
+```

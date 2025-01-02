@@ -6,22 +6,26 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GUI;
 public class MainWindow : Window
 {
-    public Box Root => (Box)Children[0];
-    public MenuBar MenuBar => (MenuBar)Root.Children[0];
-    public Toolbar Toolbar => (Toolbar)Root.Children[1];
-    public Grid ModList => (Grid)Root.Children[2];
-    public MainWindow(): this(new Builder("MainWindow.glade")) { }
-    private MainWindow(Builder builder): base(builder.GetRawOwnedObject("MainWindow"))
+    public const string ID = "MainWindow";
+    ToolbarItems Toolbar {get;}
+    MenuBarItems MenuBar {get;}
+    public Grid ModList {get;}
+    public MainWindow(): this(new Builder(VelvetGtk.GLADEFILE)) {}
+    private MainWindow(Builder builder): base(builder.GetRawOwnedObject(ID))
     {
         Icon = Utils.VelvetIcon;
         builder.Autoconnect(this);
-        Utils.JoinThread(ModLoaderTool.Run);
+
+        Toolbar = new(builder,this);
+        MenuBar = new(builder,this);
+        ModList = new(builder.GetRawOwnedObject("ModList"));
+
         DeleteEvent += delegate {Application.Quit();};
-        MenuBarItems.Init(MenuBar,this);
-        ToolbarItems.Init(Toolbar,this);
         RefreshModList();
         Drag.DestSet(this,DestDefaults.All,[new("text/uri-list",TargetFlags.OtherApp,0)],Gdk.DragAction.Copy);
         DragDataReceived += OnWindowDragDataReceived;
+        if(BackupManager.Invalid)
+            this.ShowMessageBox("Detected modified backup files! Reset Velvet Beautifer to fix this problem!",MessageType.Warning);
     }
     private void ResetModList()
     {
@@ -97,15 +101,16 @@ public class MainWindow : Window
     }
     public void ApplyMods()
     {
+        if(ModDB.EnabledMods.Count == 0) return;
         Sensitive = false;
-        Utils.JoinThread(ModLoaderTool.ApplyMods);
+        Utils.JoinThread(ModDB.Apply);
         this.ShowMessageBox("Enabled mods have been applied, you can now start the game with mods!");
         Sensitive = true;
     }
     public void Revert()
     {
         Sensitive = false;
-        Utils.JoinThread(ModLoaderTool.Revert);
+        Utils.JoinThread(BackupManager.Revert);
         this.ShowMessageBox("Reverted all the game files back to their orignal!");
         Sensitive = true;
     }

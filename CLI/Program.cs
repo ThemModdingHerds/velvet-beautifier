@@ -1,3 +1,5 @@
 ﻿using ThemModdingHerds.VelvetBeautifier;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
 
-ModLoaderTool.Run();
+ModLoaderTool.Init();
+CommandLine.Process();
