@@ -47,15 +47,16 @@ public static class LevelManager
             pack.Add(modpack);
         }
         pack.Save(tempLevels);
-        Velvet.Info($"applying levels modifications with {pack.Levels.Count} levels and {pack.Worlds.Entries.Count} to {FILENAME}");
+        Velvet.Info($"applying levels modifications with {pack.Levels.Count} levels and {pack.Worlds.Entries.Count} entries to {FILENAME}");
         string gfs = GetFilePath(game);
         RevergePackage levels = RevergePackage.Open(gfs);
-        levels.Merge(RevergePackage.Create(tempLevels));
+        RevergePackage newLevels = RevergePackage.Create(temp);
+        RevergePackage modded = RevergePackage.Merge(levels.Header,levels,newLevels);
         if(File.Exists(gfs))
             File.Delete(gfs);
         using Writer writer = new(gfs);
-        writer.Write(levels);
+        writer.Write(modded);
         if(Directory.Exists(temp))
-            Directory.Delete(temp);
+            Directory.Delete(temp,true);
     }
 }

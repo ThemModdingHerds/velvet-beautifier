@@ -6,6 +6,7 @@ namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 /// </summary>
 public static class FileSystem
 {
+    public const string TEMP_PREFIX = $"{Velvet.ALTNAME}-";
     /// <summary>
     /// Safe method of getting all the files in <c>folder</c>
     /// </summary>
@@ -63,7 +64,7 @@ public static class FileSystem
     /// Create a empty folder in the temporal folder of the Operating System
     /// </summary>
     /// <returns>A valid folderpath in the temporal folder</returns>
-    public static string CreateTempFolder() => Directory.CreateTempSubdirectory($"{Velvet.ALTNAME}-").FullName; // very easy as you can see
+    public static string CreateTempFolder() => Directory.CreateTempSubdirectory(TEMP_PREFIX).FullName; // very easy as you can see
     /// <summary>
     /// Remove invalid characters from <c>path</c>
     /// </summary>
@@ -90,5 +91,15 @@ public static class FileSystem
             UseShellExecute = true,
             Verb = "open"
         }) != null;
+    }
+    /// <summary>
+    /// Clears all the temporal folders created
+    /// </summary>
+    public static void ClearTempFolders()
+    {
+        string tempFolder = Path.GetTempPath();
+        string[] folders = Directory.GetDirectories(tempFolder,$"{TEMP_PREFIX}*");
+        foreach(string folder in folders)
+            Directory.Delete(folder,true);
     }
 }

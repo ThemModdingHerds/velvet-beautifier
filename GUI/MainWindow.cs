@@ -99,20 +99,30 @@ public class MainWindow : Window
         contextmenu.ShowAll();
         return contextmenu;
     }
+    private void ApplyModsThread()
+    {
+        Sensitive = false;
+        ModDB.Apply();
+        Sensitive = true;
+        //this.ShowMessageBox("Enabled mods have been applied, you can now start the game with mods!");
+    }
     public void ApplyMods()
     {
         if(ModDB.EnabledMods.Count == 0) return;
+        Thread thread = new(ApplyModsThread);
+        thread.Start();
+    }
+    private void RevertThread()
+    {
         Sensitive = false;
-        Utils.JoinThread(ModDB.Apply);
-        this.ShowMessageBox("Enabled mods have been applied, you can now start the game with mods!");
+        BackupManager.Revert();
         Sensitive = true;
+        //this.ShowMessageBox("Reverted all the game files back to their orignal!");
     }
     public void Revert()
     {
-        Sensitive = false;
-        Utils.JoinThread(BackupManager.Revert);
-        this.ShowMessageBox("Reverted all the game files back to their orignal!");
-        Sensitive = true;
+        Thread thread = new(RevertThread);
+        thread.Start();
     }
     public void Launch()
     {

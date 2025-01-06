@@ -18,6 +18,8 @@ public static class ModLoaderTool
     }
     public static void Init()
     {
+        // clear cache on startup
+        FileSystem.ClearTempFolders();
         // create main directory for storing things
         Directory.CreateDirectory(Velvet.AppDataFolder);
         Migrate();
