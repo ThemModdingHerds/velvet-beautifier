@@ -1,10 +1,6 @@
 name: Build (Debug)
 
-on:
-  push:
-    branches: [ "gtk" ]
-  pull_request:
-    branches: [ "gtk" ]
+on: [push, pull_request]
 
 jobs:
   cli:
