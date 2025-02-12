@@ -1,22 +1,19 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Sockets;
 
 namespace ThemModdingHerds.VelvetBeautifier.GameBanana;
-public class Argument(string link,string? itemType,int? id) : IParsable<Argument>
+public class Argument(string download_link,string? itemType,int? id) : IParsable<Argument>
 {
-    public string Link {get;set;} = link;
+    public string DownloadLink {get;set;} = download_link;
     public string? ItemType {get;set;} = itemType;
     public int? Id {get;set;} = id;
     public Argument(string link): this(link,null,null)
     {
 
     }
-    public int GetId()
+    public string GetDownloadURL()
     {
-        if(Id != null) return Id.Value;
-        string id_s = Link[(Link.IndexOf("mods/") + 5)..];
-        if(id_s.Contains('/'))
-            id_s = id_s[id_s.IndexOf('/')..];
-        return int.Parse(id_s);
+        return Id.HasValue ? Mod.Fetch(Id.Value)?.GetLatestUpdate().DownloadUrl ?? DownloadLink : DownloadLink;
     }
     public static Argument Parse(string s,IFormatProvider? provider)
     {

@@ -71,7 +71,7 @@ public static class CommandLine
                 // GameBanana 1-Click installer™
                 else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
                 {
-                    result = ModDB.InstallMod(argument.Link);
+                    result = ModDB.InstallMod(argument.DownloadLink);
                 }
                 Environment.Exit(result == ModInstallResult.Ok ? 0 : 1);
             }

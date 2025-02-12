@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Gtk;
 using ThemModdingHerds.VelvetBeautifier.GitHub;
 using ThemModdingHerds.VelvetBeautifier.Modding;
@@ -146,9 +147,9 @@ public class MenuBarItems
         };
         ToolsDesktopShortcut.Activated += delegate {Utils.CreateDesktopShortcut();};
         ToolsMenuShortcut.Activated += delegate {Utils.CreateMenuShortcut();};
-        // remove if impl
-        ToolsDesktopShortcut.Destroy();
-        ToolsMenuShortcut.Destroy();
+        // Linux does not need a menu shortcut
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            ToolsMenuShortcut.Destroy();
     }
     MenuItem? ToolsDeleteBackups;
     MenuItem? ToolsDeleteMods;

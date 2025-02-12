@@ -15,8 +15,6 @@ public class Mod
     public string Body {get;set;} = "";
     [JsonPropertyName("Files().aFiles()")]
     public Dictionary<string,ModFile> Files {get;set;} = [];
-    public static Mod? Fetch(Argument argument) => Fetch(argument.GetId());
-    public static Mod? Fetch(string url) => Fetch(Utils.GetModId(url));
     public static Mod? Fetch(int id)
     {
         string url = Utils.CreateCoreItemDataRequestUrl("Mod",id,[

@@ -41,11 +41,10 @@ public static class Steam
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             // literally from bin_steam.sh
-            string home = Environment.GetEnvironmentVariable("HOME") ?? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string steamDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME") ?? home;
+            string steamDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME") ?? Linux.HOME;
             string defaultPath = Path.Combine(steamDataHome,"Steam");
             string defaultBetaPath = defaultPath + LINUX_BETA_POSTFIX;
-            string classic = Path.Combine(home,"Steam");
+            string classic = Path.Combine(Linux.HOME,"Steam");
             string betaClassic = classic + LINUX_BETA_POSTFIX;
             if(Directory.Exists(defaultPath))
                 return defaultPath;

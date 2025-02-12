@@ -11,7 +11,7 @@ public static class Velvet
     /// <summary>
     /// The short description of the software
     /// </summary>
-    public const string DESCRIPTION = "Mod Loader/Tool for Them's Fightin' Herds games";
+    public const string DESCRIPTION = "Mod Loader/Tool for Them's Fightin' Herds";
     /// <summary>
     /// The alternative name of the software
     /// </summary>

@@ -8,13 +8,22 @@ using ThemModdingHerds.GFS;
 using ThemModdingHerds.IO.Binary;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
+/// <summary>
+/// Contains methods for archive files
+/// </summary>
 public static class ArchiveUtils
 {
-    private static bool IsRevergePackage(Stream file)
+    /// <summary>
+    /// is <c>stream</c> a Reverge Package?
+    /// </summary>
+    /// <param name="stream">A stream</param>
+    /// <returns>true if the stream is a Reverge Package, otherwise false</returns>
+    private static bool IsRevergePackage(Stream stream)
     {
         try
         {
-            using Reader reader = new(file);
+            using Reader reader = new(stream);
+            // we only need the header
             RevergePackageHeader header = reader.ReadRevergePackageHeader();
             return header.Identifier == RevergePackageHeader.IDENTIFIER;
         }
@@ -23,6 +32,12 @@ public static class ArchiveUtils
             return false;
         }
     }
+    /// <summary>
+    /// Check the archive type of <c>stream</c>
+    /// </summary>
+    /// <param name="stream">A stream</param>
+    /// <returns>The archive type</returns>
+    /// <exception cref="Exception">if no archive was detected</exception>
     public static ArchiveType DetectArchive(Stream stream)
     {
         if(ZipArchive.IsZipFile(stream))
@@ -39,34 +54,49 @@ public static class ArchiveUtils
             return ArchiveType.RevergePackage;
         throw new Exception("unknown archive type");
     }
-    public static bool ExtractArchive(string file,string output)
+    /// <summary>
+    /// Extract the archive at <c>input_filepath</c> to <c>output_folderpath</c>
+    /// </summary>
+    /// <param name="input_filepath">A valid filepath</param>
+    /// <param name="output_folderpath">A valid folderpath</param>
+    /// <returns>true if extraction was success, otherwise false</returns>
+    public static bool ExtractArchive(string input_filepath,string output_folderpath)
     {
-        using FileStream stream = File.OpenRead(file);
-        return ExtractArchive(stream,output);
+        using FileStream stream = File.OpenRead(input_filepath);
+        return ExtractArchive(stream,output_folderpath);
     }
-    public static bool ExtractArchive(Stream file,string output)
+    /// <summary>
+    /// Extract <c>stream</c> to <c>output_folderpath</c>
+    /// </summary>
+    /// <param name="stream">A stream</param>
+    /// <param name="output_folderpath">A valid folderpath</param>
+    /// <returns>true if extraction was success, otherwise false</returns>
+    public static bool ExtractArchive(Stream stream,string output_folderpath)
     {
         try
         {
-            ArchiveType type = DetectArchive(file);
+            // detect type
+            ArchiveType type = DetectArchive(stream);
             if(type != ArchiveType.RevergePackage)
             {
+                // use SharpCompress for extraction
                 IArchive? archive = type switch
                 {
-                    ArchiveType.Zip => ZipArchive.Open(file),
-                    ArchiveType.Rar => RarArchive.Open(file),
-                    ArchiveType.SevenZip => SevenZipArchive.Open(file),
-                    ArchiveType.Tar => TarArchive.Open(file),
-                    ArchiveType.GZip => GZipArchive.Open(file),
+                    ArchiveType.Zip => ZipArchive.Open(stream),
+                    ArchiveType.Rar => RarArchive.Open(stream),
+                    ArchiveType.SevenZip => SevenZipArchive.Open(stream),
+                    ArchiveType.Tar => TarArchive.Open(stream),
+                    ArchiveType.GZip => GZipArchive.Open(stream),
                     _ => null,
                 };
                 if(archive == null) return false;
-                archive.ExtractToDirectory(output);
+                archive.ExtractToDirectory(output_folderpath);
                 return true;
             }
-            using Reader reader = new(file);
+            // extract the reverge package file
+            using Reader reader = new(stream);
             RevergePackage gfs = reader.ReadRevergePackage();
-            GFS.Utils.Extract(gfs,output);
+            GFS.Utils.Extract(gfs,output_folderpath);
         }
         catch(Exception ex)
         {
@@ -75,11 +105,21 @@ public static class ArchiveUtils
         }
         return true;
     }
-    public static string? ExtractArchive(string file)
+    /// <summary>
+    /// Extract archive at <c>filepath</c> to a temporal folder
+    /// </summary>
+    /// <param name="filepath">A valid filepath</param>
+    /// <returns>true if extraction was success, otherwise false</returns>
+    public static string? ExtractArchive(string filepath)
     {
         string temp = FileSystem.CreateTempFolder();
-        return ExtractArchive(file,temp) ? temp : null;
+        return ExtractArchive(filepath,temp) ? temp : null;
     }
+    /// <summary>
+    /// Extract <c>stream</c> to a temporal folder
+    /// </summary>
+    /// <param name="stream">A stream</param>
+    /// <returns>true if extraction was success, otherwise false</returns>
     public static string? ExtractArchive(Stream stream)
     {
         string temp = FileSystem.CreateTempFolder();

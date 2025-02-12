@@ -486,7 +486,6 @@
                     <child>
                       <object class="GtkMenuItem" id="MenuToolsDesktopShortcut">
                         <property name="visible">True</property>
-                        <property name="sensitive">False</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Create a desktop shortcut for easy access</property>
                         <property name="label" translatable="yes">Create Desktop Shortcut</property>
@@ -496,7 +495,6 @@
                     <child>
                       <object class="GtkMenuItem" id="MenuToolsMenuShortcut">
                         <property name="visible">True</property>
-                        <property name="sensitive">False</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Create Menu Shortcut</property>
                         <property name="use-underline">True</property>

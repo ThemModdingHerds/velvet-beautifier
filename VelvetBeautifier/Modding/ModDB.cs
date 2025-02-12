@@ -36,7 +36,7 @@ public static class ModDB
     }
     public static ModInstallResult InstallMod(GameBanana.Argument argument)
     {
-        return InstallGameBananaMod(argument.GetId());
+        return InstallMod(argument.GetDownloadURL());
     }
     public static ModInstallResult InstallMod(GameBananaMod mod)
     {

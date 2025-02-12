@@ -53,7 +53,7 @@ public static class RevergePackageManager
             Velvet.Info($"applying .gfs modifications to {gamefile.Name}");
             if(File.Exists(filepath))
                 File.Delete(filepath);
-            Writer writer = new(filepath);
+            using Writer writer = new(filepath);
             writer.Write(modded);
         }
     }

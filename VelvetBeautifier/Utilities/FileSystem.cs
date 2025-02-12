@@ -6,6 +6,9 @@ namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 /// </summary>
 public static class FileSystem
 {
+    /// <summary>
+    /// The prefix of all temporal folders
+    /// </summary>
     public const string TEMP_PREFIX = $"{Velvet.ALTNAME}-";
     /// <summary>
     /// Safe method of getting all the files in <c>folder</c>

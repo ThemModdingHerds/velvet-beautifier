@@ -63,10 +63,40 @@ public static class Utils
     }
     public static void CreateDesktopShortcut()
     {
-        
+        string? exePath = Dotnet.ExecutablePath;
+        if(exePath == null) return;
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string desktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            string filename = $"{Velvet.NAME}.lnk";
+            string filepath = Path.Combine(desktopFolder,filename);
+            if(File.Exists(filepath))
+                File.Delete(filepath);
+            Win32.CreateShortcut(exePath,Velvet.DESCRIPTION,filepath);
+            return;
+        }
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            Linux.InstallDesktopEntry();
+            
+            return;
+        }
     }
     public static void CreateMenuShortcut()
     {
-        
+        string? exePath = Dotnet.ExecutablePath;
+        if(exePath == null) return;
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string startMenu = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu);
+            string folderpath = Path.Combine(startMenu,"Programs",Velvet.GROUP,Velvet.NAME);
+            Directory.CreateDirectory(folderpath);
+            string filename = $"{Velvet.NAME}.lnk";
+            string filepath = Path.Combine(folderpath,filename);
+            if(File.Exists(filepath))
+                File.Delete(filepath);
+            Win32.CreateShortcut(exePath,Velvet.DESCRIPTION,filepath);
+            return;
+        }
     }
 }
