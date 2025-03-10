@@ -8,7 +8,7 @@
     <RootNamespace>ThemModdingHerds.VelvetBeautifier</RootNamespace>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Title>Velvet Beautifier</Title>
-    <Version>2.3.1</Version>
+    <Version>2.3.2</Version>
     <Authors>N1ghtTheF0x</Authors>
     <Company>Them's Modding' Herds</Company>
     <Product>Velvet Beautifier</Product>
@@ -50,7 +50,7 @@
 
   <ItemGroup>
     <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />
-    <PackageReference Include="SharpCompress" Version="0.38.0" />
+    <PackageReference Include="SharpCompress" Version="0.39.0" />
     <PackageReference Include="ThemModdingHerds.Levels" Version="1.2.4" />
     <PackageReference Include="ThemModdingHerds.TFHRES" Version="1.4.0" />
     <PackageReference Include="ThemModdingHerds.GFS" Version="2.1.1" />

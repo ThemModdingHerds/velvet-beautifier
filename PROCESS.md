@@ -4,14 +4,21 @@ This is how Velvet Beautifier works
 
 ## When running executable
 
-- check if config is old
+- delete any temp folders
+- create data folder if not exists
+- migrate from older version if needed
+- load or create config file
+- check version of config and tool
+  - if new version has been installed the [setup](#when-setup) is executed
 - verify client/server paths
-- if first setup is required
-  - get game file information from external repo
-  - init Mod database
-  - [backup game files](#when-creating-backups)
+- if first time lanching then [setup](#when-setup)
 - handle command line process
-- if this is the GUI version, open the windows
+
+## when setup
+
+- get game file information from external repo
+- init Mod database
+- [backup game files](#when-creating-backups)
 
 ## when resetting
 

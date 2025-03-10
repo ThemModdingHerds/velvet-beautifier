@@ -141,3 +141,19 @@ To replace files that can't be read by a text editor you'll have to use this pat
 - when `offset` is specified it will open `target`, go to `offset` in bytes and write the bytes from `filepath` there, replacing bytes from `offset` to `offset` + size of `filepath`
 
 Binary patching  should only be done **IF** required, it also requires advanced knowledge of how binary files works if you use `offset`
+
+## How to upload mod
+
+To make your mod ready to be uploaded, compress the content of your mod folder to a zip/tar.gz, which means it requires the following structure:
+
+```txt
+mymod.zip/mod.json
+mymod.zip/*.gfs/**/*
+mymod.zip/*.tfhres
+mymod.zip/levels/**/*
+mymod.zip/patches/**/*.json
+```
+
+You can also have multiple mods in one zip file by putting them in subfolders
+
+Keep in mine that if you upload the mod on GameBanana, it will always download the latest release. Also don't put compressed files in compressed files, that's just stupid and defeating the point of compressed files.

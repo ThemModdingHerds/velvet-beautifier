@@ -6,12 +6,6 @@
             "name": "Launch Velvet Beautifier (CLI)",
             "request": "launch",
             "projectPath": "${workspaceFolder}/CLI/CLI.csproj"
-        },
-        {
-            "type": "dotnet",
-            "name": "Launch Velvet Beautifier (GUI)",
-            "request": "launch",
-            "projectPath": "${workspaceFolder}/GUI/GUI.csproj"
         }
     ]
 }

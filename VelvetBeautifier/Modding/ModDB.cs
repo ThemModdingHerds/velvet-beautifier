@@ -71,13 +71,18 @@ public static class ModDB
     }
     public static ModInstallResult InstallMod(string? str)
     {
-        if(str == null) return ModInstallResult.Invalid;
+        if(str == null || str.Length == 0) return ModInstallResult.Invalid;
         if(int.TryParse(str,out int id))
             return InstallGameBananaMod(id);
-        if(GameBanana.Utils.ValidUrl(str))
+        if(GameBanana.Utils.ValidMMDLUrl(str))
         {
             Velvet.Info($"installing GameBanana 1-Click installer: {str}");
             return InstallMod(GameBanana.Argument.Parse(str));
+        }
+        if(GameBanana.Utils.ValidModsUrl(str))
+        {
+            Velvet.Info($"installing GameBanana mod at {str}...");
+            return InstallGameBananaMod(GameBanana.Utils.GetModId(str));
         }
         if(Url.IsUrl(str))
         {
@@ -101,6 +106,19 @@ public static class ModDB
                 File.Delete(temp);
             return result;
         }
+        if(Directory.Exists(str))
+        {
+            Velvet.Info($"trying to find mods in {str}...");
+            List<string> mods = [..FileSystem.GetAllFiles(str).Where(f => Path.GetFileName(f) == Mod.MODINFO_NAME)];
+            if(mods.Count == 0)
+            {
+                Velvet.Warn($"no mods were found in {str}");
+                return ModInstallResult.Failed;
+            }
+            foreach(string mod in mods)
+                InstallMod(Path.GetDirectoryName(mod));
+            return ModInstallResult.Ok;
+        }
         return ModInstallResult.Invalid;
     }
     public static bool UninstallMod(string? id)
@@ -116,6 +134,17 @@ public static class ModDB
         if(!ContainsMod(mod)) return;
         Velvet.Info($"uninstalling {mod.Info.Id}...");
         Directory.Delete(mod.Folder,true);
+    }
+    public static ModInstallResult UpdateMod(string? id)
+    {
+        Mod? mod = FindModById(id);
+        if(mod == null) return ModInstallResult.Failed;
+        if(Url.IsUrl(mod.Info.Url))
+        {
+            return InstallMod(mod.Info.Url);
+        }
+        Velvet.Warn($"cannot update {mod} because it has no 'url' field");
+        return ModInstallResult.Failed;
     }
     public static Mod? FindModByName(string name)
     {

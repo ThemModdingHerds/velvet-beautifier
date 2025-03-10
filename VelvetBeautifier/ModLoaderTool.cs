@@ -23,12 +23,12 @@ public static class ModLoaderTool
         // create main directory for storing things
         Directory.CreateDirectory(Velvet.AppDataFolder);
         Migrate();
+        // this either creates a config or loads an already existing one
+        Config.Init();
         // check versions
         CheckVersion();
         // some branding things, version output etc :)
         Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Them's Fightin' Herds");
-        // this either creates a config or loads an already existing one
-        Config.Init();
         // reload just creates Client/Server instances
         Reload();
         // setup is required for first start or when there are no backups, mods folder, config file or levels folder

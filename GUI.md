@@ -1,5 +1,7 @@
 # Graphical User Interface
 
+    WARNING: The GUI version has been deprecated for now
+
 ![Icon](./assets/icon_medium.png)
 
 the executable is called `VelvetBeautifier.GUI.<Operating-System>` (for example on Windows it's called `VelvetBeautifier.GUI.Windows.exe`)

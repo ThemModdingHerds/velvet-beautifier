@@ -1,19 +1,12 @@
 using System.Text.RegularExpressions;
-using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GameBanana;
 public static partial class Utils
 {
-    public static bool ValidUrl(string url)
-    {
-        return GameBananaURL().IsMatch(url);
-        //return url.StartsWith("http://gamebanana.com") ||
-        //        url.StartsWith("https://gamebanana.com") ||
-        //        url.StartsWith("http://www.gamebanana.com") ||
-        //        url.StartsWith("https://www.gamebanana.com");
-    }
+    public static bool ValidMMDLUrl(string url) => GameBananaMMDLURL().IsMatch(url);
+    public static bool ValidModsUrl(string url) => GameBananaModsURL().IsMatch(url);
     public static int GetModId(string url)
     {
-        if(!ValidUrl(url) && !url.Contains("/mods/")) return -1;
+        if(!ValidMMDLUrl(url) && !url.Contains("/mods/")) return -1;
         try
         {
             string id_s = url[(url.IndexOf("mods/") + 5)..];
@@ -30,6 +23,8 @@ public static partial class Utils
         return $"https://api.gamebanana.com/Core/Item/Data?itemtype={itemtype}&itemid={id}&fields={field}&format=json&return_keys=true";
     }
 
-    [GeneratedRegex(@"^(https?:\/\/)?(www\.)?gamebanana\.com.*$")]
-    private static partial Regex GameBananaURL();
+    [GeneratedRegex(@"^(https?:\/\/)?(www\.)?gamebanana\.com\/mmdl\/\d+$")]
+    private static partial Regex GameBananaMMDLURL();
+    [GeneratedRegex(@"^(https?:\/\/)?(www\.)?gamebanana\.com\/mods\/\d+$")]
+    private static partial Regex GameBananaModsURL();
 }

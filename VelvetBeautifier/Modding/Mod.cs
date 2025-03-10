@@ -42,7 +42,7 @@ public class Mod
         Folder = folder;
         string filepath = Path.Combine(folder,MODINFO_NAME);
         if(!IsMod(folder))
-            throw new FileNotFoundException($"no mod entry in {folder}",filepath);
+            throw new FileNotFoundException($"no mod found in {folder}",filepath);
         Info = ModInfo.Read(filepath) ?? throw new Exception($"couldn't read info in {folder}");
     }
     public override string ToString()

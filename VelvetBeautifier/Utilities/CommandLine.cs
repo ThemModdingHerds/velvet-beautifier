@@ -34,6 +34,7 @@ public static class CommandLine
         new RegisterSchemeHandler(), // register URI scheme
         new InstallModHandler(), // installing a mod
         new RemoveModHandler(), // removing a mod
+        new UpdateModHandler(), // updating a mod
         new ApplyModsHandler(), // applying the mods to the game
         new RevertHandler(), // revert the game back to its orignal state
         new CreateModHandler(), // create a mod

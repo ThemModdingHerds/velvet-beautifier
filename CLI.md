@@ -58,6 +58,16 @@ example:
 VelvetBeautifier.CLI.exe --remove randomuncoolmod
 ```
 
+### `--update <identifier>`
+
+update the mod if it has any, it acts as installing the mod again
+
+example:
+
+```sh
+VelvetBeautifier.CLI.exe --update randomcoolmodthatisold
+```
+
 ### `--apply`
 
 applies all enabled mods, after this step you can play the game

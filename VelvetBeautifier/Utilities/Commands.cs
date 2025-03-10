@@ -28,6 +28,15 @@ public class RemoveModHandler : ICommandArgumentHandler
         return result ? 0 : 1;
     }
 }
+public class UpdateModHandler: ICommandArgumentHandler
+{
+    public string Name => "update";
+    public int OnExecute(string? value)
+    {
+        ModInstallResult result = ModDB.UpdateMod(value);
+        return result == ModInstallResult.Ok ? 0 : 1;
+    }
+}
 public class ApplyModsHandler : ICommandArgumentHandler
 {
     public string Name => "apply";

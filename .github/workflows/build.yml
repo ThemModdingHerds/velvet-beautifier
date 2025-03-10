@@ -25,25 +25,3 @@ jobs:
       with:
         name: velvet-beautifier-cli-${{matrix.os}}
         path: ./build-cli/${{matrix.os}}
-  gui:
-    strategy:
-      matrix:
-        os: [linux, win, osx]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build ./GUI/GUI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build-gui/${{matrix.os}} --configuration Debug
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-    - name: Upload Build
-      uses: actions/upload-artifact@v4
-      with:
-        name: velvet-beautifier-gui-${{matrix.os}}
-        path: ./build-gui/${{matrix.os}}

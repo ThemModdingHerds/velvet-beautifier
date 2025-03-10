@@ -25,7 +25,4 @@ $operatingsystem.GetEnumerator() | ForEach-Object{
     # CLI
     dotnet publish .\CLI\CLI.csproj --runtime $rid --configuration Release --self-contained=true
     Compress-Archive -Path .\CLI\bin\Release\net8.0\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.CLI.$Version.$name.zip
-    # GUI
-    dotnet publish .\GUI\GUI.csproj --runtime $rid --configuration Release --self-contained=true
-    Compress-Archive -Path .\GUI\bin\Release\net8.0\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.GUI.$Version.$name.zip
 }

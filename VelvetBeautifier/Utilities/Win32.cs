@@ -67,6 +67,7 @@ public static class Win32
             return false;
         }
     }
+    // I am leaving this for future update
     // http://www.vbaccelerator.com/home/NET/Code/Libraries/Shell_Projects/Creating_and_Modifying_Shortcuts/article.asp
     [ComImport()]
     [Guid("000214F9-0000-0000-C000-000000000046")]

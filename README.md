@@ -33,7 +33,13 @@ Mod Loader/Tool for Them's Fightin' Herds games
 ![CLI Icon](./assets/inverted_icon_medium.png)
 [The Command Line (VelvetBeautifier.CLI)](./CLI.md)  
 ![GUI Icon](./assets/icon_medium.png)
-[The Graphical User Interface (VelvetBeautifier.GUI)](GUI.md)
+[~~The Graphical User Interface (VelvetBeautifier.GUI)~~](./GUI.md)
+
+    WARNING: the GUI version has been deprecated for now. Please use the CLI for the time being
+
+#### What happenend to the GUI version?
+
+I am sick of switching between various libraries that either are bloated or just really old, there's no good GUI library for C# that is cross-platform (running on Linux, Windows and MacOS). Yes I know I can make a project in Godot, Unity or something similar, but I don't have the patience anymore. That's why I have given up working on the GUI version. You can still download the GUI version but I won't assist you in bugs or other issues, any issue reports to GUI will be ignored and closed. If you think you can make a GUI app, then clone this repo and create a pull request, I am done dealing with this.
 
 ### How do I make mods?
 
@@ -68,11 +74,11 @@ A: these are backups of games files, required for modding the game, if there's o
 
 ## 3rd-Party Libraries
 
-- [GtkSharp][gtksharp-library-link] (GPL-2) for GUI
 - [Gameloop.Vdf][gameloop-vdf-library-link] (MIT License) for reading Steam related files
 - [SharpCompress][sharpcompress-library-link] (MIT License) for extracting compressed files
 - [ThemModdingHerds.GFS][gfs-library-link] (MIT License) for creating/modifying `.gfs` files
 - [ThemModdingHerds.TFHRES][tfhres-library-link] (MIT License) for creating/modifying `.tfhres` files
+- [ThemModdingHerds.Levels][levels-library-link] (MIT License) for modifying level files (`.lvl`)
 
 ## Building
 
@@ -85,7 +91,7 @@ To make this clear, some terms have a strict definition:
 
 - this software (Velvet Beautifier)
 - me (N1ghtTheF0x)
-- any contributer on this repository
+- any contributer in this repository
 
 _We_ have **no relation** to Mane6/Maximum Entertainment/Them's Fightin' Herds, all assets used here are from the game and fall under their copyright.  
 _We_ are **not responsible** for you getting banned from online play if you use any mods that might change online gameplay/features.  
@@ -104,4 +110,4 @@ This tool is licensed under the [GPL-3.0 license][license-path]
 [sharpcompress-library-link]: https://github.com/adamhathcock/sharpcompress
 [tfhres-library-link]: https://github.com/ThemModdingHerds/tfhres
 [gfs-library-link]: https://github.com/ThemModdingHerds/gfs
-[gtksharp-library-link]: https://github.com/GtkSharp/GtkSharp
+[levels-library-link]: https://github.com/ThemModdingHerds/levels

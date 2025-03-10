@@ -38,9 +38,10 @@ public static class Velvet
     public const string GAMENEWS_MODLIST_RESOURCE_PATH = $"ThemModdingHerds.VelvetBeautifier.{GAMENEWS_MODLIST_FILENAME}";
     public static void Info(string text)
     {
+        ConsoleColor color = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine(Velvetify(text));
-        Console.ResetColor();
+        Console.ForegroundColor = color;
     }
     /// <summary>
     /// Print a error message to the <c>Console</c>
@@ -48,9 +49,10 @@ public static class Velvet
     /// <param name="text">The text to print</param>
     public static void Error(string text)
     {
+        ConsoleColor color = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Red;
         Console.Error.WriteLine(Velvetify(text));
-        Console.ResetColor();
+        Console.ForegroundColor = color;
     }
     /// <summary>
     /// Print a warning message to the <c>Console</c>
@@ -58,9 +60,10 @@ public static class Velvet
     /// <param name="text">The text to print</param>
     public static void Warn(string text)
     {
+        ConsoleColor color = Console.ForegroundColor;
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Error.WriteLine(Velvetify(text));
-        Console.ResetColor();
+        Console.ForegroundColor = color;
     }
     /// <summary>
     /// Print a exception to the <c>Console</c>
