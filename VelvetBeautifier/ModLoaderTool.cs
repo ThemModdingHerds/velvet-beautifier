@@ -27,7 +27,7 @@ public static class ModLoaderTool
         Config.Init();
         // check versions
         CheckVersion();
-        // some branding things, version output etc :)
+        // some branding things, version output etc. :)
         Velvet.Info($"{Velvet.NAME} v{Dotnet.LibraryVersion}\n\nA Mod Loader/Tool for Them's Fightin' Herds");
         // reload just creates Client/Server instances
         Reload();
