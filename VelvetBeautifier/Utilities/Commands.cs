@@ -155,18 +155,50 @@ public class ListModsHandler : ICommandArgumentHandler
     public string Name => "list";
     public int OnExecute(string? value)
     {
+        if (value == "local")
+            return GetLocalMods();
+        if (value == "online")
+        {
+            int result = 0;
+            result += GetGameBananaMods();
+            return result == 0 ? 0 : 1;
+        }
+        if (value == "gamebanana")
+            return GetGameBananaMods();
+        return GetLocalMods();
+    }
+    private static int GetGameBananaMods()
+    {
+        List<GameBanana.Search.Record> records = GameBanana.Search.FetchMods();
+        if (records.Count == 0)
+        {
+            Velvet.Warn("no mods are found on GameBanana, might be networking issues on your or their end");
+            return 0;
+        }
+        Velvet.Info($"found {records.Count} GameBanana mods:");
+        foreach (GameBanana.Search.Record record in records)
+        {
+            Console.WriteLine();
+            Velvet.Info($"{record.Name} by {record.User.Name}");
+            Console.WriteLine(record.Url);
+            Console.WriteLine();
+        }
+        return 0;
+    }
+    private static int GetLocalMods()
+    {
         List<Mod> mods = ModDB.Mods;
-        if(mods.Count == 0)
+        if (mods.Count == 0)
         {
             Velvet.Warn("no mods are installed");
             return 0;
         }
         Velvet.Info($"{mods.Count} mods installed:");
-        foreach(Mod mod in mods)
+        foreach (Mod mod in mods)
         {
             Console.WriteLine();
             Velvet.Info(mod.ToString());
-            if(mod.Info.Url != null) Console.WriteLine(mod.Info.Url);
+            if (mod.Info.Url != null) Console.WriteLine(mod.Info.Url);
             Console.WriteLine();
             Velvet.Info(mod.Info.Description);
         }

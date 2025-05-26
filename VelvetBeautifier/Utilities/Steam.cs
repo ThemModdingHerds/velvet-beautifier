@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Gameloop.Vdf;
 using Gameloop.Vdf.Linq;
@@ -20,7 +21,8 @@ public static class Steam
     /// The default path of Steam on Windows
     /// </summary>
     public const string WINDOWS_DEFAULT_FOLDERPATH = "C:\\Program Files (x86)\\Steam";
-    public const string LINUX_FOLDERNAME = "Steam";
+    public const string LINUX_DEFAULT_FOLDERNAME = ".steam/steam";
+    public const string LINUX_CLASSIC_FOLDERNAME = "Steam";
     public const string LINUX_BETA_POSTFIX = "Beta";
     /// <summary>
     /// Get the path of the steam folder. On Windows it uses Registry Keys and falls back to the default path
@@ -38,21 +40,18 @@ public static class Steam
             if(!Directory.Exists(installPath)) return null;
             return installPath;
         }
-        if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             // literally from bin_steam.sh
             string steamDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME") ?? Linux.HOME;
-            string defaultPath = Path.Combine(steamDataHome,"Steam");
-            string defaultBetaPath = defaultPath + LINUX_BETA_POSTFIX;
-            string classic = Path.Combine(Linux.HOME,"Steam");
+            string defaultPath = Path.Combine(steamDataHome, LINUX_DEFAULT_FOLDERNAME);
+            string classic = Path.Combine(steamDataHome, LINUX_CLASSIC_FOLDERNAME);
             string betaClassic = classic + LINUX_BETA_POSTFIX;
-            if(Directory.Exists(defaultPath))
+            if (Directory.Exists(defaultPath))
                 return defaultPath;
-            if(Directory.Exists(defaultBetaPath))
-                return defaultBetaPath;
-            if(Directory.Exists(classic))
+            if (Directory.Exists(classic))
                 return classic;
-            if(Directory.Exists(betaClassic))
+            if (Directory.Exists(betaClassic))
                 return betaClassic;
         }
         // TODO: how to find on MacOS?

@@ -8,7 +8,7 @@
     <RootNamespace>ThemModdingHerds.VelvetBeautifier</RootNamespace>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Title>Velvet Beautifier</Title>
-    <Version>2.3.3</Version>
+    <Version>2.4.0</Version>
     <Authors>N1ghtTheF0x</Authors>
     <Company>Them's Modding' Herds</Company>
     <Product>Velvet Beautifier</Product>
@@ -21,8 +21,6 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>tfh;themsfightinherds;velvetbeautifier;modloader</PackageTags>
-    <IncludeSymbols>True</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageOutputPath>bin\Package</PackageOutputPath>
   </PropertyGroup>
 
@@ -47,7 +45,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\README.md">
+    <None Include="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

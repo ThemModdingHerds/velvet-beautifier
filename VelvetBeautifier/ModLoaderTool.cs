@@ -25,6 +25,11 @@ public static class ModLoaderTool
         Migrate();
         // this either creates a config or loads an already existing one
         Config.Init();
+        if (!Config.IsValid())
+        {
+            Velvet.Warn("configuration does not contain any paths to the client or server! Make sure they are set and correct!");
+            return;
+        }
         // check versions
         CheckVersion();
         // some branding things, version output etc. :)

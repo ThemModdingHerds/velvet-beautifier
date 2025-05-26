@@ -77,6 +77,11 @@ public static class Config
         config.Write(FilePath);
     }
     /// <summary>
+    /// Check if <see cref="ClientPath"/> and <see cref="ServerPath"/> are valid
+    /// </summary>
+    /// <returns></returns>
+    public static bool IsValid() => (ClientPath != null && Directory.Exists(ClientPath)) || (ServerPath != null && Directory.Exists(ServerPath));
+    /// <summary>
     /// Get the version of the current config file
     /// </summary>
     /// <returns>A number as the version of the config file</returns>
@@ -86,11 +91,11 @@ public static class Config
         {
             JsonDocument json = JsonDocument.Parse(File.ReadAllText(FilePath));
             JsonElement root = json.RootElement;
-            root.TryGetProperty("version",out JsonElement versionProp);
+            root.TryGetProperty("version", out JsonElement versionProp);
             versionProp.TryGetInt32(out int version);
             return version;
         }
-        catch(Exception)
+        catch (Exception)
         {
             return INVALID_VERSION;
         }
@@ -109,17 +114,17 @@ public static class Config
         /// The full path of the client's installation folder
         /// </summary>
         [JsonPropertyName("client_path")]
-        public string? ClientPath {get; set;}
+        public string? ClientPath { get; set; }
         /// <summary>
         /// The full path of the server's installation folder
         /// </summary>
         [JsonPropertyName("server_path")]
-        public string? ServerPath {get; set;}
+        public string? ServerPath { get; set; }
         /// <summary>
         /// The version of the config file
         /// </summary>
         [JsonPropertyName("version")]
-        public int Version {get; set;} = INVALID_VERSION;
+        public int Version { get; set; } = INVALID_VERSION;
         /// <summary>
         /// Read the config file at <c>filepath</c>
         /// </summary>
@@ -148,6 +153,6 @@ public static class Config
         /// Write the config file at <c>filepath</c>
         /// </summary>
         /// <param name="filepath">A valid filepath</param>
-        public void Write(string filepath) => File.WriteAllText(filepath,JsonSerializer.Serialize(this));
+        public void Write(string filepath) => File.WriteAllText(filepath, JsonSerializer.Serialize(this));
     }
 }

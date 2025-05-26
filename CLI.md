@@ -150,14 +150,21 @@ example:
 VelvetBeautifier.CLI.exe --reset
 ```
 
-### `--list`
+### `--list [<mode>]`
 
-lists all installed mods and shows if they're enabled/disabled
+lists mods based on the `mode`. It defaults to `local`
+
+- `local`: shows mods installed on your system including if they are enabled/disabled
+- `gamebanana`: shows mods available on GameBanana
+- `online`: alias for `gamebanana` (and future mod site providers?)
 
 example:
 
 ```sh
-VelvetBeautifier.CLI.exe --list
+VelvetBeautifier.CLI.exe --list # lists local mods
+VelvetBeautifier.CLI.exe --list local # same as above
+VelvetBeautifier.ClI.exe --list gamebanana # list mods that are on GameBanana
+VelvetBeautifier.CLI.exe --list online # same as above (for future plans?)
 ```
 
 ### `--register-scheme` (currently only Windows)
