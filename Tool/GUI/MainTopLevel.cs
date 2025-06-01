@@ -6,17 +6,25 @@ namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 
 public class MainTopLevel : Toplevel
 {
-    private readonly ModListView modList = new();
+    private const int HorSepDistance = 25;
+    private readonly ModListView modList = new()
+    {
+        X = 0,
+        Y = 0,
+        Width = Dim.Fill(),
+        Height = Dim.Fill()
+    };
+    private readonly ModDetails modDetails;
     private readonly FrameView left = new("Mods")
     {
         X = 0,
         Y = 1,
-        Width = 25,
+        Width = HorSepDistance,
         Height = Dim.Fill()
     };
     private readonly FrameView right = new("Description")
     {
-        X = 25,
+        X = HorSepDistance,
         Y = 1,
         Width = Dim.Fill(),
         Height = Dim.Fill()
@@ -28,9 +36,16 @@ public class MainTopLevel : Toplevel
 
         left.Add(modList);
         Add(left);
-
+        modDetails = new(right);
         Add(right);
+        modList.SelectedItemChanged += OnModListSelect;
     }
+    private void OnModListSelect(ListViewItemEventArgs args)
+    {
+        ModListView.Item item = (ModListView.Item)args.Value;
+        modDetails.SetMod(item.Mod);
+    }
+
     public void RefreshModList()
     {
         modList.Refresh();

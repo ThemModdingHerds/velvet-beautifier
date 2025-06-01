@@ -14,7 +14,7 @@ public class GuiCommand : ICommandArgumentHandler
             Application.Init();
 
             MainTopLevel top = new();
-            
+
             Application.Run(top);
             Application.Shutdown();
             return 0;

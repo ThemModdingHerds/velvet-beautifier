@@ -3,7 +3,7 @@ name: Build (Debug)
 on: [push, pull_request]
 
 jobs:
-  cli:
+  tool:
     strategy:
       matrix:
         os: [linux, win, osx]
@@ -17,11 +17,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CLI/CLI.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build-cli/${{matrix.os}} --configuration Debug
+      run: dotnet build ./Tool/Tool.csproj --no-restore --runtime ${{matrix.os}}-x64 --output ./build/${{matrix.os}} --configuration Debug
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload Build
       uses: actions/upload-artifact@v4
       with:
-        name: velvet-beautifier-cli-${{matrix.os}}
-        path: ./build-cli/${{matrix.os}}
+        name: velvet-beautifier-${{matrix.os}}
+        path: ./build/${{matrix.os}}
