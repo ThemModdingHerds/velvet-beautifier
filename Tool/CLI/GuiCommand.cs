@@ -1,11 +1,12 @@
 using Terminal.Gui;
+using ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
-namespace ThemModdingHerds.VelvetBeautifier.CLI.GUI;
+namespace ThemModdingHerds.VelvetBeautifier.Tool.CLI;
 public class GuiCommand : ICommandArgumentHandler
 {
     public string Name => "gui";
-
+    public string Description => "Open the GUI inside the terminal";
     public int OnExecute(string? value)
     {
         try

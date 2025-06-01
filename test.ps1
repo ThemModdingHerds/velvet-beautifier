@@ -1,4 +1,4 @@
-$executable = ".\CLI\bin\Debug\net8.0\VelvetBeautifier.CLI.exe"
+$executable = ".\Tool\bin\Debug\net8.0\VelvetBeautifier.exe"
 $appdata = "$ENV:LOCALAPPDATA\velvetbeautifier"
 $mods = "$appdata\mods"
 # reset

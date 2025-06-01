@@ -2,7 +2,7 @@ using Terminal.Gui;
 using ThemModdingHerds.VelvetBeautifier.Modding;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
-namespace ThemModdingHerds.VelvetBeautifier.CLI.GUI;
+namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 
 public class MainTopLevel : Toplevel
 {

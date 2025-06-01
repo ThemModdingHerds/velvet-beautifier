@@ -22,7 +22,7 @@ public static class CommandLine
     /// <summary>
     /// The parsed arguments with their value if they have one
     /// </summary>
-    public static Dictionary<string,string?> Arguments {get;private set;} = [];
+    public static Dictionary<string, string?> Arguments { get; private set; } = [];
     /// <summary>
     /// The prefix of the parsed arguments
     /// </summary>
@@ -30,7 +30,8 @@ public static class CommandLine
     /// <summary>
     /// This is a collection of commands for handling specfic command line arguments
     /// </summary>
-    private static List<ICommandArgumentHandler> handlers = [
+    private static readonly List<ICommandArgumentHandler> handlers = [
+        new HelpHandler(),
         new RegisterSchemeHandler(), // register URI scheme
         new InstallModHandler(), // installing a mod
         new RemoveModHandler(), // removing a mod
@@ -48,6 +49,10 @@ public static class CommandLine
         new SetConfigHandler() // set values in the configuration file
     ];
     /// <summary>
+    /// This is a readonly collection of commands for handling specfic command line arguments
+    /// </summary>
+    public static IReadOnlyList<ICommandArgumentHandler> Handlers => handlers;
+    /// <summary>
     /// Add a custom command to the pool
     /// </summary>
     /// <param name="handler">A custom handler</param>
@@ -58,10 +63,15 @@ public static class CommandLine
     public static void Process()
     {
         string[] args = Argv;
+        if (args.Length == 0)
+        {
+            new HelpHandler().OnExecute(null);
+            Environment.Exit(1);
+        }
 #if DEBUG
-        // make changes to 'args' here
+            // make changes to 'args' here
 #endif
-        Arguments = Create(args);
+            Arguments = Create(args);
         if (args.Length == 1)
         {
             // this is for URI scheme
@@ -120,28 +130,28 @@ public static class CommandLine
     /// </summary>
     /// <param name="argv">A array of arguments (from Main)</param>
     /// <returns>The parsed arguments</returns>
-    private static Dictionary<string,string?> Create(string[] argv)
+    private static Dictionary<string, string?> Create(string[] argv)
     {
-        Dictionary<string,string?> dict = [];
-        for(long i = 0;i < argv.LongLength;i++)
+        Dictionary<string, string?> dict = [];
+        for (long i = 0; i < argv.LongLength; i++)
         {
             string arg = argv[i];
-            if(IsArg(arg))
+            if (IsArg(arg))
             {
                 string key = arg[2..];
                 string? value = null;
                 long next = i + 1;
-                if(next < argv.LongLength && !IsArg(argv[next]))
+                if (next < argv.LongLength && !IsArg(argv[next]))
                 {
                     value = argv[next];
                     i = next;
                 }
-                if(dict.ContainsKey(key))
+                if (dict.ContainsKey(key))
                 {
                     dict[key] = value;
                     continue;
                 }
-                dict.Add(key,value);
+                dict.Add(key, value);
             }
         }
         return dict;
@@ -155,7 +165,8 @@ public interface ICommandArgumentHandler
     /// <summary>
     /// The name of the command
     /// </summary>
-    public string Name {get;}
+    public string Name { get; }
+    public string Description { get; }
     /// <summary>
     /// This method gets triggered if <c>Name</c> was found in the arguments
     /// </summary>

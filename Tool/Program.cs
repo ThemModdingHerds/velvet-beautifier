@@ -1,5 +1,5 @@
 ﻿using ThemModdingHerds.VelvetBeautifier;
-using ThemModdingHerds.VelvetBeautifier.CLI.GUI;
+using ThemModdingHerds.VelvetBeautifier.Tool.CLI;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 CommandLine.AddHandler(new GuiCommand());

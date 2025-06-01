@@ -1,7 +1,7 @@
 using Terminal.Gui;
 using ThemModdingHerds.VelvetBeautifier.Modding;
 
-namespace ThemModdingHerds.VelvetBeautifier.CLI.GUI;
+namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 
 public class ModListView : ListView
 {

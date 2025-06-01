@@ -31,10 +31,10 @@ for OS in "${!OPERATING_SYSTEM[@]}"; do
     RID="${OPERATING_SYSTEM[$OS]}"
 
     # Publish the .NET project
-    dotnet publish ./CLI/CLI.csproj --runtime "$RID" --configuration Release --self-contained true
+    dotnet publish ./Tool/Tool.csproj --runtime "$RID" --configuration Release --self-contained true
 
     # Create a ZIP archive
-    ZIP_NAME="$OUTPUT_FOLDER/VelvetBeautifier.CLI.$VERSION.$OS.zip"
-    PUBLISH_DIR="./CLI/bin/Release/net8.0/$RID/publish"
+    ZIP_NAME="$OUTPUT_FOLDER/VelvetBeautifier.$VERSION.$OS.zip"
+    PUBLISH_DIR="./Tool/bin/Release/net8.0/$RID/publish"
     7z a -r "$ZIP_NAME" "$PUBLISH_DIR"/*
 done

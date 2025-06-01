@@ -2,7 +2,7 @@ using Terminal.Gui;
 using ThemModdingHerds.VelvetBeautifier.GitHub;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
-namespace ThemModdingHerds.VelvetBeautifier.CLI.GUI;
+namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 public static class MenuBar
 {
     public static Terminal.Gui.MenuBar Create(MainTopLevel window)

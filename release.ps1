@@ -22,7 +22,7 @@ New-Item -ItemType Directory -Force -Path .\$outputFolder\
 $operatingsystem.GetEnumerator() | ForEach-Object{
     $rid = $_.Value;
     $name = $_.Key;
-    # CLI
-    dotnet publish .\CLI\CLI.csproj --runtime $rid --configuration Release --self-contained=true
-    Compress-Archive -Path .\CLI\bin\Release\net8.0\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.CLI.$Version.$name.zip
+    # Tool
+    dotnet publish .\Tool\Tool.csproj --runtime $rid --configuration Release --self-contained=true
+    Compress-Archive -Path .\Tool\bin\Release\net8.0\$rid\publish\* -DestinationPath .\$outputFolder\VelvetBeautifier.$Version.$name.zip
 }

@@ -7,11 +7,11 @@
     <Nullable>enable</Nullable>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-    <AssemblyName>VelvetBeautifier.$(MSBuildProjectName)</AssemblyName>
-    <Title>Velvet Beautifier Command Line Interface</Title>
+    <AssemblyName>VelvetBeautifier</AssemblyName>
+    <Title>Velvet Beautifier</Title>
     <Authors>N1ghtTheF0x</Authors>
     <Company>Them's Modding Herds</Company>
-    <Product>Velvet Beautifier Command Line Interface</Product>
+    <Product>Velvet Beautifier</Product>
     <Description>Mod Loader/Tool for Them's Fightin' Herds</Description>
     <PackageProjectUrl>https://github.com/ThemModdingHerds/</PackageProjectUrl>
     <PackageIcon>icon_small.png</PackageIcon>

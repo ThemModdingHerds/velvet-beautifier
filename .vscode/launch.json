@@ -3,9 +3,9 @@
     "configurations": [
         {
             "type": "dotnet",
-            "name": "Launch Velvet Beautifier (CLI)",
+            "name": "Launch Velvet Beautifier",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/CLI/CLI.csproj"
+            "projectPath": "${workspaceFolder}/Tool/Tool.csproj"
         }
     ]
 }
