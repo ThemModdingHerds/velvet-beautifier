@@ -31,23 +31,17 @@ Mod Loader/Tool for Them's Fightin' Herds games
 [Configurations (config.json)](CONFIG.md)
 
 ![CLI Icon](./assets/inverted_icon_medium.png)
-[The Command Line (VelvetBeautifier.CLI)](./CLI.md)  
+[The Command Line (`VelvetBeautifier.CLI`)](./CLI.md)  
 ![GUI Icon](./assets/icon_medium.png)
-[~~The Graphical User Interface (VelvetBeautifier.GUI)~~](./GUI.md)
-
-    WARNING: the GUI version has been deprecated for now. Please use the CLI for the time being
-
-#### What happenend to the GUI version?
-
-I am sick of switching between various libraries that either are bloated or just really old, there's no good GUI library for C# that is cross-platform (running on Linux, Windows and MacOS). Yes I know I can make a project in Godot, Unity or something similar, but I don't have the patience anymore. That's why I have given up working on the GUI version. You can still download the GUI version but I won't assist you in bugs or other issues, any issue reports to GUI will be ignored and closed. If you think you can make a GUI app, then clone this repo and create a pull request, I am done dealing with this.
+[The Graphical User Interface (`VelvetBeautifier.CLI --gui`)](./GUI.md)
 
 ### How do I make mods?
 
-[here][guide-path]
+[here you can follow a guide for making mods][guide-path]
 
 ### How does this work?
 
-[here][process-path]
+[here is a step-by-step process how this tool works][process-path]
 
 ## Frequently asked questions
 

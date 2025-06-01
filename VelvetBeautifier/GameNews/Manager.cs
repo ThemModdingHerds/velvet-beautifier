@@ -37,7 +37,7 @@ public static class GameNewsManager
             Velvet.GAMENEWS_MODLIST_FILENAME,
             Velvet.Velvetify(Velvet.NAME),
             Velvet.Velvetify("this game has been modified, you may experience unstable/broken sessions"),
-            GitHub.GitHub.OWNER_URL
+            GitHubUtilities.OWNER_URL
         );
         List<News> gamenews = [];
         if(GitHubRelease.Outdated)
@@ -48,7 +48,7 @@ public static class GameNewsManager
                 Velvet.GAMENEWS_MODLIST_FILENAME,
                 Velvet.Velvetify(Velvet.NAME),
                 Velvet.Velvetify($"you are using an old version of {Velvet.NAME}, update to have better support"),
-                GitHub.GitHub.LATEST_RELEASE_URL
+                GitHubUtilities.LATEST_RELEASE_URL
             );
             gamenews.Add(outdatedNews);
         }

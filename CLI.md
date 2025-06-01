@@ -2,11 +2,12 @@
 
 ![Icon](./assets/inverted_icon_medium.png)
 
-the executable is called `VelvetBeautifier.CLI.exe`
+the executable is called `VelvetBeautifier.CLI.exe` on Windows and `VelvetBeautifier.CLI` on Unix (that is Mac and any Linux distro)
 
 ## Some neat features
 
 - you can drag & drop a file or folder to install it as a mod
+- you can open a GUI-like interface with [`--gui`](#--gui)
 
 ## Arguments
 
@@ -188,4 +189,14 @@ example:
 
 ```sh
 VelvetBeautifier.CLI.exe --config --client-path path/to/client
+```
+
+### `--gui`
+
+Opens up a GUI-like interface inside the terminal. [Follow this guide on how to use it](./GUI.md)
+
+example:
+
+```sh
+VelvetBeautifier.CLI.exe --gui
 ```

@@ -30,7 +30,7 @@ public static class CommandLine
     /// <summary>
     /// This is a collection of commands for handling specfic command line arguments
     /// </summary>
-    public static IReadOnlyList<ICommandArgumentHandler> Handlers => [
+    private static List<ICommandArgumentHandler> handlers = [
         new RegisterSchemeHandler(), // register URI scheme
         new InstallModHandler(), // installing a mod
         new RemoveModHandler(), // removing a mod
@@ -48,6 +48,11 @@ public static class CommandLine
         new SetConfigHandler() // set values in the configuration file
     ];
     /// <summary>
+    /// Add a custom command to the pool
+    /// </summary>
+    /// <param name="handler">A custom handler</param>
+    public static void AddHandler(params ICommandArgumentHandler[] handler) => handlers.AddRange(handler);
+    /// <summary>
     /// Process the command line arguments, may exit the current process
     /// </summary>
     public static void Process()
@@ -57,20 +62,20 @@ public static class CommandLine
         // make changes to 'args' here
 #endif
         Arguments = Create(args);
-        if(args.Length == 1)
+        if (args.Length == 1)
         {
             // this is for URI scheme
-            if(args[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(args[0],UriKind.Absolute,out Uri? uri))
+            if (args[0] != Dotnet.ExecutableDllPath && Uri.TryCreate(args[0], UriKind.Absolute, out Uri? uri))
             {
                 string content = uri.AbsolutePath;
                 ModInstallResult result = ModInstallResult.Invalid;
                 // basic URI scheme
-                if(Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
+                if (Url.IsUrl(content) || File.Exists(content) || Directory.Exists(content))
                 {
                     result = ModDB.InstallMod(content);
                 }
                 // GameBanana 1-Click installer™
-                else if(GameBanana.Argument.TryParse(content,out GameBanana.Argument? argument))
+                else if (GameBanana.Argument.TryParse(content, out GameBanana.Argument? argument))
                 {
                     result = ModDB.InstallMod(argument.DownloadLink);
                 }
@@ -79,26 +84,26 @@ public static class CommandLine
         }
         bool handled = false;
         // go through each command
-        foreach(ICommandArgumentHandler handler in Handlers)
+        foreach (ICommandArgumentHandler handler in handlers)
         {
-            if(handled) break;
-            if(Arguments.TryGetValue(handler.Name,out string? value))
+            if (handled) break;
+            if (Arguments.TryGetValue(handler.Name, out string? value))
             {
                 try
                 {
                     int result = handler.OnExecute(value);
-                    if(result != 0)
+                    if (result != 0)
                         Environment.Exit(result);
                     handled = true;
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     Velvet.Error(exception);
                 }
             }
         }
         // if any of the arguments was handled, exit the current process
-        if(handled)
+        if (handled)
             Environment.Exit(0);
     }
     /// <summary>

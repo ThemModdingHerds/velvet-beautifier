@@ -5,7 +5,7 @@ using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.GitHub;
 public class GitHubRelease
 {
-    public const string API_URL = $"https://api.github.com/repos/{GitHub.OWNER}/{GitHub.REPO}/releases";
+    public const string API_URL = $"https://api.github.com/repos/{GitHubUtilities.OWNER}/{GitHubUtilities.REPO}/releases";
     public const string API_LATEST_URL = $"{API_URL}/latest";
     [JsonPropertyName("tag_name")]
     public string TagName {get;set;} = string.Empty;

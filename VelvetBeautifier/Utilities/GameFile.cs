@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ThemModdingHerds.VelvetBeautifier.GitHub;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 /// <summary>
@@ -42,7 +43,7 @@ public class GameFiles
     /// <summary>
     /// The URL to fetch the game file information
     /// </summary>
-    public const string FILEURL = $"https://raw.githubusercontent.com/{GitHub.GitHub.OWNER}/{GitHub.GitHub.CHECKSUM_REPO}/refs/heads/main/tfh.json";
+    public const string FILEURL = $"https://raw.githubusercontent.com/{GitHubUtilities.OWNER}/{GitHubUtilities.CHECKSUM_REPO}/refs/heads/main/tfh.json";
     /// <summary>
     /// The full filepath of the local game files information file
     /// </summary>

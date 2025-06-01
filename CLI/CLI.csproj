@@ -46,4 +46,8 @@
   <ItemGroup>
     <ProjectReference Include="..\VelvetBeautifier\VelvetBeautifier.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Terminal.Gui" Version="1.18.1" />
+  </ItemGroup>
 </Project>

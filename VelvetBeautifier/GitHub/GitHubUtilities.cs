@@ -1,5 +1,5 @@
 namespace ThemModdingHerds.VelvetBeautifier.GitHub;
-public class GitHub
+public class GitHubUtilities
 {
     public const string OWNER = "ThemModdingHerds";
     public const string REPO = "velvet-beautifier";
