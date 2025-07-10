@@ -103,22 +103,23 @@ public static class ModLoaderTool
         if(File.Exists(config))
             File.Move(config,Config.FilePath);
     }
-    public static void Extract(string? input,string? output)
+    public static bool Extract(string? input, string? output)
     {
-        if(input == null || output == null) return;
-        string inputPath = Path.Combine(Environment.CurrentDirectory,input);
-        string outputPath = Path.Combine(Environment.CurrentDirectory,output);
-        if(inputPath.EndsWith(".gfs"))
+        if (input == null || output == null) return false;
+        string inputPath = Path.Combine(Environment.CurrentDirectory, input);
+        string outputPath = Path.Combine(Environment.CurrentDirectory, output);
+        if (inputPath.EndsWith(".gfs"))
         {
             Velvet.Info($"extracting GFS at {inputPath} to {outputPath}...");
-            GFS.Utils.Extract(inputPath,outputPath);
-            return;
+            GFS.Utils.Extract(inputPath, outputPath);
+            return true;
         }
-        if(inputPath.EndsWith(".tfhres"))
+        if (inputPath.EndsWith(".tfhres"))
         {
             Velvet.Info($"extracting TFHResource at {inputPath} to {outputPath}...");
-            TFHResource.Utils.Extract(inputPath,outputPath);
-            return;
+            TFHResource.Utils.Extract(inputPath, outputPath);
+            return true;
         }
+        return false;
     }
 }

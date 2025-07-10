@@ -15,7 +15,7 @@ public class GuiCommand : ICommandArgumentHandler
 
             MainTopLevel top = new();
 
-            Application.Run(top);
+            Application.Run(top,HandleError);
             Application.Shutdown();
             return 0;
         }
@@ -24,5 +24,10 @@ public class GuiCommand : ICommandArgumentHandler
             Velvet.Error(ex);
             return 1;
         }
+    }
+    private bool HandleError(Exception exception)
+    {
+        Velvet.Error(exception);
+        return false;
     }
 }
