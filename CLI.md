@@ -1,6 +1,6 @@
 # Command Line Usage
 
-![Icon](./assets/inverted_icon_medium.png)
+![Icon](./assets/icon_medium.png)
 
 the executable is called `VelvetBeautifier.CLI.exe` on Windows and `VelvetBeautifier.CLI` on Unix (that is Mac and any Linux distro)
 

@@ -30,9 +30,7 @@ Mod Loader/Tool for Them's Fightin' Herds games
 
 [Configurations (config.json)](CONFIG.md)
 
-![CLI Icon](./assets/inverted_icon_medium.png)
 [The Command Line (`VelvetBeautifier.CLI`)](./CLI.md)  
-![GUI Icon](./assets/icon_medium.png)
 [The Graphical User Interface (`VelvetBeautifier.CLI --gui`)](./GUI.md)
 
 ### How do I make mods?
@@ -69,6 +67,7 @@ A: these are backups of games files, required for modding the game, if there's o
 ## 3rd-Party Libraries
 
 - [Gameloop.Vdf][gameloop-vdf-library-link] (MIT License) for reading Steam related files
+- [Terminal.GUI][terminal-gui-library-link] (MIT License) for the graphical user interface
 - [SharpCompress][sharpcompress-library-link] (MIT License) for extracting compressed files
 - [ThemModdingHerds.GFS][gfs-library-link] (MIT License) for creating/modifying `.gfs` files
 - [ThemModdingHerds.TFHRES][tfhres-library-link] (MIT License) for creating/modifying `.tfhres` files
@@ -101,6 +100,7 @@ This tool is licensed under the [GPL-3.0 license][license-path]
 [gamebanana-link]: https://gamebanana.com/tools/15674
 [process-path]: PROCESS.md
 [gameloop-vdf-library-link]: https://github.com/shravan2x/Gameloop.Vdf
+[terminal-gui-library-link]: https://github.com/gui-cs/Terminal.Gui
 [sharpcompress-library-link]: https://github.com/adamhathcock/sharpcompress
 [tfhres-library-link]: https://github.com/ThemModdingHerds/tfhres
 [gfs-library-link]: https://github.com/ThemModdingHerds/gfs
