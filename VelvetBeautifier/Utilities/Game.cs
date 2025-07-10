@@ -38,15 +38,17 @@ public abstract class Game(string folder)
     /// <returns>true if this is a valid installation, otherwise false</returns>
     public abstract bool Valid();
     /// <summary>
-    /// Launch the executable
+    /// Launch the executable with <c><paramref name="args"/></c>
     /// </summary>
-    public virtual void Launch()
+    /// <param name="args">Command line arguments as one string</param>
+    public virtual void Launch(string args)
     {
         Process.Start(new ProcessStartInfo()
         {
             FileName = Executable,
             Verb = "open",
-            WorkingDirectory = Path.GetDirectoryName(Executable)
+            WorkingDirectory = Path.GetDirectoryName(Executable),
+            Arguments = args
         });
     }
 }
@@ -56,14 +58,15 @@ public abstract class Game(string folder)
 /// <param name="folder">The folder of the client installation</param>
 public class Client(string folder) : Game(folder)
 {
-    public override string ExecutableName {
+    public override string ExecutableName
+    {
         get
         {
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 return "Them's Fightin' Herds.exe";
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 return "ThemsFightinHerds.Linux.x64";
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 return "Them's Fighting Herds.app/Contents/MacOS/Them's Fighting Herds";
             return string.Empty;
         }
@@ -79,6 +82,7 @@ public class Client(string folder) : Game(folder)
     /// <returns>true if this is a valid installation, otherwise false</returns>
     public static bool Valid(string? folder) => folder != null && new Client(folder).Valid();
     public override bool Valid() => File.Exists(Executable) && HasResources && HasData01;
+    public void Launch() => Launch("");
 }
 /// <summary>
 /// This class contains methods and fields for the server
@@ -86,12 +90,13 @@ public class Client(string folder) : Game(folder)
 /// <param name="folder">The folder of the server</param>
 public class Server(string folder) : Game(folder)
 {
-    public override string ExecutableName {
+    public override string ExecutableName
+    {
         get
         {
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 return "LobbyExe.exe";
-            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 return "LobbyServer.Linux.x64";
             return string.Empty;
         }
@@ -103,4 +108,5 @@ public class Server(string folder) : Game(folder)
     /// <returns>true if this is a valid installation, otherwise false</returns>
     public static bool Valid(string? folder) => folder != null && new Server(folder).Valid();
     public override bool Valid() => File.Exists(Executable) && HasResources;
+    public void Launch() => Launch("");
 }
