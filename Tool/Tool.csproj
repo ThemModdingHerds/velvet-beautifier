@@ -9,6 +9,7 @@
     <RootNamespace>ThemModdingHerds.VelvetBeautifier.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <AssemblyName>VelvetBeautifier</AssemblyName>
     <Title>Velvet Beautifier</Title>
+    <Version>2.4.0</Version>
     <Authors>N1ghtTheF0x</Authors>
     <Company>Them's Modding Herds</Company>
     <Product>Velvet Beautifier</Product>
@@ -22,6 +23,9 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <PublishSingleFile>true</PublishSingleFile>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>velvetbeautifier</ToolCommandName>
+    <PackageOutputPath>bin\Package</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
