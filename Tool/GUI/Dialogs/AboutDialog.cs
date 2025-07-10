@@ -3,7 +3,7 @@ using Terminal.Gui;
 using ThemModdingHerds.VelvetBeautifier.GitHub;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
-namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
+namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI.Dialogs;
 
 public class AboutDialog : Dialog
 {
@@ -14,17 +14,18 @@ public class AboutDialog : Dialog
             Clicked += () => Application.RequestStop();
         }
     }
-    public static void Show()
-    {
-        Application.Run(new AboutDialog());
-    }
-    public AboutDialog() : base($"About {Velvet.NAME}", new OkButton())
+    public static void Show() => Application.Run(new AboutDialog());
+    private AboutDialog() : base($"About {Velvet.NAME}", 60, 8, new OkButton())
     {
         string[] lines = [
             $"v{Dotnet.LibraryVersion} - {Velvet.DESCRIPTION}",
             $"{GitHubUtilities.REPO_URL}"
         ];
-        Label about = new(string.Join('\n',lines));
+        Label about = new(string.Join('\n', lines))
+        {
+            X = Pos.Center(),
+            Y = Pos.Center()
+        };
         Add(about);
     }
 }
