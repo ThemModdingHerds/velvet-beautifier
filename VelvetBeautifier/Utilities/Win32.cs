@@ -14,28 +14,28 @@ public static class Win32
     public static bool CreateURIScheme()
     {
         // Only windows
-        if(!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             Velvet.Warn("not supported on this platform");
             return false;
         }
         // we need the executable
         string? path = Dotnet.ExecutablePath;
-        if(path == null) return false;
+        if (path == null) return false;
         // this is the path where URI schemes are registered in windows
         string regpath = $"SOFTWARE\\CLASSES\\{Velvet.URI_SCHEME}";
-        using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(regpath,true) ?? Microsoft.Win32.Registry.CurrentUser.CreateSubKey(regpath);
+        using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(regpath, true) ?? Microsoft.Win32.Registry.CurrentUser.CreateSubKey(regpath);
         // set name of URI scheme
-        key.SetValue("",$"URL:{Velvet.NAME}");
-        key.SetValue("URL Protocol","");
+        key.SetValue("", $"URL:{Velvet.NAME}");
+        key.SetValue("URL Protocol", "");
 
         // set the icon of the URI scheme (this uses the executable icon)
-        using Microsoft.Win32.RegistryKey iconKey = key.OpenSubKey("DefaultIcon",true) ?? key.CreateSubKey("DefaultIcon");
-        iconKey.SetValue("",$"\"{path}\",1");
+        using Microsoft.Win32.RegistryKey iconKey = key.OpenSubKey("DefaultIcon", true) ?? key.CreateSubKey("DefaultIcon");
+        iconKey.SetValue("", $"\"{path}\",1");
 
         // set the logic of the URI scheme (when someone click on the link)
-        using Microsoft.Win32.RegistryKey openKey = key.OpenSubKey("shell\\open\\command",true) ?? key.CreateSubKey("shell\\open\\command");
-        openKey.SetValue("",$"\"{path}\" \"%1\"");
+        using Microsoft.Win32.RegistryKey openKey = key.OpenSubKey("shell\\open\\command", true) ?? key.CreateSubKey("shell\\open\\command");
+        openKey.SetValue("", $"\"{path}\" \"%1\"");
 
         Velvet.Info("created URI scheme for this executable");
         return true;
@@ -47,7 +47,7 @@ public static class Win32
     public static bool DeleteURIScheme()
     {
         // only on windows
-        if(!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             Velvet.Warn("not supported on this platform");
             return false;
@@ -55,14 +55,14 @@ public static class Win32
         string regpath = $"SOFTWARE\\CLASSES\\{Velvet.URI_SCHEME}";
         // check if key exists
         bool exists = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(regpath) != null;
-        if(!exists) return false;
+        if (!exists) return false;
         try
         {
             // try to delete it
-            Microsoft.Win32.Registry.CurrentUser.DeleteSubKey(regpath,true);
+            Microsoft.Win32.Registry.CurrentUser.DeleteSubKey(regpath, true);
             return true;
         }
-        catch(Exception)
+        catch (Exception)
         {
             return false;
         }
@@ -143,7 +143,7 @@ public static class Win32
         //[helpstring("Retrieves the location (path and index) 
         // of the shell link icon")]
         void GetIconLocation(
-        [Out(), MarshalAs(UnmanagedType.LPWStr)] 
+        [Out(), MarshalAs(UnmanagedType.LPWStr)]
             StringBuilder pszIconPath,
         int cchIconPath,
         out int piIcon);
@@ -156,7 +156,7 @@ public static class Win32
 
         //[helpstring("Sets the shell link relative path")]
         void SetRelativePath(
-        [MarshalAs(UnmanagedType.LPWStr)] 
+        [MarshalAs(UnmanagedType.LPWStr)]
             string pszPathRel,
         uint dwReserved);
 
@@ -176,9 +176,9 @@ public static class Win32
     [Guid("00021401-0000-0000-C000-000000000046")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComImport()]
-    private class CShellLink{}
+    private class CShellLink { }
     [StructLayout(LayoutKind.Sequential,
-          Pack=4, Size=0, CharSet=CharSet.Unicode)]
+          Pack = 4, Size = 0, CharSet = CharSet.Unicode)]
     private struct _WIN32_FIND_DATAW
     {
         public uint dwFileAttributes;
@@ -189,13 +189,13 @@ public static class Win32
         public uint nFileSizeLow;
         public uint dwReserved0;
         public uint dwReserved1;
-        [MarshalAs(UnmanagedType.ByValTStr , SizeConst = 260)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
         public string cFileName;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
         public string cAlternateFileName;
     }
     [StructLayout(LayoutKind.Sequential,
-        Pack=4, Size=0)]
+        Pack = 4, Size = 0)]
     private struct _FILETIME
     {
         public uint dwLowDateTime;
@@ -225,9 +225,9 @@ public static class Win32
         //[helpstring("Saves the object into 
         // the specified file")]
         void Save(
-        [MarshalAs(UnmanagedType.LPWStr)] 
+        [MarshalAs(UnmanagedType.LPWStr)]
         string pszFileName,
-        [MarshalAs(UnmanagedType.Bool)] 
+        [MarshalAs(UnmanagedType.Bool)]
         bool fRemember);
 
         //[helpstring("Notifies the object that save
@@ -248,15 +248,30 @@ public static class Win32
     /// <param name="target">A path to redirect</param>
     /// <param name="description">The description of the shortcut</param>
     /// <param name="filepath">A filepath of the shortcut</param>
-    public static void CreateShortcut(string target,string description,string filepath)
+    public static void CreateShortcut(string target, string args, string description, string filepath)
     {
-        if(!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
-        if(!filepath.EndsWith(".lnk"))
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+        if (!filepath.EndsWith(".lnk"))
             filepath += ".lnk";
         IShellLinkW link = (IShellLinkW)new CShellLink();
         link.SetPath(target);
+        link.SetWorkingDirectory(Path.GetDirectoryName(target)!);
+        link.SetArguments(args);
         link.SetDescription(description);
         IPersistFile file = (IPersistFile)link;
-        file.Save(filepath,false);
+        file.Save(filepath, false);
+    }
+    /// <summary>
+    /// Create a shortcut to this tool in the Programs Menu in Windows
+    /// </summary>
+    public static void InstallMenuShortcut()
+    {
+        string filepath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), Velvet.GROUP, Velvet.NAME);
+        CreateMenuShortcut(filepath);
+    }
+    public static void CreateMenuShortcut(string filepath)
+    {
+        if (Dotnet.ExecutablePath == null) return;
+        CreateShortcut(Dotnet.ExecutablePath, "--gui", Velvet.DESCRIPTION, filepath);
     }
 }
