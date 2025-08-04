@@ -28,13 +28,11 @@ public static class ActionDialog
     }
     private static void ApplyMods()
     {
-        ModDB.Apply();
-        MessageBox.Query("Applied mods", "Mods have been applied! You can now launch the game", "Ok");
+        ProcessDialog.Show(ModDB.Apply, "Applying mods...", "Mods have been applied! You can now launch the game");
     }
     private static void Revert()
     {
-        BackupManager.Revert();
-        MessageBox.Query("Reverted", "Reverted back to orignal game, no mods applied", "Ok");
+        ProcessDialog.Show(BackupManager.Revert, "Restoring files...", "Restored back to original file, no mods applied");
     }
     private static void LaunchClient()
     {
