@@ -7,27 +7,30 @@ public class GuiCommand : ICommandArgumentHandler
 {
     public string Name => "gui";
     public string Description => "Open the GUI inside the terminal";
+    private Exception? hasException = null;
     public int OnExecute(string? value)
     {
         try
         {
             Application.Init();
 
-            MainTopLevel top = new();
-
-            Application.Run(top,HandleError);
+            Application.Run(MainTopLevel.Instance, HandleError);
             Application.Shutdown();
-            return 0;
         }
         catch (Exception ex)
         {
-            Velvet.Error(ex);
+            hasException = ex;
+        }
+        if (hasException != null)
+        {
+            Velvet.Error(hasException);
             return 1;
         }
+        return 0;
     }
     private bool HandleError(Exception exception)
     {
-        Velvet.Error(exception);
+        hasException = exception;
         return false;
     }
 }
