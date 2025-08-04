@@ -1,49 +1,48 @@
 using Terminal.Gui;
-using ThemModdingHerds.VelvetBeautifier.Modding;
-using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 
 public class MainTopLevel : Toplevel
 {
+    public static readonly MainTopLevel Instance = new();
     private const int HorSepDistance = 25;
     public readonly ModListView modList = new()
     {
         X = 0,
-        Y = 0,
-        Width = Dim.Fill(),
-        Height = Dim.Fill()
-    };
-    public readonly ModDetails modDetails = new()
-    {
-        X = 0,
-        Y = 0,
-        Width = Dim.Fill(),
-        Height = Dim.Fill(1)
-    };
-    private readonly FrameView left = new("Mods")
-    {
-        X = 0,
         Y = 1,
         Width = HorSepDistance,
-        Height = Dim.Fill()
+        Height = Dim.Fill(1)
     };
-    private readonly FrameView right = new("Description")
+    public readonly ModDetails modDetails = new()
     {
         X = HorSepDistance,
         Y = 1,
         Width = Dim.Fill(),
-        Height = Dim.Fill()
+        Height = Dim.Fill(1)
     };
-    public MainTopLevel()
+    private MainTopLevel()
     {
-        Add(MenuBar = GUI.MenuBar.Create(this));
+        Add(MenuBar = MenuBarUtilities.Create());
 
-        left.Add(modList);
-        right.Add(modDetails);
-        
-        Add(left,right);
+        Add(modList, modDetails);
 
         modList.OnModSelect += modDetails.SetMod;
+        modList.OnModSelect += OnModSelect;
+        modList.OnModeChange += OnModeChange;
+
+        ResetStatusBar();
+    }
+    private void OnModSelect(ModListView.IModItem item)
+    {
+        if (StatusBar != null)
+            Remove(StatusBar);
+        Add(StatusBar = StatusBarUtilities.Create(item));
+    }
+    private void OnModeChange(ModListView.Mode mode) => ResetStatusBar();
+    private void ResetStatusBar()
+    {
+        if (StatusBar != null)
+            Remove(StatusBar);
+        Add(StatusBar = new());
     }
 }
