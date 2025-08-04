@@ -1,19 +1,21 @@
+using System.Runtime.InteropServices;
 using Terminal.Gui;
 using ThemModdingHerds.VelvetBeautifier.GitHub;
 using ThemModdingHerds.VelvetBeautifier.Tool.GUI.Dialogs;
 using ThemModdingHerds.VelvetBeautifier.Utilities;
 
 namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
-public static class MenuBar
+
+public static class MenuBarUtilities
 {
-    public static Terminal.Gui.MenuBar Create(MainTopLevel topLevel)
+    public static MenuBar Create()
     {
         return new([
             new MenuBarItem("_File",[
-                new MenuItem("_Refresh","Refresh list",topLevel.modList.Refresh),
+                new MenuItem("_Refresh","Refresh list",MainTopLevel.Instance.modList.Refresh),
                 new MenuBarItem("_Show",[
-                    new MenuItem("_Local mods","Show local installed mods",() => topLevel.modList.Refresh(ModListView.Mode.Local)),
-                    new MenuItem("_Online","Show mods available online",() => topLevel.modList.Refresh(ModListView.Mode.Online))
+                    new MenuItem("_Local mods","Show local installed mods",() => MainTopLevel.Instance.modList.Refresh(ModListView.Mode.Local)),
+                    new MenuItem("_Online","Show mods available online",() => MainTopLevel.Instance.modList.Refresh(ModListView.Mode.Online))
                 ]),
                 new MenuItem("_Apply","Apply enabled mods",ActionDialog.Show(ActionDialog.Type.Apply)),
                 new MenuItem("_Revert","Remove all modifications from the game",ActionDialog.Show(ActionDialog.Type.Revert)),
@@ -37,7 +39,8 @@ public static class MenuBar
                     new MenuItem("_backups","",DeleteDialog.Show(DeleteDialog.Type.Backup)),
                     new MenuItem("_mods","",DeleteDialog.Show(DeleteDialog.Type.Mods)),
                     new MenuItem("_everything","",DeleteDialog.Show(DeleteDialog.Type.Everything))
-                ])
+                ]),
+                new MenuItem("Install _Menu Shortcut","Create a shortcut in the OS menu",CreateMenuShortcut)
             ]),
             new MenuBarItem("_Help",[
                 new MenuItem("_How to use this?","Opens a link to a guide on how to use Velvet Beautifier",() => Url.OpenUrl(GitHubUtilities.GUI_GUIDE_URL)),
@@ -46,5 +49,12 @@ public static class MenuBar
                 new MenuItem("_About","",AboutDialog.Show)
             ])
         ]);
+    }
+    private static void CreateMenuShortcut()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            Win32.InstallMenuShortcut();
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            Linux.InstallDesktopEntry();
     }
 }
