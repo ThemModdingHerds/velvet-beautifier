@@ -1,11 +1,12 @@
 using Terminal.Gui;
 using ThemModdingHerds.VelvetBeautifier.GameBanana;
 using ThemModdingHerds.VelvetBeautifier.Modding;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
 using Mod = ThemModdingHerds.VelvetBeautifier.Modding.Mod;
 
 namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 
-public class ModListView : ListView
+public class ModListView : FrameView
 {
     public enum Mode
     {
@@ -35,10 +36,11 @@ public class ModListView : ListView
     }
     public class OnlineModItem(Search.Record record) : IModItem
     {
+        private readonly string desc = GameBanana.Mod.Fetch(record.Id)?.Body ?? string.Empty;
         public Search.Record Record => record;
         public string Name => record.Name;
         public string Author => record.User.Name;
-        public string Description => GameBanana.Mod.Fetch(record.Id)?.Body ?? string.Empty;
+        public string Description => desc;
         public string Version => record.Version;
         public Mode FromMode => Mode.Online;
         public override string ToString()
@@ -46,24 +48,34 @@ public class ModListView : ListView
             return Name;
         }
     }
-    public delegate void ModSelectHandler(IModItem item);
-    public event ModSelectHandler? OnModSelect;
-    private Mode _mode = Mode.Local;
-    public ModListView()
+    public event Action<IModItem>? OnModSelect;
+    public event Action<Mode>? OnModeChange;
+    private ListView _list = new()
     {
+        X = 0,
+        Y = 0,
+        Width = Dim.Fill(),
+        Height = Dim.Fill()
+    };
+    private Mode _mode = Mode.Local;
+    public ModListView() : base("Mods")
+    {
+        Add(_list);
         Refresh();
-        SelectedItemChanged += OnItemSelected;
+        IModItem? mod = (IModItem?)_list.Source.ToList()[0];
+        if (mod != null)
+            OnModSelect?.Invoke(mod);
+        _list.SelectedItemChanged += OnItemSelected;
     }
-
     private void OnItemSelected(ListViewItemEventArgs args)
     {
         OnModSelect?.Invoke((IModItem)args.Value);
     }
-
-    private void SetMods(List<IModItem> mods) => SetSource(mods);
+    private void SetMods(List<IModItem> mods) => _list.SetSource(mods);
     public void Refresh(Mode mode)
     {
         _mode = mode;
+        OnModeChange?.Invoke(_mode);
         Refresh();
     }
     public void Refresh()
