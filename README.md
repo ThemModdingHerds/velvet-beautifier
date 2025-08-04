@@ -30,8 +30,8 @@ Mod Loader/Tool for Them's Fightin' Herds games
 
 [Configurations (config.json)](CONFIG.md)
 
-[The Command Line (`VelvetBeautifier.CLI`)](./CLI.md)  
-[The Graphical User Interface (`VelvetBeautifier.CLI --gui`)](./GUI.md)
+[The Command Line (`VelvetBeautifier`)](./CLI.md)  
+[The Graphical User Interface (`VelvetBeautifier --gui`)](./GUI.md)
 
 ### How do I make mods?
 

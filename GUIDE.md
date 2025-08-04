@@ -4,7 +4,7 @@
 
 ### The `GUI` way
 
-1. Launch `VelvetBeautifier.GUI`, it should look something like this:
+1. Launch `VelvetBeautifier` with the `--gui` argument, it should look something like this:
     ![Empty GUI](./assets/screenshots/gui-empty.png)
 2. Click on `Tools -> Create new mod` or just press `Ctrl + N` on your keyboard, you should see this:
     ![Create Mod GUI](./assets/screenshots/gui-create-mod.png)
@@ -14,11 +14,11 @@
 
 ### The `CLI` way
 
-1. Open up a Terminal where `VelvetBeautifier.CLI` is located
+1. Open up a Terminal where `VelvetBeautifier` is located
 2. Type this command in:
 
     ```shell
-    VelvetBeautifier.CLI --create <mod-id> # replace mod-id with your unique mod identifier
+    VelvetBeautifier --create <mod-id> # replace mod-id with your unique mod identifier
     ```
 
 3. A new folder in `mods` should be called `<mod-id>`
@@ -75,7 +75,7 @@ TFH Resource files are just SQL databases so you can use any SQL client to make 
 
 ### Level Packs
 
-To not cause issues with `levels.gfs` mods, I've created something called **Level Packs**, a level pack contains entries to your stages and their data, when mods are applied, all level packs get merged into one and written to `levels.gfs`. A valid level pack rests inside `<root>/levels/`, more information can be found [here](https://github.com/ThemModdingHerds/levels/blob/main/Levels/README.md#level-packs)
+To not cause issues with `levels.gfs` mods, I've created something called **Level Packs**, a level pack contains entries to your stages and their data, when mods are applied, all level packs get merged into one and written to `levels.gfs`. A valid level pack rests inside `<root>/levels/`, more information can be found [in this repository](https://github.com/ThemModdingHerds/levels/blob/main/Levels/README.md#level-packs)
 
 ### Any other file (ONLY USE THIS IF NEEDED)
 
