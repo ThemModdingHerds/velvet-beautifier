@@ -22,7 +22,7 @@ public class MainTopLevel : Toplevel
     };
     private MainTopLevel()
     {
-        Add(MenuBar = MenuBarUtilities.Create());
+        Add(MenuBar = MenuBarUtilities.Create(this));
 
         Add(modList, modDetails);
 

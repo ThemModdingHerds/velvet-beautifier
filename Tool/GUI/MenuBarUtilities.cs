@@ -8,14 +8,14 @@ namespace ThemModdingHerds.VelvetBeautifier.Tool.GUI;
 
 public static class MenuBarUtilities
 {
-    public static MenuBar Create()
+    public static MenuBar Create(MainTopLevel mainTopLevel)
     {
         return new([
             new MenuBarItem("_File",[
-                new MenuItem("_Refresh","Refresh list",MainTopLevel.Instance.modList.Refresh),
+                new MenuItem("_Refresh","Refresh list",mainTopLevel.modList.Refresh),
                 new MenuBarItem("_Show",[
-                    new MenuItem("_Local mods","Show local installed mods",() => MainTopLevel.Instance.modList.Refresh(ModListView.Mode.Local)),
-                    new MenuItem("_Online","Show mods available online",() => MainTopLevel.Instance.modList.Refresh(ModListView.Mode.Online))
+                    new MenuItem("_Local mods","Show local installed mods",() => mainTopLevel.modList.Refresh(ModListView.Mode.Local)),
+                    new MenuItem("_Online","Show mods available online",() => mainTopLevel.modList.Refresh(ModListView.Mode.Online))
                 ]),
                 new MenuItem("_Apply","Apply enabled mods",ActionDialog.Show(ActionDialog.Type.Apply)),
                 new MenuItem("_Revert","Remove all modifications from the game",ActionDialog.Show(ActionDialog.Type.Revert)),
