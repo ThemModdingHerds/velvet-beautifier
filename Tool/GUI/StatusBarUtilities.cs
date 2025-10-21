@@ -29,6 +29,18 @@ public static class StatusBarUtilities
             new StatusItem(Key.ShiftMask | Key.O,"Open mod page",() => Url.OpenUrl(item.Record.Url))
         ]);
     }
+    private class LocalModToggle : StatusItem
+    {
+        public LocalModToggle(ModListView.LocalModItem item) : base(Key.ShiftMask | Key.E, "Enable",() => {})
+        {
+            Action = () => Toggle(item);
+        }
+        private void Toggle(ModListView.LocalModItem item)
+        {
+            item.Mod.Toggle();
+            Title = item.Mod.Enabled ? "Disable" : "Enable";
+        }
+    }
     private static StatusBar CreateLocalMods(ModListView.LocalModItem item)
     {
         void OnUninstall()
@@ -39,6 +51,7 @@ public static class StatusBarUtilities
             MainTopLevel.Instance.modList.Refresh();
         }
         return new([
+            new LocalModToggle(item),
             new StatusItem(Key.ShiftMask | Key.R,"Remove",OnUninstall),
             new StatusItem(Key.ShiftMask | Key.O,"Show folder",() => FileSystem.OpenFolder(item.Mod.Folder))
         ]);
