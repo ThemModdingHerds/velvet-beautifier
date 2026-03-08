@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 /// <summary>
@@ -104,5 +105,41 @@ public static class FileSystem
         string[] folders = Directory.GetDirectories(tempFolder,$"{TEMP_PREFIX}*");
         foreach(string folder in folders)
             Directory.Delete(folder,true);
+    }
+    /// <summary>
+    /// Read a JSON file at <c>filepath</c>
+    /// </summary>
+    /// <typeparam name="T">Serializable type</typeparam>
+    /// <param name="filepath">A filepath</param>
+    /// <returns>Serialized object or null if couldn't parse or incorrect structure</returns>
+    public static T? ReadJson<T>(string filepath)
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<T>(File.ReadAllText(filepath));
+        }
+        catch(Exception)
+        {
+            return default;
+        }
+    }
+    /// <summary>
+    /// Write a serializable object to <c>filepath</c>
+    /// </summary>
+    /// <typeparam name="T">Serializable type</typeparam>
+    /// <param name="filepath">A filepath</param>
+    /// <param name="item">A serializable object</param>
+    /// <returns>true if JSON was written, otherwise false</returns>
+    public static bool WriteJson<T>(string filepath,T item)
+    {
+        try
+        {
+            File.WriteAllText(filepath,JsonSerializer.Serialize(item));
+            return true;
+        }
+        catch(Exception)
+        {
+            return false;
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using ThemModdingHerds.GFS;
 using ThemModdingHerds.Levels;
 using ThemModdingHerds.TFHResource;
@@ -125,7 +124,7 @@ public class Mod
         List<Patch> patches = [];
         foreach(string file in files)
         {
-            List<Patch> patch = JsonSerializer.Deserialize<List<Patch>>(File.ReadAllText(file)) ?? [];
+            List<Patch> patch = FileSystem.ReadJson<List<Patch>>(file) ?? [];
             patches.AddRange(patch);
         }
         return patches;

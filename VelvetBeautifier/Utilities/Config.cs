@@ -132,7 +132,7 @@ public static class Config
         /// <returns>The config file, can be null</returns>
         public static JSON? Read(string filepath)
         {
-            return JsonSerializer.Deserialize<JSON>(File.ReadAllText(filepath));
+            return FileSystem.ReadJson<JSON>(filepath);
         }
         /// <summary>
         /// Create a config file at <c>filepath</c>
@@ -153,6 +153,6 @@ public static class Config
         /// Write the config file at <c>filepath</c>
         /// </summary>
         /// <param name="filepath">A valid filepath</param>
-        public void Write(string filepath) => File.WriteAllText(filepath, JsonSerializer.Serialize(this));
+        public void Write(string filepath) => FileSystem.WriteJson(filepath,this);
     }
 }

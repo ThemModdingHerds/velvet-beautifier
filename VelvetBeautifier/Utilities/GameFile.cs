@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using ThemModdingHerds.VelvetBeautifier.GitHub;
 
@@ -97,9 +96,9 @@ public class GameFiles
             // delete already existing one to overwrite
             if(File.Exists(FilePath))
                 File.Delete(FilePath);
-            File.WriteAllText(FilePath,JsonSerializer.Serialize(gamefiles));
+            FileSystem.WriteJson(FilePath,gamefiles);
             return gamefiles;
         }
-        return JsonSerializer.Deserialize<GameFiles>(File.ReadAllText(FilePath));
+        return FileSystem.ReadJson<GameFiles>(FilePath);
     }
 }

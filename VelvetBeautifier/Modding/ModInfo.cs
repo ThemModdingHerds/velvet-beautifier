@@ -1,6 +1,5 @@
-using System.Runtime.Serialization;
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using ThemModdingHerds.VelvetBeautifier.Utilities;
 namespace ThemModdingHerds.VelvetBeautifier.Modding;
 public class ModInfo
 {
@@ -18,11 +17,11 @@ public class ModInfo
     public string? Url {get; set;}
     public static ModInfo? Read(string filepath)
     {
-        return JsonSerializer.Deserialize<ModInfo?>(File.ReadAllText(filepath));
+        return FileSystem.ReadJson<ModInfo?>(filepath);
     }
     public void Write(string filepath)
     {
-        File.WriteAllText(filepath,JsonSerializer.Serialize(this));
+        FileSystem.WriteJson(filepath,this);
     }
     public override string ToString()
     {
