@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ThemModdingHerds.VelvetBeautifier.Utilities;
 /// <summary>
@@ -15,6 +15,13 @@ public static class EpicGames
     /// The Registry key path of the manifests folder location
     /// </summary>
     public const string MANIFEST_KEYPATH = "HKEY_CURRENT_USER\\Software\\Epic Games\\EOS";
+    public class Manifest
+    {
+        [JsonPropertyName("DisplayName")]
+        public string DisplayName {get;set;} = string.Empty;
+        [JsonPropertyName("InstallLocation")]
+        public string InstallLocation {get;set;} = string.Empty;
+    }
     /// <summary>
     /// Get the manifest folder path if it exists
     /// </summary>
@@ -31,31 +38,18 @@ public static class EpicGames
     /// Get the file paths of all manifests
     /// </summary>
     /// <returns>A list of file paths of manifests</returns>
-    public static List<string> GetManifests()
+    public static List<Manifest> GetManifests()
     {
-        string? manifest = GetManifestFolder();
-        if(manifest == null) return [];
-        return FileSystem.GetAllFiles(manifest);
-    }
-    /// <summary>
-    /// Get the names of the games installed on Epic Games
-    /// </summary>
-    /// <returns>A list of game names</returns>
-    public static List<string> GetGames()
-    {
-        List<string> games = [];
-        List<string> manifest_paths = GetManifests();
-        foreach(string manifest_path in manifest_paths)
+        string? manifestFolder = GetManifestFolder();
+        if(manifestFolder == null) return [];
+        List<Manifest> manifests = [];
+        foreach(string manifestPath in FileSystem.GetAllFiles(manifestFolder,"*.item"))
         {
-            JsonDocument? document = JsonSerializer.Deserialize<JsonDocument>(manifest_path);
-            if(document == null) continue;
-            JsonElement root = document.RootElement;
-            // "MainGameAppName" is the string property containing the game's name
-            string? name = root.GetProperty("MainGameAppName").GetString();
-            if(name != null)
-                games.Add(name);
+            Manifest? manifest = FileSystem.ReadJson<Manifest>(manifestPath);
+            if(manifest == null) continue;
+            manifests.Add(manifest);
         }
-        return games;
+        return manifests;
     }
     /// <summary>
     /// Get the folderpath of Them's Fightin' Herds if it exists
@@ -63,11 +57,11 @@ public static class EpicGames
     /// <returns>The folderpath of the game installed on Epic Games</returns>
     public static string? GetGamePath()
     {
-        List<string> gamepaths = GetGames();
-        foreach(string gamepath in gamepaths)
+        List<Manifest> manifests = GetManifests();
+        foreach(Manifest manifest in manifests)
         {
-            if(gamepath.EndsWith(Game.NAME))
-                return gamepath;
+            if(manifest.DisplayName == Game.NAME)
+                return manifest.InstallLocation;
         }
         return null;
     }
