@@ -62,9 +62,12 @@ public class ModListView : FrameView
     {
         Add(_list);
         Refresh();
-        IModItem? mod = (IModItem?)_list.Source.ToList()[0];
-        if (mod != null)
-            OnModSelect?.Invoke(mod);
+        if(_list.Source.Count > 0)
+        {
+            IModItem? mod = (IModItem?)_list.Source.ToList()[0];
+            if (mod != null)
+                OnModSelect?.Invoke(mod);
+        }
         _list.SelectedItemChanged += OnItemSelected;
     }
     private void OnItemSelected(ListViewItemEventArgs args)
