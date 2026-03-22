@@ -29,4 +29,8 @@ namespace TMH
             entries.push_back(readEntry(stream));
         return entries;
     }
+    ::std::uint64_t GFS::entrySize(const Entry &entry)
+    {
+        return sizeof(::std::uint64_t) + entry.filepath.size() + sizeof(entry.size) + sizeof(entry.alignment);
+    }
 }

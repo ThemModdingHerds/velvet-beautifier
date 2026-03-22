@@ -9,6 +9,8 @@ namespace TMH
 {
     namespace GFS
     {
+        const ::std::string IDENTIFIER = "Reverge Package File";
+        const ::std::string VERSION = "1.1";
         struct Header
         {
             ::std::uint32_t dataOffset;
@@ -18,6 +20,7 @@ namespace TMH
         };
         void writeHeader(::std::ostream &stream,const Header &header);
         Header readHeader(::std::istream &stream);
+        ::std::uint64_t headerSize(const Header &header);
     }
 }
 

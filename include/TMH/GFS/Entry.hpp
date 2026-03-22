@@ -8,6 +8,7 @@ namespace TMH
 {
     namespace GFS
     {
+        const ::std::int32_t ALIGNMENT = 4096;
         struct Entry
         {
             ::std::string filepath;
@@ -19,6 +20,7 @@ namespace TMH
         Entry readEntry(::std::istream &stream);
         void writeEntries(::std::ostream &stream,const Entries &entries);
         Entries readEntries(::std::istream &stream,::std::uint64_t count);
+        ::std::uint64_t entrySize(const Entry &entry);
     }
 }
 

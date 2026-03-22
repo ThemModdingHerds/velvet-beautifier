@@ -20,4 +20,11 @@ namespace TMH
         hds.entries = IO::readBigEndian<::std::uint64_t>(stream);
         return hds;
     }
+    ::std::uint64_t GFS::headerSize(const Header &header)
+    {
+        return sizeof(header.dataOffset) +
+            sizeof(::std::uint64_t) + header.identifier.size() +
+            sizeof(::std::uint64_t) + header.version.size() +
+            sizeof(header.entries);
+    }
 }
