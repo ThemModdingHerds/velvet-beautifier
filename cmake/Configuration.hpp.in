@@ -1,0 +1,9 @@
+#ifndef __TMH_VB_CONFIGURATION_HPP
+#define __TMH_VB_CONFIGURATION_HPP
+
+#cmakedefine TMH_VB_VERSION "@PROJECT_VERSION@"
+#define TMH_VB_NAME "Velvet Beautifier"
+#define TMH_VB_DESCRIPTION "Mod Loader/Tool for Them's Fightin' Herds"
+#define TMH_VB_ALTNAME "velvetbeautifier"
+
+#endif
