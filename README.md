@@ -66,12 +66,8 @@ A: these are backups of games files, required for modding the game, if there's o
 
 ## 3rd-Party Libraries
 
-- [Gameloop.Vdf][gameloop-vdf-library-link] (MIT License) for reading Steam related files
-- [Terminal.GUI][terminal-gui-library-link] (MIT License) for the graphical user interface
-- [SharpCompress][sharpcompress-library-link] (MIT License) for extracting compressed files
-- [ThemModdingHerds.GFS][gfs-library-link] (MIT License) for creating/modifying `.gfs` files
-- [ThemModdingHerds.TFHRES][tfhres-library-link] (MIT License) for creating/modifying `.tfhres` files
-- [ThemModdingHerds.Levels][levels-library-link] (MIT License) for modifying level files (`.lvl`)
+- [nlohmann_json][nlohmann_json-library-link] (`MIT License`) for reading/writing JSON files
+- [cpp-httplib][cpp-httplib-library-link] (`MIT License`) for making HTTP requests
 
 ## Building
 
@@ -99,9 +95,5 @@ This tool is licensed under the [GPL-3.0 license][license-path]
 [guide-path]: ./GUIDE.md
 [gamebanana-link]: https://gamebanana.com/tools/15674
 [process-path]: PROCESS.md
-[gameloop-vdf-library-link]: https://github.com/shravan2x/Gameloop.Vdf
-[terminal-gui-library-link]: https://github.com/gui-cs/Terminal.Gui
-[sharpcompress-library-link]: https://github.com/adamhathcock/sharpcompress
-[tfhres-library-link]: https://github.com/ThemModdingHerds/tfhres
-[gfs-library-link]: https://github.com/ThemModdingHerds/gfs
-[levels-library-link]: https://github.com/ThemModdingHerds/levels
+[nlohmann_json-library-link]: https://github.com/nlohmann/json
+[cpp-httplib-library-link]: https://github.com/yhirose/cpp-httplib
