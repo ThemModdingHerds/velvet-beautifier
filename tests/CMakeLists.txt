@@ -1,12 +1,14 @@
 set(NAME_PREFIX test)
 
-# Big Endian test
-set(BIG_ENDIAN_TEST ${NAME_PREFIX}_io_bigendian)
-add_executable(${BIG_ENDIAN_TEST} bigendian.cpp)
-target_include_directories(${BIG_ENDIAN_TEST} PRIVATE ../include)
-# GFS test
-set(GFS_TEST ${NAME_PREFIX}_gfs)
-add_executable(${GFS_TEST} gfs.cpp)
-target_include_directories(${GFS_TEST} PRIVATE ../include)
-target_link_libraries(${GFS_TEST} PRIVATE ${PROJECT_NAME}.GFS)
-add_dependencies(${GFS_TEST} ${PROJECT_NAME}.GFS)
+macro(tmh_test Name MainCPP)
+    set(NAME ${NAME_PREFIX}_${Name})
+    add_executable(${NAME} ${MainCPP})
+    set_target_properties(${NAME}
+        PROPERTIES
+        RUNTIME_OUTPUT_NAME tests/${NAME}
+    )
+    target_include_directories(${NAME} PRIVATE ../include)
+endmacro(tmh_test)
+
+# IO tests
+tmh_test(io_bigendian bigendian.cpp)
