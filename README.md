@@ -1,3 +1,5 @@
+# Due to lack of interest this project has been archived
+
 # Velvet Beautifier
 
 ![Icon](./assets/icon.png)
